@@ -90,6 +90,7 @@ This isn't just another AI model. It's a **revolutionary framework** for artific
 - **[Individual System Docs](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/tree/main/02%20-%20SYSTEMS)** - Detailed documentation for each neural system
 - **[Research Papers](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/tree/main/06%20-%20PUBLISHING)** - Academic publications and research findings
 - **[Implementation Guides](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/tree/main/05%20-%20DOCUMENTATION/Implementation-Guides)** - Technical implementation documentation
+- **[Neuron Sanctuary Encryption (NSE)](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/05%20-%20DOCUMENTATION/Implementation-Guides/Neuron%20Sanctuary%20Encryption%20(NSE).md)** - New encryption method, possibly quantum resistant!!!
 
 ## 🔬 **Research Applications**
 
