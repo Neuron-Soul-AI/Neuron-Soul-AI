@@ -127,7 +127,7 @@ This project is licensed under **Creative Commons Attribution-NonCommercial 4.0 
 - 💼 **Commercial licensing required for**: Business applications, commercial products, enterprise use
 - 📧 **Commercial inquiries**: marcelo.soul.ai@gmail.com
 
-For full license terms, see [LICENSE]([LICENSE](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/License.md)) file.
+For full license terms, see ([LICENSE](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/License.md)) file.
 
 ## 🤝 **Contributing**
 
