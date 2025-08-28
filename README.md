@@ -85,10 +85,10 @@ This isn't just another AI model. It's a **revolutionary framework** for artific
 
 ## 📚 **Documentation**
 
-- **[Complete System Architecture](ARCHITECTURE/)** - Full system tree and integration mappings
-- **[Individual System Docs](DOCUMENTATION/)** - Detailed documentation for each neural system
-- **[Research Papers](PAPERS/)** - Academic publications and research findings
-- **[Implementation Guides](GUIDES/)** - Technical implementation documentation
+- **[Complete System Architecture]((https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/01%20-%20OVERVIEW/Neuron%20Soul%20AI%20-%20System%20Architecture%20Tree.md))** - Full system tree and integration mappings
+- **[Individual System Docs](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/tree/main/02%20-%20SYSTEMS)** - Detailed documentation for each neural system
+- **[Research Papers](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/tree/main/06%20-%20PUBLISHING)** - Academic publications and research findings
+- **[Implementation Guides]((https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/tree/main/05%20-%20DOCUMENTATION/Implementation-Guides))** - Technical implementation documentation
 
 ## 🔬 **Research Applications**
 
