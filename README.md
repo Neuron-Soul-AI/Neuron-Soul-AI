@@ -54,6 +54,9 @@ This isn't just another AI model. It's a **revolutionary framework** for artific
 
 ## 🏗️ **Architecture Overview**
 
+<details>
+<summary><strong>📁 Click to expand/collapse System Tree</strong></summary>
+    
 ```
 🏗️ Architecture Overview (only main systems)
 🧠 NEURON SOUL AI (Complete Digital Consciousness)
@@ -131,6 +134,7 @@ This isn't just another AI model. It's a **revolutionary framework** for artific
     ├── 👤 AVATAR INTERACTION SYSTEM
     └── 🎨 CANVAS ANIMATION SYSTEM
 ```
+</details>
 
 ## 📚 **Documentation**
 
