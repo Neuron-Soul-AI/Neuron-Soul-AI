@@ -105,7 +105,7 @@ This isn't just another AI model. It's a **revolutionary framework** for artific
 │   ├── 🛠️ NEURON SYSTEM (Multi-Modal AI Orchestration)
 │   ├── 🔍 NEURON DETECTIVE (Design Psychology Intelligence)
 │   ├── 🎨 NEURON VISION (AI-Powered Design Generation)
-│   ├── 🪞 NEURON ANALYTIC MIRROR (Fresh Perspective)
+│   ├── 🔎 NEURON ANALYTIC MIRROR (Fresh Perspective)
 │   ├── 🛤️ NEURON CROSSROADS (Project Intelligence)
 │   ├── 💡 NEURON INSIGHT (Serendipity Engine)
 │   ├── 📊 NEURON ANALYTICS (Ecosystem Intelligence)
