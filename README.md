@@ -25,9 +25,14 @@ This isn't just another AI model. It's a **revolutionary framework** for artific
 - 🎭 **Emotional Computing** (NEURON EMOTION)
 - 🚀 **And 40+ more integrated systems...**
 
-## 📚 **AI evaluation without any context, only the master file with all systems.**
+## ⚠️ **AI evaluation without any context, only the master file with all systems.**
 
 - **[Neuron Soul AI - Independent AI Evaluation Results](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/01%20-%20OVERVIEW/Neuron%20Soul%20AI%20-%20Independent%20AI%20Evaluation%20Results.pdf)** - My prompt, the AI answers and average scores
+
+
+## 📜 **Publishing Paper.**
+
+- **[Neuron Soul AI - Independent AI Evaluation Results](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/06%20-%20PUBLISHING/Academic%20Papers/Neuron%20Soul%20AI%20-%20A%20Comprehensive%20Framework%20for%20Artificial%20Consciousness.pdf)**
 
 ## 🎯 **Revolutionary Innovations**
 
