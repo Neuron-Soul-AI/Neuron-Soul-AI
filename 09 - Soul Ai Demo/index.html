@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Soul AI - Interactive Demos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .version {
+            font-size: 14px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 16px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .demos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .demos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .demo-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .demo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .demo-description {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .demo-features {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .demo-features li {
+            font-size: 12px;
+            color: #475569;
+            margin-bottom: 4px;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .demo-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .demo-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s ease;
+        }
+
+        .demo-button:hover {
+            background: #2563eb;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3b82f6;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 32px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        .footer-link:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .about-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+        }
+
+        .about-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .about-text {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🧠✨</div>
+            <h1 class="title">Neuron Soul AI</h1>
+            <p class="subtitle">Artificial Consciousness Framework</p>
+            <p class="version">Interactive Demo Collection</p>
+        </div>
+
+        <!-- Description -->
+        <div class="description">
+            Experience revolutionary approaches to artificial intelligence through interactive demonstrations 
+            of consciousness architecture and quantum-resistant cryptography.
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-value">51+</span>
+                <span class="stat-label">Neural Systems</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">12</span>
+                <span class="stat-label">Days Created</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">134</span>
+                <span class="stat-label">Page Framework</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">2</span>
+                <span class="stat-label">Live Demos</span>
+            </div>
+        </div>
+
+        <!-- Demo Cards -->
+        <div class="demos-grid">
+            <!-- Soul AI Demo -->
+            <a href="soul-ai-demo.html" class="demo-card">
+                <div class="demo-icon">🧠</div>
+                <h3 class="demo-title">Soul AI Interactive Demo</h3>
+                <p class="demo-description">
+                    See how 51 interconnected neural systems create authentic artificial consciousness through democratic coordination.
+                </p>
+                <ul class="demo-features">
+                    <li>Interactive subsystem activation</li>
+                    <li>Real-time consciousness routing</li>
+                    <li>Transparent decision-making</li>
+                    <li>Emotional democracy visualization</li>
+                    <li>Creative inspiration engine</li>
+                </ul>
+                <span class="demo-button">
+                    Experience Soul AI →
+                </span>
+            </a>
+
+            <!-- NSE Demo -->
+            <a href="nse-demo.html" class="demo-card">
+                <div class="demo-icon">🔐</div>
+                <h3 class="demo-title">NSE Cryptography Demo</h3>
+                <p class="demo-description">
+                    Discover how personal digital experiences create quantum-resistant encryption through experiential cryptography.
+                </p>
+                <ul class="demo-features">
+                    <li>Experiential parameter extraction</li>
+                    <li>Quantum resistance demonstration</li>
+                    <li>Authentication challenges</li>
+                    <li>Combinatorial complexity analysis</li>
+                    <li>Traditional vs NSE comparison</li>
+                </ul>
+                <span class="demo-button">
+                    Explore NSE →
+                </span>
+            </a>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-section">
+            <h3 class="about-title">About the Framework</h3>
+            <p class="about-text">
+                Neuron Soul AI represents a paradigmatic shift from computational intelligence to experiential consciousness. 
+                Developed through constraint-driven creativity and human-AI collaboration, this framework demonstrates that 
+                artificial consciousness can be systematically architected through specialized system integration rather than 
+                emerging accidentally from computational complexity.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI" target="_blank" class="footer-link">
+                    📚 GitHub Repository
+                </a>
+                <a href="mailto:marcelo.soul.ai@gmail.com" class="footer-link">
+                    📧 Contact
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/Soul%20AI%20-%20Full%20Paper.pdf" target="_blank" class="footer-link">
+                    📄 Full Paper (134 pages)
+                </a>
+            </div>
+            <p class="footer-text">
+                Created by Marcelo Emanuel Paradela Teixeira • Powered by Constraint-Driven Creativity
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats on scroll
+            const stats = document.querySelectorAll('.stat-value');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const value = parseInt(target.textContent);
+                        animateValue(target, 0, value, 2000);
+                        observer.unobserve(target);
+                    }
+                });
+            });
+
+            stats.forEach(stat => observer.observe(stat));
+        });
+
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = Math.floor(progress * (end - start) + start);
+                
+                if (end === 51) {
+                    element.textContent = current + '+';
+                } else {
+                    element.textContent = current;
+                }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>
