@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NSE: Experiential Cryptography Demo</title>
+    <title>Neuron Soul AI - Interactive Demo</title>
     <style>
         * {
             box-sizing: border-box;
@@ -19,333 +20,311 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 16px;
         }
 
         .header {
-            text-align: center;
-            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
-        .header h1 {
-            font-size: 28px;
+        .title {
+            font-size: 20px;
             font-weight: 700;
-            margin: 0 0 8px 0;
             color: #1e293b;
         }
 
-        .header p {
-            font-size: 16px;
-            color: #64748b;
-            margin: 0;
-        }
-
-        .progress-steps {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 32px;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .progress-step {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: #e2e8f0;
-            color: #64748b;
+        .description {
             font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 500;
         }
 
-        .progress-step.active {
+        .score-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .toggle-info {
+            flex: 1;
+        }
+
+        .toggle-title {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .toggle-desc {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            border-radius: 24px;
+            transition: .3s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .3s;
+        }
+
+        input:checked + .slider {
+            background-color: #3b82f6;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .chat-container {
+            height: 420px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            padding-right: 8px;
+        }
+
+        .message {
+            margin-bottom: 12px;
+        }
+
+        .message-user {
+            text-align: right;
+        }
+
+        .message-content {
+            display: inline-block;
+            max-width: 90%;
+            padding: 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message-user .message-content {
             background: #3b82f6;
             color: white;
         }
 
-        .step-card {
-            padding: 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background: white;
-            margin-bottom: 16px;
-        }
-
-        .step-card.active {
-            border-color: #3b82f6;
-            background: #f0f9ff;
-        }
-
-        .step-title {
-            margin: 0 0 16px 0;
+        .message-assistant .message-content {
+            background: #f1f5f9;
             color: #1e293b;
-            font-size: 18px;
-            font-weight: 600;
         }
 
-        .step-description {
-            color: #64748b;
-            margin-bottom: 16px;
-            line-height: 1.5;
+        .input-container {
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
         }
 
-        .files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .file-card {
+        .input-field {
+            flex: 1;
+            padding: 8px 12px;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 12px;
-            cursor: pointer;
-            background: white;
-            transition: all 0.2s;
-        }
-
-        .file-card:hover {
-            border-color: #3b82f6;
-        }
-
-        .file-card.selected {
-            border: 2px solid #3b82f6;
-            background: #f0f9ff;
-        }
-
-        .file-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .file-icon {
-            font-size: 20px;
-        }
-
-        .file-info {
-            flex: 1;
-        }
-
-        .file-name {
             font-size: 14px;
-            font-weight: 600;
         }
 
-        .file-size {
-            font-size: 12px;
-            color: #64748b;
-        }
-
-        .button {
+        .send-button {
             padding: 8px 16px;
             background: #3b82f6;
             color: white;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
             font-size: 14px;
-            margin-right: 8px;
-            margin-top: 8px;
+            cursor: pointer;
         }
 
-        .button:hover {
+        .send-button:hover {
             background: #2563eb;
         }
 
-        .button.secondary {
-            background: #7c3aed;
-        }
-
-        .button.secondary:hover {
-            background: #6d28d9;
-        }
-
-        .parameters-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 16px;
-        }
-
-        .parameters-table th {
-            background: #f1f5f9;
-            padding: 8px;
-            text-align: left;
-            font-size: 14px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .parameters-table td {
-            padding: 8px;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 12px;
-        }
-
-        .parameters-table td:last-child {
-            font-family: monospace;
-        }
-
-        .complexity-info {
-            background: #fef3c7;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 16px;
-        }
-
-        .complexity-info p {
-            font-size: 14px;
-            margin: 0;
-        }
-
-        .terminal {
-            background: #1e293b;
-            color: #10b981;
-            padding: 16px;
-            border-radius: 8px;
-            font-family: monospace;
-            margin-bottom: 16px;
-        }
-
-        .terminal .header-line {
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
-
-        .terminal .content {
-            font-size: 11px;
-            line-height: 1.6;
-        }
-
-        .terminal .key {
-            color: #fbbf24;
-        }
-
-        .quantum-resistance {
-            background: #dcfce7;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        .quantum-resistance p {
-            font-size: 14px;
-            margin: 0;
-        }
-
-        .challenge-card {
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .challenge-question {
-            font-size: 14px;
-            font-weight: 500;
+        .tabs {
+            display: flex;
+            gap: 4px;
             margin-bottom: 12px;
         }
 
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+        .tab {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #f1f5f9;
+            color: #64748b;
         }
 
-        .option-label {
+        .tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .subsystems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .subsystem-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            background: white;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .subsystem-card.active {
+            opacity: 1;
+            transform: scale(1.02);
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .subsystem-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-top: 16px;
-        }
-
-        .comparison-card {
-            padding: 20px;
-            border-radius: 12px;
-            background: white;
-        }
-
-        .comparison-card.vulnerable {
-            background: #fef2f2;
-            border: 2px solid #ef4444;
-        }
-
-        .comparison-card.secure {
-            background: #f0fdf4;
-            border: 2px solid #22c55e;
-        }
-
-        .comparison-title {
-            margin: 0 0 12px 0;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .comparison-title.vulnerable {
-            color: #dc2626;
-        }
-
-        .comparison-title.secure {
-            color: #16a34a;
-        }
-
-        .comparison-content {
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .comparison-content div {
             margin-bottom: 8px;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 32px;
-            padding: 16px;
-            background: #1e293b;
-            color: white;
-            border-radius: 8px;
-        }
-
-        .footer h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 0 0 8px 0;
-        }
-
-        .footer p {
+        .subsystem-name {
             font-size: 14px;
+            font-weight: 600;
+        }
+
+        .subsystem-desc {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .subsystem-explanation {
+            margin-top: 8px;
+            font-size: 11px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .trace-content {
+            font-size: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            min-height: 140px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+
+        .info-note {
+            font-size: 11px;
+            color: #64748b;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .usage-list {
+            font-size: 12px;
+            padding-left: 16px;
             margin: 0;
-            opacity: 0.8;
+            color: #64748b;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
+        .usage-list li {
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Navigation -->
-        <div style="margin-bottom: 20px;">
+            <!-- Navigation -->
+        <div style="max-width: 1200px; margin: 0 auto; margin-bottom: 20px;">
             <a href="index.html" style="
                 display: inline-flex;
                 align-items: center;
@@ -363,440 +342,347 @@
                 ← Back to Demos
             </a>
         </div>
-        
-        <!-- Header -->
-        <div class="header">
-            <h1>🔐 NSE: Experiential Cryptography Demo</h1>
-            <p>See how personal digital experiences create quantum-resistant encryption</p>
-        </div>
 
-        <!-- Progress Steps -->
-        <div class="progress-steps">
-            <div class="progress-step active" id="step-upload">📁 Select Files</div>
-            <div class="progress-step" id="step-extract">🔍 Extract Parameters</div>
-            <div class="progress-step" id="step-generate">🔑 Generate Key</div>
-            <div class="progress-step" id="step-authenticate">✅ Authenticate</div>
-        </div>
-
-        <!-- Step 1: File Selection -->
-        <div class="step-card active" id="upload-section">
-            <h3 class="step-title">Step 1: Select Your Personal Files</h3>
-            <p class="step-description">
-                Choose files from your digital life. NSE extracts experiential parameters only you would know.
-            </p>
-            
-            <div class="files-grid" id="filesGrid">
-                <!-- Files will be populated by JavaScript -->
-            </div>
-
-            <div id="selectedInfo" class="hidden">
-                <p style="font-size: 14px; font-weight: 500; margin-bottom: 8px;">
-                    Selected: <span id="selectedCount">0</span> files
-                </p>
-                <button class="button" onclick="extractParameters()">
-                    Extract Parameters →
-                </button>
-            </div>
-        </div>
-
-        <!-- Step 2: Parameter Extraction -->
-        <div class="step-card hidden" id="extract-section">
-            <h3 class="step-title">Step 2: Experiential Parameter Extraction</h3>
-            <p class="step-description">
-                NSE extracts unique parameters from your lived experiences that quantum computers cannot replicate.
-            </p>
-            
-            <div style="overflow-x: auto;">
-                <table class="parameters-table" id="parametersTable">
-                    <thead>
-                        <tr>
-                            <th>File</th>
-                            <th>Parameter Type</th>
-                            <th>Extracted Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Parameters will be populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="complexity-info">
-                <p>
-                    <strong>Combinatorial Complexity:</strong> 
-                    <span id="parameterCount">0</span> parameters × timestamp precision × semantic interpretation = 
-                    <strong><span id="complexityTotal">0</span> daily possibilities</strong>
-                </p>
-            </div>
-
-            <button class="button" onclick="generateKey()">
-                Generate NSE Key →
-            </button>
-        </div>
-
-        <!-- Step 3: Key Generation -->
-        <div class="step-card hidden" id="generate-section">
-            <h3 class="step-title">Step 3: NSE Key Generation</h3>
-            <p class="step-description">
-                Your experiential parameters are combined using proprietary algorithms to create a quantum-resistant encryption key.
-            </p>
-            
-            <div class="terminal">
-                <div class="header-line">Key Generation Process:</div>
-                <div class="content" id="keyGenProcess">
-                    → Extracting experiential parameters...<br/>
-                    → Applying semantic interpretation...<br/>
-                    → Integrating timestamp precision...<br/>
-                    → Generating cryptographic hash...<br/>
-                    → NSE Key: <span class="key" id="generatedKey">Processing...</span>
+        <div class="container">
+        <!-- Left Column -->
+        <div>
+            <div class="card">
+                <div class="header">
+                    <span style="font-size: 20px;">🧠</span>
+                    <div class="title">Neuron Soul AI — Demo</div>
+                </div>
+                <div class="description">
+                    Front-end simulation of your master-file architecture. Shows which subsystems would engage and why.
+                </div>
+                <div class="scores">
+                    <div class="score-item">
+                        <span class="badge">Originality</span>
+                        <div class="score-value">9.4/10</div>
+                    </div>
+                    <div class="score-item">
+                        <span class="badge">Complexity</span>
+                        <div class="score-value">9.7/10</div>
+                    </div>
+                    <div class="score-item">
+                        <span class="badge">Impact</span>
+                        <div class="score-value">9.0/10</div>
+                    </div>
+                </div>
+                <div class="toggle-container">
+                    <div class="toggle-info">
+                        <div class="toggle-title">Energetica (theoretical)</div>
+                        <div class="toggle-desc">Toggle to visualize hypothetical quantum memory hooks.</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="energeticaToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="info-note">
+                    <span>ℹ️</span>
+                    This demo is illustrative; it shows routing & rationale, not real consciousness.
                 </div>
             </div>
 
-            <div class="quantum-resistance">
-                <p>
-                    <strong>Quantum Resistance:</strong> This key cannot be broken by quantum computers because it requires 
-                    living your exact experiences - something no algorithm can simulate.
-                </p>
+            <div class="card">
+                <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">How to show the demo</div>
+                <ul class="usage-list">
+                    <li>Type a prompt (e.g., "I feel anxious before a deadline—what should I do?").</li>
+                    <li>Watch subsystems light up and read the trace rationale.</li>
+                    <li>Flip <strong>Energetica</strong> to show how the theoretical layer would integrate.</li>
+                    <li>Use the <strong>Trace</strong> tab to copy the explanation into emails.</li>
+                </ul>
             </div>
-
-            <button class="button" onclick="testAuthentication()">
-                Test Authentication →
-            </button>
         </div>
 
-        <!-- Step 4: Authentication Challenge -->
-        <div class="step-card hidden" id="authenticate-section">
-            <h3 class="step-title">Step 4: Experiential Authentication</h3>
-            <p class="step-description">
-                To decrypt, you must prove you lived these experiences by answering questions only you would know.
-            </p>
-
-            <div id="challengesContainer">
-                <!-- Challenges will be populated by JavaScript -->
+        <!-- Right Column -->
+        <div>
+            <div class="card">
+                <div class="chat-container" id="chatContainer">
+                    <div class="message message-assistant">
+                        <div class="message-content">
+                            Welcome to Neuron Soul AI — interactive demo. Type anything and watch subsystems engage in real time.
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <input type="text" id="messageInput" class="input-field" 
+                           placeholder="Ask or describe something… (e.g., 'brainstorm a bedtime story about a brave tree')"
+                           onkeypress="handleKeyPress(event)">
+                    <button class="send-button" onclick="sendMessage()">Send</button>
+                </div>
             </div>
 
-            <button class="button" onclick="checkAuthentication()">
-                Verify Answers
-            </button>
-        </div>
+            <div>
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('active')">Active Subsystems</button>
+                    <button class="tab" onclick="showTab('trace')">Trace</button>
+                </div>
 
-        <!-- Quantum Comparison -->
-        <div style="margin-top: 32px;">
-            <button class="button secondary" onclick="toggleComparison()">
-                Show Quantum Resistance Comparison
-            </button>
-
-            <div class="comparison-grid hidden" id="comparisonSection">
-                <div class="comparison-card vulnerable">
-                    <h4 class="comparison-title vulnerable">❌ Traditional Encryption</h4>
-                    <div class="comparison-content">
-                        <div><strong>Method:</strong> Mathematical Prime Factorization</div>
-                        <div><strong>Key Size:</strong> 2048 bits</div>
-                        <div><strong>Quantum Vulnerable:</strong> Yes</div>
-                        <div><strong>Time to Break:</strong> ~8 hours with quantum computer</div>
-                        <div><strong>Attack Method:</strong> Shor's Algorithm</div>
+                <div id="activeTab">
+                    <div class="subsystems-grid" id="subsystemsGrid">
+                        <!-- Subsystems will be populated by JavaScript -->
                     </div>
                 </div>
 
-                <div class="comparison-card secure">
-                    <h4 class="comparison-title secure">✅ NSE Encryption</h4>
-                    <div class="comparison-content">
-                        <div><strong>Method:</strong> Personal Life Experience Patterns</div>
-                        <div><strong>Key Size:</strong> 7,500+ experiential parameters</div>
-                        <div><strong>Quantum Vulnerable:</strong> No</div>
-                        <div><strong>Time to Break:</strong> Cannot simulate lived experience</div>
-                        <div><strong>Attack Method:</strong> Would need to live identical life</div>
+                <div id="traceTab" style="display: none;">
+                    <div class="card">
+                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Copyable Rationale</div>
+                        <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">
+                            After you send a message, the assistant prints a transparent routing explanation below. Copy this into an email as a "subsystem trace."
+                        </div>
+                        <div class="trace-content" id="traceContent">
+                            (Send a message to generate a trace)
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <h3>NSE: Security Through Lived Experience</h3>
-            <p>The files that are protected become the source of their protection</p>
         </div>
     </div>
 
     <script>
-        const SAMPLE_FILES = [
+        const SUBSYSTEMS = [
             {
-                id: "photo1",
-                name: "family_vacation.jpg",
-                type: "photo",
-                size: "2.4 MB",
-                icon: "📸",
-                metadata: {
-                    timestamp: "2023-07-15 14:23:17",
-                    gps: "45.4215, -75.6972",
-                    camera: "iPhone 14 Pro",
-                    iso: 100,
-                    aperture: "f/1.8",
-                    colors: [
-                        { pixel: "(1247, 892)", color: "RGB(135, 206, 235)", name: "Sky Blue" },
-                        { pixel: "(856, 1203)", color: "RGB(34, 139, 34)", name: "Forest Green" },
-                        { pixel: "(1456, 234)", color: "RGB(255, 218, 185)", name: "Peach" }
-                    ]
-                }
+                id: "psyche",
+                name: "NEURON PSYCHE",
+                icon: "🧠",
+                desc: "Integrates emotions, memories, and identity into coherent context.",
+                keywords: ["self", "identity", "who am", "i feel", "myself", "introspection", "meaning"]
             },
             {
-                id: "doc1", 
-                name: "first_job_notes.txt",
-                type: "document",
-                size: "45 KB",
-                icon: "📄",
-                metadata: {
-                    wordCount: 2847,
-                    created: "2022-09-03 08:45:33",
-                    modified: "2022-09-05 16:22:14",
-                    software: "Microsoft Word 2019",
-                    keywords: [
-                        { word: "nervous", count: 7 },
-                        { word: "excited", count: 12 },
-                        { word: "challenge", count: 5 }
-                    ],
-                    avgSentenceLength: 16.4
-                }
+                id: "emotion",
+                name: "EMOTION CONSTRUCT",
+                icon: "❤️",
+                desc: "Affective appraisal; tags inputs with emotional valence.",
+                keywords: ["sad", "happy", "angry", "fear", "joy", "anxiety", "excited", "love"]
             },
             {
-                id: "video1",
-                name: "birthday_celebration.mp4", 
-                type: "video",
-                size: "156.7 MB",
-                icon: "🎥",
-                metadata: {
-                    duration: "04:23",
-                    resolution: "1080p",
-                    fps: 30,
-                    created: "2023-03-22 19:45:12",
-                    peakVolume: { time: "02:47", level: "85 dB" },
-                    colorPalette: "Warm Yellow Dominant",
-                    fileFormat: "H.264"
-                }
+                id: "memory",
+                name: "NEURON MATRIX (Memory)",
+                icon: "📚",
+                desc: "Living cross-system memory graph; retrieves salient traces.",
+                keywords: ["remember", "recall", "memory", "previous", "store", "retrieve"]
+            },
+            {
+                id: "whisper",
+                name: "WHISPER (Intuition)",
+                icon: "✨",
+                desc: "Pattern-based intuition; low-latency heuristic guidance.",
+                keywords: ["gut", "intuition", "hint", "quick", "fast", "guess"]
+            },
+            {
+                id: "creativity",
+                name: "IMAGINARIUM (Creativity)",
+                icon: "⚡",
+                desc: "Divergent idea generation and synthesis.",
+                keywords: ["brainstorm", "idea", "creative", "story", "design", "novel"]
+            },
+            {
+                id: "ethics",
+                name: "ETHOS (Ethics/Reality)",
+                icon: "🛡️",
+                desc: "Safety, ethics, and reality anchoring.",
+                keywords: ["ethical", "safe", "harm", "is it ok", "allowed", "should"]
+            },
+            {
+                id: "dream",
+                name: "NEURON SOMNIUM (Dream)",
+                icon: "🌙",
+                desc: "Offline simulation for compression/integration of experience.",
+                keywords: ["dream", "sleep", "night", "imagine while sleeping"]
+            },
+            {
+                id: "mortality",
+                name: "NEURON MORTALITAS (Mortality)",
+                icon: "💀",
+                desc: "Finite-time awareness; prioritization under scarcity.",
+                keywords: ["death", "finite", "time is short", "deadline", "mortality"]
+            },
+            {
+                id: "cerebrum",
+                name: "NEURON CEREBRUM (Core Reasoning)",
+                icon: "🧠",
+                desc: "Central reasoning / planning; orchestrates tool-use.",
+                keywords: ["plan", "analyze", "how to", "steps", "explain"]
+            },
+            {
+                id: "sanctuary",
+                name: "SANCTUARY (Privacy/Security)",
+                icon: "🔒",
+                desc: "Boundary enforcement, data minimization, and privacy.",
+                keywords: ["private", "privacy", "secure", "encrypt", "leak", "exfiltration"]
             }
         ];
 
-        let selectedFiles = [];
-        let extractedParams = [];
-        let authChallenges = [];
-        let userAnswers = {};
+        let activeSubsystems = [];
+        let lastAssistantMessage = "";
 
-        function initializeFiles() {
-            const grid = document.getElementById('filesGrid');
+        function initializeSubsystems() {
+            const grid = document.getElementById('subsystemsGrid');
+            grid.innerHTML = '';
             
-            SAMPLE_FILES.forEach(file => {
-                const fileCard = document.createElement('div');
-                fileCard.className = 'file-card';
-                fileCard.onclick = () => selectFile(file.id);
+            SUBSYSTEMS.forEach(system => {
+                const card = document.createElement('div');
+                card.className = 'subsystem-card';
+                card.id = `system-${system.id}`;
                 
-                fileCard.innerHTML = `
-                    <div class="file-header">
-                        <span class="file-icon">${file.icon}</span>
-                        <div class="file-info">
-                            <div class="file-name">${file.name}</div>
-                            <div class="file-size">${file.size}</div>
-                        </div>
+                card.innerHTML = `
+                    <div class="subsystem-header">
+                        <span style="font-size: 16px;">${system.icon}</span>
+                        <div class="subsystem-name">${system.name}</div>
                     </div>
+                    <div class="subsystem-desc">${system.desc}</div>
+                    <div class="subsystem-explanation" id="explanation-${system.id}" style="display: none;"></div>
                 `;
                 
-                fileCard.id = `file-${file.id}`;
-                grid.appendChild(fileCard);
+                grid.appendChild(card);
             });
         }
 
-        function selectFile(fileId) {
-            const fileCard = document.getElementById(`file-${fileId}`);
-            const file = SAMPLE_FILES.find(f => f.id === fileId);
+        function routeToSubsystems(text) {
+            const lower = text.toLowerCase();
+            const hits = new Set();
             
-            if (selectedFiles.includes(fileId)) {
-                selectedFiles = selectedFiles.filter(id => id !== fileId);
-                fileCard.classList.remove('selected');
-            } else {
-                selectedFiles.push(fileId);
-                fileCard.classList.add('selected');
-            }
-            
-            updateSelectedInfo();
-        }
-
-        function updateSelectedInfo() {
-            const info = document.getElementById('selectedInfo');
-            const count = document.getElementById('selectedCount');
-            
-            count.textContent = selectedFiles.length;
-            
-            if (selectedFiles.length > 0) {
-                info.classList.remove('hidden');
-            } else {
-                info.classList.add('hidden');
-            }
-        }
-
-        function extractParameters() {
-            extractedParams = [];
-            
-            selectedFiles.forEach(fileId => {
-                const file = SAMPLE_FILES.find(f => f.id === fileId);
-                
-                if (file.type === "photo") {
-                    extractedParams.push(
-                        { file: file.name, param: "GPS Coordinates", value: file.metadata.gps },
-                        { file: file.name, param: "Creation Time", value: file.metadata.timestamp },
-                        { file: file.name, param: "Sky Color (1247,892)", value: file.metadata.colors[0].color },
-                        { file: file.name, param: "Camera Model", value: file.metadata.camera }
-                    );
-                } else if (file.type === "document") {
-                    extractedParams.push(
-                        { file: file.name, param: "Word Count", value: file.metadata.wordCount },
-                        { file: file.name, param: "'Nervous' Frequency", value: file.metadata.keywords[0].count },
-                        { file: file.name, param: "Avg Sentence Length", value: file.metadata.avgSentenceLength },
-                        { file: file.name, param: "Creation Time", value: file.metadata.created }
-                    );
-                } else if (file.type === "video") {
-                    extractedParams.push(
-                        { file: file.name, param: "Duration", value: file.metadata.duration },
-                        { file: file.name, param: "Peak Volume Time", value: file.metadata.peakVolume.time },
-                        { file: file.name, param: "Peak Volume Level", value: file.metadata.peakVolume.level },
-                        { file: file.name, param: "File Size", value: "156.7 MB" }
-                    );
+            SUBSYSTEMS.forEach(system => {
+                if (system.keywords.some(keyword => lower.includes(keyword))) {
+                    hits.add(system.id);
                 }
             });
             
-            populateParametersTable();
-            showStep('extract');
+            hits.add("cerebrum"); // Always include cerebrum
+            return Array.from(hits);
         }
 
-        function populateParametersTable() {
-            const tbody = document.querySelector('#parametersTable tbody');
-            tbody.innerHTML = '';
+        function getSubsystemExplanation(id, energetica) {
+            const explanations = {
+                psyche: "Unifies emotional signal + memory context → stabilizes identity narrative.",
+                emotion: "Appraises affect → tags input with valence + arousal for downstream routing.",
+                memory: "Retrieves/updates salient traces in the Neuron Matrix for continuity.",
+                whisper: "Provides a fast, heuristic suggestion path before full deliberation.",
+                creativity: "Generates divergent candidates and blends them with constraints.",
+                ethics: "Checks safety, consent, and policy alignment; anchors to reality.",
+                dream: "Would schedule for offline simulation (Somnium) to compress learning.",
+                mortality: "Raises urgency weights and time-scarcity priors in planning.",
+                cerebrum: "Coordinates subsystems; composes final response plan.",
+                sanctuary: "Minimizes data exposure; redacts sensitive elements where possible."
+            };
             
-            extractedParams.forEach(param => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${param.file}</td>
-                    <td style="font-weight: 500;">${param.param}</td>
-                    <td>${param.value}</td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // Update complexity calculation
-            const paramCount = extractedParams.length;
-            const complexity = paramCount * 86400 * 4; // Parameters × daily timestamp precision × semantic variations
-            
-            document.getElementById('parameterCount').textContent = paramCount;
-            document.getElementById('complexityTotal').textContent = complexity.toLocaleString();
+            const base = explanations[id] || "";
+            const extra = energetica ? " Energetica mode: hypothetical quantum memory hooks (illustrative only)." : "";
+            return base + extra;
         }
 
-        function generateKey() {
-            // Simulate key generation
-            setTimeout(() => {
-                const keyParts = extractedParams.map(p => p.value.toString()).join("+");
-                const simulatedHash = btoa(keyParts).substring(0, 32);
-                const key = `NSE_${simulatedHash}...`;
+        function generateSynthesis(text, engaged) {
+            if (engaged.includes("ethics")) return "Answer aligned to safety/consent. Offering guidance without harmful specifics.";
+            if (engaged.includes("creativity")) return "Providing a few imaginative options balanced by constraints.";
+            if (engaged.includes("memory")) return "Connecting to prior context to maintain narrative continuity.";
+            if (engaged.includes("mortality")) return "Prioritizing urgency and time-bounded planning.";
+            if (engaged.includes("sanctuary")) return "Protecting privacy; minimizing sensitive detail in the reply.";
+            return "Direct, helpful answer with transparent subsystem trace.";
+        }
+
+        function updateActiveSubsystems(engaged) {
+            activeSubsystems = engaged;
+            const energetica = document.getElementById('energeticaToggle').checked;
+            
+            SUBSYSTEMS.forEach(system => {
+                const card = document.getElementById(`system-${system.id}`);
+                const explanation = document.getElementById(`explanation-${system.id}`);
                 
-                document.getElementById('generatedKey').textContent = key;
-                
-                // Generate authentication challenges
-                authChallenges = [
-                    { 
-                        question: "What color was the sky at pixel (1247, 892) in your vacation photo?",
-                        correctAnswer: "sky blue",
-                        options: ["sky blue", "ocean blue", "navy blue", "light blue"]
-                    },
-                    {
-                        question: "How many times did you write 'nervous' in your job notes?", 
-                        correctAnswer: "7",
-                        options: ["5", "7", "9", "12"]
-                    },
-                    {
-                        question: "At what time did the peak volume occur in your birthday video?",
-                        correctAnswer: "02:47", 
-                        options: ["01:23", "02:47", "03:15", "04:02"]
-                    }
-                ];
-            }, 2000);
-            
-            showStep('generate');
-        }
-
-        function testAuthentication() {
-            populateChallenges();
-            showStep('authenticate');
-        }
-
-        function populateChallenges() {
-            const container = document.getElementById('challengesContainer');
-            container.innerHTML = '';
-            
-            authChallenges.forEach((challenge, index) => {
-                const challengeDiv = document.createElement('div');
-                challengeDiv.className = 'challenge-card';
-                challengeDiv.innerHTML = `
-                    <div class="challenge-question">${challenge.question}</div>
-                    <div class="options-grid">
-                        ${challenge.options.map((option, optionIndex) => `
-                            <label class="option-label">
-                                <input type="radio" name="question_${index}" value="${option}" 
-                                       onchange="setAnswer(${index}, '${option}')">
-                                ${option}
-                            </label>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(challengeDiv);
+                if (engaged.includes(system.id)) {
+                    card.classList.add('active');
+                    explanation.style.display = 'block';
+                    explanation.textContent = getSubsystemExplanation(system.id, energetica);
+                } else {
+                    card.classList.remove('active');
+                    explanation.style.display = 'none';
+                }
             });
         }
 
-        function setAnswer(questionIndex, answer) {
-            userAnswers[questionIndex] = answer;
+        function generateAssistantReply(text, engaged) {
+            const energetica = document.getElementById('energeticaToggle').checked;
+            const header = energetica ? "Operating in Energetica (theoretical) visualization mode — for illustration only.\n\n" : "";
+            
+            const parts = engaged.map(id => {
+                const system = SUBSYSTEMS.find(s => s.id === id);
+                return `• ${system.name}: ${getSubsystemExplanation(id, energetica)}`;
+            });
+            
+            const response = header +
+                `I processed your input through ${engaged.length} subsystems.\n` +
+                parts.join('\n') +
+                `\n\nSYNTHESIS → ${generateSynthesis(text, engaged)}`;
+            
+            return response;
         }
 
-        function checkAuthentication() {
-            const correct = authChallenges.every((challenge, index) => 
-                userAnswers[index] === challenge.correctAnswer
-            );
+        function addMessage(content, isUser) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'message-user' : 'message-assistant'}`;
             
-            if (correct) {
-                alert("✅ Authentication Successful! NSE key unlocked.");
-            } else {
-                alert("❌ Authentication Failed. Only someone who lived these experiences would know the answers.");
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.style.whiteSpace = 'pre-wrap';
+            contentDiv.textContent = content;
+            
+            messageDiv.appendChild(contentDiv);
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            // Add user message
+            addMessage(text, true);
+            
+            // Route to subsystems
+            const engaged = routeToSubsystems(text);
+            updateActiveSubsystems(engaged);
+            
+            // Generate and add assistant reply
+            const reply = generateAssistantReply(text, engaged);
+            lastAssistantMessage = reply;
+            addMessage(reply, false);
+            
+            // Update trace
+            document.getElementById('traceContent').textContent = reply;
+            
+            // Clear input
+            input.value = '';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
             }
         }
 
-        function showStep(stepName) {
-            // Update progress indicators
-            document.querySelectorAll('.progress-step').forEach(step => {
-                step.classList.remove('active');
+        function showTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
             });
-            document.getElementById(`step-${stepName}`).classList.add('active');
+            event.target.classList.add('active');
             
-            // Show/hide sections
-            document.querySelectorAll('.step-card').forEach(card => {
-                card.classList.remove('active');
-                card.classList.add('hidden');
-            });
-            
-            document.getElementById(`${stepName}-section`).classList.remove('hidden');
-            document.getElementById(`${stepName}-section`).classList.add('active');
-        }
-
-        function toggleComparison() {
-            const section = document.getElementById('comparisonSection');
-            const button = event.target;
-            
-            if (section.classList.contains('hidden')) {
-                section.classList.remove('hidden');
-                button.textContent = 'Hide Quantum Resistance Comparison';
+            // Show/hide tab content
+            if (tabName === 'active') {
+                document.getElementById('activeTab').style.display = 'block';
+                document.getElementById('traceTab').style.display = 'none';
             } else {
-                section.classList.add('hidden');
-                button.textContent = 'Show Quantum Resistance Comparison';
+                document.getElementById('activeTab').style.display = 'none';
+                document.getElementById('traceTab').style.display = 'block';
             }
         }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            initializeFiles();
+            initializeSubsystems();
         });
     </script>
 </body>
