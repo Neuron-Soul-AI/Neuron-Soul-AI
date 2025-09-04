@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Dream System - Subconscious Processing Simulation</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f0f23 60%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 16px;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation */
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            color: #a8edea;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.8;
+            color: #a8edea;
+        }
+
+        /* Main Layout */
+        .demo-layout {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+        }
+
+        .control-title {
+            color: #a8edea;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Dream Scenarios */
+        .dream-scenarios {
+            margin-bottom: 20px;
+        }
+
+        .scenario-label {
+            color: #fed6e3;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .scenario-button {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(168, 237, 234, 0.2);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: rgba(168, 237, 234, 0.1);
+            border-color: #a8edea;
+        }
+
+        .scenario-button.active {
+            background: rgba(168, 237, 234, 0.15);
+            border-color: #a8edea;
+            box-shadow: 0 0 20px rgba(168, 237, 234, 0.3);
+        }
+
+        .dream-button {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #1a1a2e;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dream-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 237, 234, 0.4);
+        }
+
+        .dream-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Dream States */
+        .dream-state {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(168, 237, 234, 0.1);
+        }
+
+        .state-title {
+            color: #a8edea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .state-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .current-phase {
+            color: #fed6e3;
+            font-weight: 600;
+        }
+
+        /* Dream Stats */
+        .dream-stats {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .stats-title {
+            color: #fed6e3;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stat-value {
+            color: #a8edea;
+            font-weight: 600;
+        }
+
+        /* Dream Visualization */
+        .dream-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dream-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(168, 237, 234, 0.02) 0%, transparent 50%);
+        }
+
+        /* Memory Fragments */
+        .memory-fragment {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(168, 237, 234, 0.1);
+            border: 1px solid rgba(168, 237, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .memory-fragment:hover {
+            background: rgba(168, 237, 234, 0.2);
+            border-color: #a8edea;
+            transform: scale(1.1);
+        }
+
+        .memory-fragment.active {
+            background: rgba(254, 214, 227, 0.2);
+            border-color: #fed6e3;
+            box-shadow: 0 0 20px rgba(254, 214, 227, 0.4);
+            animation: memory-pulse 2s infinite;
+        }
+
+        .memory-fragment.connecting {
+            background: rgba(168, 237, 234, 0.3);
+            border-color: #a8edea;
+            box-shadow: 0 0 25px rgba(168, 237, 234, 0.6);
+            animation: connection-pulse 1s infinite;
+        }
+
+        @keyframes memory-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes connection-pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Dream Connections */
+        .dream-connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(168, 237, 234, 0.6), transparent);
+            transform-origin: 0 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .dream-connection.active {
+            opacity: 1;
+            animation: connection-flow 2s ease-in-out;
+        }
+
+        @keyframes connection-flow {
+            0% { 
+                background: linear-gradient(90deg, transparent, rgba(168, 237, 234, 0.6), transparent);
+                transform: scaleX(0);
+            }
+            50% { 
+                background: linear-gradient(90deg, transparent, rgba(254, 214, 227, 0.8), transparent);
+                transform: scaleX(1);
+            }
+            100% { 
+                background: linear-gradient(90deg, transparent, rgba(168, 237, 234, 0.6), transparent);
+                transform: scaleX(1);
+            }
+        }
+
+        /* Dream Particles */
+        .dream-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #a8edea;
+            box-shadow: 0 0 8px #a8edea;
+            animation: float-particle 8s infinite linear;
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Insight Burst */
+        .insight-burst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(254, 214, 227, 0.8) 0%, transparent 70%);
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .insight-burst.active {
+            animation: insight-explosion 3s ease-out;
+        }
+
+        @keyframes insight-explosion {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(5);
+                opacity: 0;
+            }
+        }
+
+        /* Dream Mode Indicator */
+        .dream-mode {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(168, 237, 234, 0.1);
+            border: 1px solid rgba(168, 237, 234, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: #a8edea;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .dream-mode.active {
+            display: block;
+            animation: dream-mode-pulse 3s infinite;
+        }
+
+        @keyframes dream-mode-pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* Breakthrough Notification */
+        .breakthrough-notification {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #fed6e3, #a8edea);
+            color: #1a1a2e;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .breakthrough-notification.active {
+            opacity: 1;
+            animation: breakthrough-appear 4s ease-in-out;
+        }
+
+        @keyframes breakthrough-appear {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            20% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            80% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 237, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <a href="index.html" class="nav-button">
+            ← Back to Demos
+        </a>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>🌙 Neuron Dream System</h1>
+            <p>Experience subconscious processing and breakthrough insight generation</p>
+        </div>
+
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    <span>🌙</span>
+                    Dream Controller
+                </div>
+
+                <div class="dream-scenarios">
+                    <div class="scenario-label">Select Subconscious Challenge:</div>
+                    <div class="scenario-buttons">
+                        <button class="scenario-button active" data-scenario="creative">
+                            <strong>Creative Breakthrough</strong><br>
+                            <small>Stuck on creative project - let subconscious find solution</small>
+                        </button>
+                        <button class="scenario-button" data-scenario="problem">
+                            <strong>Complex Problem</strong><br>
+                            <small>Difficult technical challenge requiring insight</small>
+                        </button>
+                        <button class="scenario-button" data-scenario="memory">
+                            <strong>Memory Integration</strong><br>
+                            <small>Consolidate recent experiences and learning</small>
+                        </button>
+                        <button class="scenario-button" data-scenario="emotional">
+                            <strong>Emotional Processing</strong><br>
+                            <small>Work through emotional conflict subconsciously</small>
+                        </button>
+                        <button class="scenario-button" data-scenario="pattern">
+                            <strong>Pattern Recognition</strong><br>
+                            <small>Find hidden connections in complex data</small>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="dream-button" onclick="enterDreamState()">
+                    🌙 Enter Dream State
+                </button>
+
+                <div class="dream-state">
+                    <div class="state-title">
+                        <span>💭</span>
+                        Current Dream Phase
+                    </div>
+                    <div class="state-description" id="dreamPhase">
+                        Conscious state - Ready to enter subconscious processing mode.
+                    </div>
+                    <div class="current-phase" id="currentPhase"></div>
+                </div>
+
+                <div class="dream-stats">
+                    <div class="stats-title">Subconscious Activity</div>
+                    <div class="stat-row">
+                        <span class="stat-label">Memory Fragments:</span>
+                        <span class="stat-value" id="memoryCount">0 active</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Neural Connections:</span>
+                        <span class="stat-value" id="connectionCount">0 formed</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Pattern Synthesis:</span>
+                        <span class="stat-value" id="patternSynthesis">0%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Insight Probability:</span>
+                        <span class="stat-value" id="insightProb">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dream Visualization -->
+            <div class="dream-container">
+                <div class="dream-mode" id="dreamMode">
+                    🌙 DREAM STATE ACTIVE
+                </div>
+                
+                <div class="dream-canvas" id="dreamCanvas">
+                    <!-- Memory fragments and connections will be generated here -->
+                </div>
+
+                <div class="insight-burst" id="insightBurst"></div>
+                
+                <div class="breakthrough-notification" id="breakthroughNotification">
+                    💡 Breakthrough Insight Generated!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        const MEMORY_TYPES = [
+            { emoji: "💡", type: "idea", color: "#fed6e3" },
+            { emoji: "📚", type: "knowledge", color: "#a8edea" },
+            { emoji: "❤️", type: "emotion", color: "#ffb3ba" },
+            { emoji: "🎯", type: "goal", color: "#bae1ff" },
+            { emoji: "🔍", type: "observation", color: "#ffffba" },
+            { emoji: "⚡", type: "insight", color: "#c7ceea" },
+            { emoji: "🌟", type: "inspiration", color: "#b5ead7" },
+            { emoji: "🧩", type: "pattern", color: "#ffd1dc" }
+        ];
+
+        const DREAM_SCENARIOS = {
+            creative: {
+                description: "Processing creative challenge through subconscious synthesis",
+                fragments: ["💡", "🎨", "⚡", "🌟", "🔮", "🎭"],
+                breakthrough: "Revolutionary creative concept emerges from subconscious synthesis!"
+            },
+            problem: {
+                description: "Working on complex technical problem in background",
+                fragments: ["🔧", "⚙️", "📊", "🧩", "🔍", "💡"],
+                breakthrough: "Elegant technical solution discovered through dream processing!"
+            },
+            memory: {
+                description: "Consolidating recent experiences and integrating new knowledge",
+                fragments: ["📚", "🧠", "💭", "🔗", "📝", "✨"],
+                breakthrough: "Memory patterns consolidated - new understanding achieved!"
+            },
+            emotional: {
+                description: "Processing emotional experiences and resolving inner conflicts",
+                fragments: ["❤️", "😌", "💚", "🕊️", "🌸", "☮️"],
+                breakthrough: "Emotional clarity achieved - inner harmony restored!"
+            },
+            pattern: {
+                description: "Finding hidden patterns and connections in complex information",
+                fragments: ["🔍", "🧩", "📈", "🌐", "⚡", "🎯"],
+                breakthrough: "Hidden pattern revealed - breakthrough insight unlocked!"
+            }
+        };
+
+        let currentScenario = 'creative';
+        let isDreaming = false;
+        let memoryFragments = [];
+        let dreamConnections = [];
+        let activeConnections = 0;
+        let patternSynthesis = 0;
+        let insightProbability = 0;
+
+        // Initialize dream system
+        function initializeDreamSystem() {
+            createDreamParticles();
+            updateDreamStats();
+        }
+
+        // Create floating dream particles
+        function createDreamParticles() {
+            setInterval(() => {
+                if (isDreaming) {
+                    const particle = document.createElement('div');
+                    particle.className = 'dream-particle';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    
+                    document.getElementById('dreamCanvas').appendChild(particle);
+                    
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.remove();
+                        }
+                    }, 8000);
+                }
+            }, 1000);
+        }
+
+        // Enter dream state
+        async function enterDreamState() {
+            if (isDreaming) return;
+            
+            isDreaming = true;
+            const button = document.querySelector('.dream-button');
+            button.disabled = true;
+            button.textContent = '🌙 Dreaming...';
+            
+            // Show dream mode indicator
+            document.getElementById('dreamMode').classList.add('active');
+            
+            // Clear previous dream
+            clearDreamCanvas();
+            
+            // Get current scenario
+            const scenario = DREAM_SCENARIOS[currentScenario];
+            updateDreamPhase("Entering dream state...", "Phase 1: Consciousness transition");
+            
+            // Dream sequence
+            await dreamSequence(scenario);
+            
+            // Complete dream
+            setTimeout(() => {
+                button.disabled = false;
+                button.textContent = '🌙 Enter Dream State';
+                document.getElementById('dreamMode').classList.remove('active');
+                updateDreamPhase("Dream complete - Conscious state restored", "");
+                isDreaming = false;
+            }, 2000);
+        }
+
+        // Main dream sequence
+        async function dreamSequence(scenario) {
+            const phases = [
+                { name: "Memory Recall", duration: 2000 },
+                { name: "Fragment Activation", duration: 3000 },
+                { name: "Pattern Recognition", duration: 4000 },
+                { name: "Subconscious Synthesis", duration: 3000 },
+                { name: "Insight Generation", duration: 2000 }
+            ];
+            
+            for (let i = 0; i < phases.length; i++) {
+                const phase = phases[i];
+                updateDreamPhase(scenario.description, `Phase ${i + 2}: ${phase.name}`);
+                
+                switch(phase.name) {
+                    case "Memory Recall":
+                        await activateMemoryFragments(scenario.fragments);
+                        break;
+                    case "Fragment Activation":
+                        await animateFragmentActivation();
+                        break;
+                    case "Pattern Recognition":
+                        await createDreamConnections();
+                        break;
+                    case "Subconscious Synthesis":
+                        await synthesizePatterns();
+                        break;
+                    case "Insight Generation":
+                        await generateInsight(scenario.breakthrough);
+                        break;
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, phase.duration));
+            }
+        }
+
+        // Activate memory fragments
+        async function activateMemoryFragments(fragmentTypes) {
+            const canvas = document.getElementById('dreamCanvas');
+            const canvasRect = canvas.getBoundingClientRect();
+            
+            for (let i = 0; i < fragmentTypes.length; i++) {
+                const fragment = document.createElement('div');
+                fragment.className = 'memory-fragment';
+                fragment.innerHTML = fragmentTypes[i];
+                
+                // Random position avoiding edges
+                const x = 60 + Math.random() * (canvasRect.width - 120);
+                const y = 60 + Math.random() * (canvasRect.height - 120);
+                
+                fragment.style.left = `${x}px`;
+                fragment.style.top = `${y}px`;
+                
+                fragment.addEventListener('mouseenter', (e) => showMemoryTooltip(e, fragmentTypes[i]));
+                fragment.addEventListener('mouseleave', hideTooltip);
+                
+                canvas.appendChild(fragment);
+                memoryFragments.push({ element: fragment, x: x + 20, y: y + 20 });
+                
+                // Animate appearance
+                setTimeout(() => {
+                    fragment.classList.add('active');
+                }, i * 300);
+                
+                updateDreamStats();
+                await new Promise(resolve => setTimeout(resolve, 400));
+            }
+        }
+
+        // Animate fragment activation
+        async function animateFragmentActivation() {
+            for (let fragment of memoryFragments) {
+                fragment.element.classList.add('connecting');
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+        }
+
+        // Create dream connections
+        async function createDreamConnections() {
+            for (let i = 0; i < memoryFragments.length - 1; i++) {
+                if (Math.random() > 0.3) { // 70% chance of connection
+                    const fromFragment = memoryFragments[i];
+                    const toFragment = memoryFragments[i + 1];
+                    
+                    await createDreamConnection(fromFragment, toFragment);
+                    activeConnections++;
+                    patternSynthesis += 15;
+                    insightProbability += 12;
+                    updateDreamStats();
+                    
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                }
+            }
+        }
+
+        // Create a dream connection between fragments
+        async function createDreamConnection(fromFragment, toFragment) {
+            const canvas = document.getElementById('dreamCanvas');
+            const connection = document.createElement('div');
+            connection.className = 'dream-connection';
+            
+            const deltaX = toFragment.x - fromFragment.x;
+            const deltaY = toFragment.y - fromFragment.y;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+            
+            connection.style.left = `${fromFragment.x}px`;
+            connection.style.top = `${fromFragment.y}px`;
+            connection.style.width = `${distance}px`;
+            connection.style.transform = `rotate(${angle}deg)`;
+            
+            canvas.appendChild(connection);
+            dreamConnections.push(connection);
+            
+            setTimeout(() => {
+                connection.classList.add('active');
+            }, 100);
+        }
+
+        // Synthesize patterns
+        async function synthesizePatterns() {
+            // Intensify fragment animations
+            memoryFragments.forEach(fragment => {
+                fragment.element.style.animation = 'memory-pulse 0.5s infinite';
+            });
+            
+            // Rapidly increase synthesis
+            for (let i = 0; i < 20; i++) {
+                patternSynthesis = Math.min(100, patternSynthesis + 3);
+                insightProbability = Math.min(100, insightProbability + 4);
+                updateDreamStats();
+                await new Promise(resolve => setTimeout(resolve, 150));
+            }
+        }
+
+        // Generate breakthrough insight
+        async function generateInsight(breakthroughText) {
+            // Trigger insight burst
+            const burst = document.getElementById('insightBurst');
+            burst.classList.add('active');
+            
+            // Show breakthrough notification
+            setTimeout(() => {
+                const notification = document.getElementById('breakthroughNotification');
+                notification.textContent = breakthroughText;
+                notification.classList.add('active');
+                
+                // Reset burst
+                burst.classList.remove('active');
+                
+                // Remove notification
+                setTimeout(() => {
+                    notification.classList.remove('active');
+                }, 4000);
+            }, 1500);
+            
+            // Set final stats
+            patternSynthesis = 100;
+            insightProbability = 100;
+            updateDreamStats();
+        }
+
+        // Clear dream canvas
+        function clearDreamCanvas() {
+            const canvas = document.getElementById('dreamCanvas');
+            
+            // Remove memory fragments
+            memoryFragments.forEach(fragment => {
+                if (fragment.element.parentNode) {
+                    fragment.element.remove();
+                }
+            });
+            memoryFragments = [];
+            
+            // Remove connections
+            dreamConnections.forEach(connection => {
+                if (connection.parentNode) {
+                    connection.remove();
+                }
+            });
+            dreamConnections = [];
+            
+            activeConnections = 0;
+            patternSynthesis = 0;
+            insightProbability = 0;
+            updateDreamStats();
+        }
+
+        // Update dream phase
+        function updateDreamPhase(description, phase) {
+            document.getElementById('dreamPhase').textContent = description;
+            document.getElementById('currentPhase').textContent = phase;
+        }
+
+        // Update dream statistics
+        function updateDreamStats() {
+            document.getElementById('memoryCount').textContent = `${memoryFragments.length} active`;
+            document.getElementById('connectionCount').textContent = `${activeConnections} formed`;
+            document.getElementById('patternSynthesis').textContent = `${Math.round(patternSynthesis)}%`;
+            document.getElementById('insightProb').textContent = `${Math.round(insightProbability)}%`;
+        }
+
+        // Show memory tooltip
+        function showMemoryTooltip(event, emoji) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.style.display = 'block';
+            tooltip.style.left = event.pageX + 10 + 'px';
+            tooltip.style.top = event.pageY + 10 + 'px';
+            
+            const memoryType = MEMORY_TYPES.find(type => type.emoji === emoji);
+            tooltip.innerHTML = `
+                <strong>Memory Fragment</strong><br>
+                Type: ${memoryType ? memoryType.type : 'unknown'}<br>
+                Status: Subconscious processing
+            `;
+        }
+
+        // Hide tooltip
+        function hideTooltip() {
+            document.getElementById('tooltip').style.display = 'none';
+        }
+
+        // Scenario selection handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const scenarioButtons = document.querySelectorAll('.scenario-button');
+            scenarioButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (isDreaming) return;
+                    
+                    scenarioButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentScenario = this.dataset.scenario;
+                });
+            });
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDreamSystem();
+        });
+    </script>
+</body>
+</html>
