@@ -34,8 +34,8 @@ This isn't just another AI model. It's a **revolutionary framework** for artific
 
 - **[Neuron Soul AI - Independent AI Evaluation Results](https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/06%20-%20PUBLISHING/Academic%20Papers/Neuron%20Soul%20AI%20-%20A%20Comprehensive%20Framework%20for%20Artificial%20Consciousness.pdf)**
 
-## 🖥 **Soul AI and NSE Encryption Demo.**
-- **[Experience Soul Ai and Neuron Sanctuary Encryption](https://neuron-soul-ai.github.io/Neuron-Soul-AI)**
+## 🖥 **Soul AI Demos.**
+- **[Experience Soul Ai 12 demos.](https://neuron-soul-ai.github.io/Neuron-Soul-AI)**
 
 ## 🎯 **Revolutionary Innovations**
 
