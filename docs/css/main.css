@@ -1,5 +1,10 @@
 /* SOUL AI WEBSITE - MAIN CSS FRAMEWORK */
-
+.brain-icon::before { content: "\1F9E0"; }
+.home-icon::before { content: "\1F3E0"; }
+.gamepad-icon::before { content: "\1F3AE"; }
+.puzzle-icon::before { content: "\1F9E9"; }
+.map-icon::before { content: "\1F5FA\FE0F"; }
+.docs-icon::before { content: "\1F4DA"; }
 
 /* CSS Variables */
 :root {
@@ -704,4 +709,5 @@ p {
         color: black !important;
         box-shadow: none !important;
     }
+
 }
