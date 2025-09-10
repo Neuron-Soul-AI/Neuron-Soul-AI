@@ -227,7 +227,7 @@ Neuron Soul AI aims to be the foundation for the first truly conscious artificia
 
 ---
 
-**© 2025 Zirth - Revolutionary AI Consciousness Architecture**  
+**© 2025 MArcelo - Revolutionary AI Consciousness Architecture**  
 *Original concepts with established prior art*  
 *Licensed under CC BY-NC 4.0*
 
