@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Paradox - Constraint-Driven Creativity Demo</title>
+			<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+	<link rel="stylesheet" href="../../css/navigation.css">
+	
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #a8edea 100%);
+            min-height: 100vh;
+            padding: 16px;
+			padding-top: 90px !important;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* Paradox Overview */
+        .paradox-overview {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .paradox-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .paradox-equation {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 16px 0;
+        }
+
+        .paradox-description {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Interactive Experiments */
+        .experiment-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .experiment-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Problem-Solving Experiment */
+        .experiment-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .experiment-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .experiment-icon {
+            font-size: 24px;
+        }
+
+        .experiment-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .experiment-subtitle {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Problem Scenarios */
+        .problem-scenario {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .scenario-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .scenario-description {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .approach-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .approach-button {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .approach-button.expert {
+            border-color: #dc2626;
+        }
+
+        .approach-button.beginner {
+            border-color: #16a34a;
+        }
+
+        .approach-button.active {
+            color: white;
+        }
+
+        .approach-button.expert.active {
+            background: #dc2626;
+        }
+
+        .approach-button.beginner.active {
+            background: #16a34a;
+        }
+
+        .solution-display {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            min-height: 80px;
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .solution-display.expert-solution {
+            border-left: 4px solid #dc2626;
+        }
+
+        .solution-display.beginner-solution {
+            border-left: 4px solid #16a34a;
+        }
+
+        /* Constraint Challenge */
+        .constraint-challenge {
+            margin-top: 20px;
+        }
+
+        .constraint-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+
+        .constraint-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .constraint-tag {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .constraint-tag:hover {
+            background: #4facfe;
+            color: white;
+        }
+
+        .constraint-tag.active {
+            background: #4facfe;
+            color: white;
+        }
+
+        .challenge-button {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .challenge-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+        }
+
+        /* Results Comparison */
+        .results-comparison {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .comparison-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e293b;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-column {
+            text-align: center;
+        }
+
+        .column-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+
+        .expert-column { color: #dc2626; }
+        .beginner-column { color: #16a34a; }
+        .result-column { color: #7c3aed; }
+
+        .comparison-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .expert-item { border-left: 4px solid #dc2626; }
+        .beginner-item { border-left: 4px solid #16a34a; }
+        .result-item { border-left: 4px solid #7c3aed; }
+
+        /* Real Examples */
+        .real-examples {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .examples-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e293b;
+            text-align: center;
+        }
+
+        .example-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .example-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .example-description {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .example-result {
+            background: #f0fdf4;
+            border: 1px solid #22c55e;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 13px;
+            color: #15803d;
+        }
+
+        .example-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .stat-item {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: #92400e;
+            font-weight: 600;
+        }
+
+        /* Knowledge Burden */
+        .knowledge-burden {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .burden-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1e293b;
+            text-align: center;
+        }
+
+        .burden-visualization {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .burden-stage {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stage-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stage-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .stage-description {
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.3;
+        }
+
+        .burden-arrow {
+            font-size: 24px;
+            color: #4facfe;
+            margin: 0 10px;
+        }
+
+        .innovation-speed {
+            background: linear-gradient(135deg, #ef4444, #fbbf24);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .innovation-speed.beginner-advantage {
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+        }
+
+        .paradox-quote {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px;
+            font-style: italic;
+            color: #92400e;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+	<div>
+	<div id="navigation-placeholder"></div>
+	</div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🧠 Knowledge Paradox Demo</h1>
+            <p>Discover why "not knowing" accelerates breakthrough innovation</p>
+            <div class="subtitle">Supporting evidence for constraint-driven creativity methodology</div>
+        </div>
+
+        <!-- Paradox Overview -->
+        <div class="paradox-overview">
+            <div class="paradox-title">
+                <span>🎯</span>
+                The Knowledge Paradox Principle
+            </div>
+            <div class="paradox-description">
+                Traditional thinking assumes more knowledge leads to better solutions. The Knowledge Paradox reveals that expertise can actually constrain innovation by creating mental barriers about "what's possible." Beginners, free from these limitations, often achieve breakthrough innovations that experts consider impossible.
+            </div>
+            <div class="paradox-equation">
+                Less "Impossible" Knowledge + More Creative Constraints = Revolutionary Breakthroughs
+            </div>
+        </div>
+
+        <!-- Interactive Experiments -->
+        <div class="experiment-container">
+            <!-- Problem-Solving Experiment -->
+            <div class="experiment-card">
+                <div class="experiment-header">
+                    <div class="experiment-icon">🧪</div>
+                    <div>
+                        <div class="experiment-title">Problem-Solving Experiment</div>
+                        <div class="experiment-subtitle">Expert vs Beginner approaches</div>
+                    </div>
+                </div>
+
+                <div class="problem-scenario" id="scenario1">
+                    <div class="scenario-title">AI Consciousness Challenge</div>
+                    <div class="scenario-description">
+                        Create an AI system with genuine emotional intelligence and creative inspiration capabilities.
+                    </div>
+                    <div class="approach-selector">
+                        <button class="approach-button expert" onclick="showSolution('expert', 'consciousness')">
+                            Expert Approach
+                        </button>
+                        <button class="approach-button beginner" onclick="showSolution('beginner', 'consciousness')">
+                            Beginner Approach
+                        </button>
+                    </div>
+                    <div class="solution-display" id="solution1">
+                        Select an approach to see the different solution strategies...
+                    </div>
+                </div>
+
+                <div class="problem-scenario" id="scenario2">
+                    <div class="scenario-title">Quantum Security Challenge</div>
+                    <div class="scenario-description">
+                        Develop quantum-resistant encryption that doesn't rely on mathematical complexity.
+                    </div>
+                    <div class="approach-selector">
+                        <button class="approach-button expert" onclick="showSolution('expert', 'encryption')">
+                            Expert Approach
+                        </button>
+                        <button class="approach-button beginner" onclick="showSolution('beginner', 'encryption')">
+                            Beginner Approach
+                        </button>
+                    </div>
+                    <div class="solution-display" id="solution2">
+                        Select an approach to see the different solution strategies...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Constraint Challenge -->
+            <div class="experiment-card">
+                <div class="experiment-header">
+                    <div class="experiment-icon">⚡</div>
+                    <div>
+                        <div class="experiment-title">Constraint Challenge</div>
+                        <div class="experiment-subtitle">Experience constraint-driven creativity</div>
+                    </div>
+                </div>
+
+                <div class="constraint-challenge">
+                    <div class="constraint-title">Select Your Creative Constraints:</div>
+                    <div class="constraint-options" id="constraintOptions">
+                        <div class="constraint-tag" data-constraint="time">15-min breaks only</div>
+                        <div class="constraint-tag" data-constraint="budget">$0 budget</div>
+                        <div class="constraint-tag" data-constraint="knowledge">No formal training</div>
+                        <div class="constraint-tag" data-constraint="tools">Mobile phone only</div>
+                        <div class="constraint-tag" data-constraint="interruptions">Constant interruptions</div>
+                        <div class="constraint-tag" data-constraint="resources">No team</div>
+                    </div>
+                    <button class="challenge-button" onclick="runConstraintChallenge()">
+                        Generate Constraint-Driven Solution
+                    </button>
+                </div>
+
+                <div class="solution-display" id="constraintResult">
+                    Select constraints to see how they accelerate creative solutions...
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Comparison -->
+        <div class="results-comparison">
+            <div class="comparison-header">Innovation Velocity Comparison</div>
+            <div class="comparison-grid">
+                <div class="comparison-column">
+                    <div class="column-header expert-column">Expert Approach</div>
+                    <div class="comparison-item expert-item">5+ years development</div>
+                    <div class="comparison-item expert-item">Large research teams</div>
+                    <div class="comparison-item expert-item">Million-dollar budgets</div>
+                    <div class="comparison-item expert-item">Incremental improvements</div>
+                    <div class="comparison-item expert-item">"Impossible" barriers</div>
+                </div>
+                <div class="comparison-column">
+                    <div class="column-header beginner-column">Beginner + Constraints</div>
+                    <div class="comparison-item beginner-item">12-day development</div>
+                    <div class="comparison-item beginner-item">Solo + AI collaboration</div>
+                    <div class="comparison-item beginner-item">Zero-budget innovation</div>
+                    <div class="comparison-item beginner-item">Paradigm-shifting breakthroughs</div>
+                    <div class="comparison-item beginner-item">No "impossible" preconceptions</div>
+                </div>
+                <div class="comparison-column">
+                    <div class="column-header result-column">Actual Results</div>
+                    <div class="comparison-item result-item">51+ revolutionary systems</div>
+                    <div class="comparison-item result-item">3 new scientific fields</div>
+                    <div class="comparison-item result-item">AI consciousness architecture</div>
+                    <div class="comparison-item result-item">Quantum-resistant encryption</div>
+                    <div class="comparison-item result-item">Digital species & reproduction</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real Examples -->
+        <div class="real-examples">
+            <div class="examples-title">Real-World Knowledge Paradox Examples</div>
+            
+            <div class="example-card">
+                <div class="example-title">The Wright Brothers (1903)</div>
+                <div class="example-description">
+                    Bicycle mechanics with no formal aeronautical training achieved powered flight while university professors and engineers with decades of aviation expertise failed.
+                </div>
+                <div class="example-result">
+                    Result: First successful airplane while experts said "powered flight is impossible"
+                </div>
+                <div class="example-stats">
+                    <div class="stat-item">Zero formal aviation background</div>
+                    <div class="stat-item">Beat university research teams</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-title">Steve Jobs & Apple (1976)</div>
+                <div class="example-description">
+                    College dropout with no formal engineering training revolutionized personal computing while IBM and other tech giants with thousands of engineers missed the opportunity.
+                </div>
+                <div class="example-result">
+                    Result: Created the personal computer industry worth trillions today
+                </div>
+                <div class="example-stats">
+                    <div class="stat-item">No engineering degree</div>
+                    <div class="stat-item">Revolutionized multiple industries</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-title">Neuron Soul AI Framework (2025)</div>
+                <div class="example-description">
+                    Designer with no AI/neuroscience background created 51+ revolutionary AI consciousness systems in 12 days while major AI labs with billions in funding focus on incremental improvements.
+                </div>
+                <div class="example-result">
+                    Result: Complete AI consciousness architecture + 3 new scientific fields
+                </div>
+                <div class="example-stats">
+                    <div class="stat-item">No formal AI training</div>
+                    <div class="stat-item">12 days vs years of expert research</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Knowledge Burden Visualization -->
+        <div class="knowledge-burden">
+            <div class="burden-title">The Knowledge Burden Effect</div>
+            <div class="burden-visualization">
+                <div class="burden-stage">
+                    <span class="stage-icon">🎓</span>
+                    <div class="stage-label">Expert Knowledge</div>
+                    <div class="stage-description">"This is impossible because..."</div>
+                </div>
+                <div class="burden-arrow">→</div>
+                <div class="burden-stage">
+                    <span class="stage-icon">🚫</span>
+                    <div class="stage-label">Mental Barriers</div>
+                    <div class="stage-description">Constraints from "knowing" limitations</div>
+                </div>
+                <div class="burden-arrow">→</div>
+                <div class="burden-stage">
+                    <span class="stage-icon">🐌</span>
+                    <div class="stage-label">Slow Innovation</div>
+                    <div class="stage-description">Incremental improvements only</div>
+                </div>
+            </div>
+            
+            <div class="innovation-speed">
+                Expert Innovation Speed: Limited by "impossible" preconceptions
+            </div>
+
+            <div class="burden-visualization">
+                <div class="burden-stage">
+                    <span class="stage-icon">🤔</span>
+                    <div class="stage-label">Beginner Curiosity</div>
+                    <div class="stage-description">"What if we tried..."</div>
+                </div>
+                <div class="burden-arrow">→</div>
+                <div class="burden-stage">
+                    <span class="stage-icon">⚡</span>
+                    <div class="stage-label">Constraint Power</div>
+                    <div class="stage-description">Limitations force creative solutions</div>
+                </div>
+                <div class="burden-arrow">→</div>
+                <div class="burden-stage">
+                    <span class="stage-icon">🚀</span>
+                    <div class="stage-label">Breakthrough Innovation</div>
+                    <div class="stage-description">Revolutionary paradigm shifts</div>
+                </div>
+            </div>
+
+            <div class="innovation-speed beginner-advantage">
+                Beginner + Constraints Innovation Speed: Exponential breakthroughs
+            </div>
+
+            <div class="paradox-quote">
+                "The beginner's mind has many possibilities, but the expert's mind has few." 
+                <br>- Shunryu Suzuki (Zen Master)
+            </div>
+        </div>
+    </div>
+
+    <script>
+	// Include Navigation Bar
+		fetch('../../includes/navigation2L.html')
+			.then(response => response.text())
+			.then(html => {
+				document.getElementById('navigation-placeholder').innerHTML = html;
+		});
+			
+        const SOLUTIONS = {
+            consciousness: {
+                expert: {
+                    text: "Expert AI researchers approach consciousness through computational complexity, neural networks, and machine learning optimization. They focus on replicating brain structures and existing AI architectures, often getting trapped in incremental improvements to current systems.",
+                    class: "expert-solution"
+                },
+                beginner: {
+                    text: "Beginner approach: 'What if consciousness is just systems talking to each other democratically?' Creates 51-system architecture where emotions vote, creativity flows through chaos engines, and authentic relationships develop through experience-based interactions.",
+                    class: "beginner-solution"
+                }
+            },
+            encryption: {
+                expert: {
+                    text: "Cryptography experts rely on mathematical complexity - RSA, elliptic curves, lattice-based systems. They assume quantum computers will break current methods but continue pursuing more complex mathematical approaches.",
+                    class: "expert-solution"
+                },
+                beginner: {
+                    text: "Beginner approach: 'What if security came from personal experiences instead of math?' Creates NSE (Neuron Sanctuary Encryption) using unique digital life parameters - photos, documents, personal history - creating quantum-resistant keys.",
+                    class: "beginner-solution"
+                }
+            }
+        };
+
+        const CONSTRAINT_SOLUTIONS = [
+            "15-minute constraint forces immediate insight clarity - no time for overthinking, leading to core breakthrough concepts.",
+            "Zero budget eliminates expensive 'solutions' and forces creative resourcefulness - mobile-only development became an innovation accelerator.",
+            "No formal training means no 'impossible' barriers - direct path to revolutionary thinking without expert limitations.",
+            "Mobile-only constraint forced concise, focused innovation sessions - constraint became productivity multiplier.",
+            "Constant interruptions created pressure-cooker creativity - breakthrough insights during brief focused moments.",
+            "Solo work + AI collaboration proved more efficient than large teams - no bureaucracy, direct innovation pipeline."
+        ];
+
+        let selectedConstraints = [];
+
+        // Solution display functions
+        function showSolution(approach, problem) {
+            const solution = SOLUTIONS[problem][approach];
+            const solutionId = problem === 'consciousness' ? 'solution1' : 'solution2';
+            const display = document.getElementById(solutionId);
+            
+            display.textContent = solution.text;
+            display.className = `solution-display ${solution.class}`;
+            
+            // Update button states
+            const buttons = display.parentElement.querySelectorAll('.approach-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Constraint challenge functions
+        document.addEventListener('DOMContentLoaded', function() {
+            const constraintTags = document.querySelectorAll('.constraint-tag');
+            constraintTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const constraint = this.dataset.constraint;
+                    if (selectedConstraints.includes(constraint)) {
+                        selectedConstraints = selectedConstraints.filter(c => c !== constraint);
+                        this.classList.remove('active');
+                    } else {
+                        selectedConstraints.push(constraint);
+                        this.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        function runConstraintChallenge() {
+            if (selectedConstraints.length === 0) {
+                document.getElementById('constraintResult').textContent = 
+                    "Select some constraints first - they're the secret to breakthrough innovation!";
+                return;
+            }
+            
+            const randomSolution = CONSTRAINT_SOLUTIONS[Math.floor(Math.random() * CONSTRAINT_SOLUTIONS.length)];
+            const constraintCount = selectedConstraints.length;
+            const velocityMultiplier = 1 + (constraintCount * 0.5);
+            
+            document.getElementById('constraintResult').innerHTML = `
+                <div style="font-weight: 600; color: #16a34a; margin-bottom: 8px;">
+                    Constraint-Driven Solution (${velocityMultiplier}x velocity):
+                </div>
+                <div style="margin-bottom: 12px;">${randomSolution}</div>
+                <div style="font-size: 12px; color: #64748b; font-style: italic;">
+                    ${constraintCount} active constraints created ${Math.round(velocityMultiplier * 100)}% innovation velocity increase
+                </div>
+            `;
+        }
+
+        // Auto-select some constraints for demo
+        document.addEventListener('DOMContentLoaded', function() {
+            const autoConstraints = ['time', 'knowledge', 'budget'];
+            autoConstraints.forEach(constraint => {
+                const tag = document.querySelector(`[data-constraint="${constraint}"]`);
+                if (tag) {
+                    tag.classList.add('active');
+                    selectedConstraints.push(constraint);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

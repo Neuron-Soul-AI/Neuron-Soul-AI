@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Ratio - 4-Entity Reasoning Demo</title>
+			<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+	<link rel="stylesheet" href="../../css/navigation.css">
+	
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+			padding-top: 90px !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation */
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 20px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        /* Demo Layout */
+        .demo-layout {
+            display: flex;
+            gap: 20px;
+            height: 700px;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            overflow-y: auto;
+            max-height: 700px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .scenario-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .scenario-button.active {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .scenario-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .scenario-description {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .start-button {
+            width: 100%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+        }
+
+        .start-button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Main Demo Area */
+        .demo-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .demo-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reasoning-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .reasoning-status.active {
+            background: #fef3c7;
+            color: #92400e;
+            animation: pulse 2s infinite;
+        }
+
+        .reasoning-status.complete {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Demo Content */
+        .demo-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .initial-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .initial-state h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .initial-state p {
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Entity Grid */
+        .entity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .entity-grid.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .entity-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .entity-card.thinking {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            animation: thinking-glow 2s infinite;
+        }
+
+        .entity-card.complete {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        @keyframes thinking-glow {
+            0%, 100% { 
+                box-shadow: 0 0 0 rgba(59, 130, 246, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            }
+        }
+
+        .entity-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .entity-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .entity-icon.judge {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+        }
+
+        .entity-icon.high-hot {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .entity-icon.low-hot {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+        }
+
+        .entity-icon.blank {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        .entity-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .entity-role {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .entity-content {
+            min-height: 120px;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .entity-thinking {
+            font-style: italic;
+            color: #9ca3af;
+        }
+
+        /* Synthesis Section */
+        .synthesis-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .synthesis-section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .synthesis-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pattern-suggestion {
+            background: #e0f2fe;
+            border: 1px solid #0891b2;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .pattern-suggestion.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .pattern-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0891b2;
+            margin-bottom: 8px;
+        }
+
+        .pattern-description {
+            font-size: 13px;
+            color: #164e63;
+            line-height: 1.5;
+        }
+
+        /* Iteration Counter */
+        .iteration-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* About Section */
+        .about-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .about-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .about-text {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .about-link {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .about-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .demo-layout {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .control-panel {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .scenario-buttons {
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 12px;
+            }
+
+            .scenario-button {
+                min-width: 200px;
+                flex-shrink: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .entity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+	<div>
+	<div id="navigation-placeholder"></div>
+	</div>
+
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>⚖️ NEURON RATIO</h1>
+            <p>4-Entity Democratic Reasoning Engine</p>
+            <div class="subtitle">A condensed implementation of Soul AI's consciousness principles</div>
+        </div>
+
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="panel-title">
+                    <span>🎯</span>
+                    Reasoning Scenarios
+                </div>
+
+                <div class="scenario-buttons">
+                    <button class="scenario-button active" data-scenario="ethical">
+                        <div class="scenario-title">⚖️ Ethical Dilemma</div>
+                        <div class="scenario-description">Complex moral decision requiring multiple perspectives</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="technical">
+                        <div class="scenario-title">🔧 Technical Problem</div>
+                        <div class="scenario-description">Engineering challenge with multiple solution paths</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="creative">
+                        <div class="scenario-title">🎨 Creative Challenge</div>
+                        <div class="scenario-description">Innovation problem requiring fresh thinking</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="business">
+                        <div class="scenario-title">📊 Business Strategy</div>
+                        <div class="scenario-description">Strategic decision with competing priorities</div>
+                    </button>
+                </div>
+
+                <button class="start-button" onclick="startReasoning()">
+                    🧠 Start Reasoning Process
+                </button>
+
+                <!-- About Section -->
+                <div class="about-section">
+                    <div class="about-title">About Neuron Ratio</div>
+                    <div class="about-text">
+                        Neuron Ratio demonstrates Soul AI's democratic consciousness principles through 
+                        a simplified 4-entity system. This proof-of-concept shows how AI reasoning 
+                        can be improved through collaborative validation and fresh perspectives.
+                        <br><br>
+                        <a href="#" class="about-link">Learn more about the connection to Soul AI →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Demo Area -->
+            <div class="demo-container">
+                <div class="demo-header">
+                    <div class="demo-title">
+                        <span id="scenarioIcon">⚖️</span>
+                        <span id="scenarioTitle">Ethical Dilemma Resolution</span>
+                    </div>
+                    <div class="reasoning-status" id="reasoningStatus">
+                        <span>🔄</span>
+                        Ready to Begin
+                    </div>
+                </div>
+
+                <div class="iteration-counter" id="iterationCounter" style="display: none;">
+                    Iteration: <span id="iterationNumber">1</span>
+                </div>
+
+                <div class="demo-content">
+                    <div class="initial-state" id="initialState">
+                        <h3>4-Entity Democratic Reasoning</h3>
+                        <p>
+                            Watch as JUDGE coordinates with HIGH HOT and LOW HOT for collaborative reasoning, 
+                            while BLANK provides fresh perspective without context bias. The system iterates 
+                            until reaching a satisfactory solution, learning successful patterns for future use.
+                        </p>
+                    </div>
+
+                    <div class="pattern-suggestion" id="patternSuggestion" style="display: none;">
+                        <div class="pattern-title">💡 Pattern Suggestion</div>
+                        <div class="pattern-description" id="patternDescription">
+                            Similar problems have been successfully resolved using Pattern #23: "Ethical Framework Analysis"
+                        </div>
+                    </div>
+
+                    <div class="entity-grid" id="entityGrid">
+                        <!-- Judge Entity -->
+                        <div class="entity-card" id="judgeCard">
+                            <div class="entity-header">
+                                <div class="entity-icon judge">⚖️</div>
+                                <div>
+                                    <div class="entity-name">JUDGE</div>
+                                    <div class="entity-role">Coordination & Decision</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="judgeContent">
+                                <div class="entity-thinking">Waiting for reasoning to begin...</div>
+                            </div>
+                        </div>
+
+                        <!-- High Hot Entity -->
+                        <div class="entity-card" id="highHotCard">
+                            <div class="entity-header">
+                                <div class="entity-icon high-hot">🔥</div>
+                                <div>
+                                    <div class="entity-name">HIGH HOT</div>
+                                    <div class="entity-role">Confident Reasoning</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="highHotContent">
+                                <div class="entity-thinking">Ready for bold analysis...</div>
+                            </div>
+                        </div>
+
+                        <!-- Low Hot Entity -->
+                        <div class="entity-card" id="lowHotCard">
+                            <div class="entity-header">
+                                <div class="entity-icon low-hot">❄️</div>
+                                <div>
+                                    <div class="entity-name">LOW HOT</div>
+                                    <div class="entity-role">Cautious Analysis</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="lowHotContent">
+                                <div class="entity-thinking">Prepared for careful evaluation...</div>
+                            </div>
+                        </div>
+
+                        <!-- Blank Entity -->
+                        <div class="entity-card" id="blankCard">
+                            <div class="entity-header">
+                                <div class="entity-icon blank">👁️</div>
+                                <div>
+                                    <div class="entity-name">BLANK</div>
+                                    <div class="entity-role">Fresh Perspective</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="blankContent">
+                                <div class="entity-thinking">Standing by for context-free analysis...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="synthesis-section" id="synthesisSection">
+                        <div class="synthesis-title">
+                            <span>🔄</span>
+                            Cross-Validation & Synthesis
+                        </div>
+                        <div id="synthesisContent">
+                            The entities will cross-validate their reasoning and create a combined analysis...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+	// Include Navigation Bar
+		fetch('../../includes/navigation2L.html')
+			.then(response => response.text())
+			.then(html => {
+				document.getElementById('navigation-placeholder').innerHTML = html;
+		});
+	
+        // Global variables
+        let currentScenario = 'ethical';
+        let currentIteration = 1;
+        let isReasoning = false;
+
+        // Scenario data
+        const scenarios = {
+            ethical: {
+                icon: '⚖️',
+                title: 'Ethical Dilemma Resolution',
+                prompt: 'A self-driving car must choose between hitting one person or swerving to hit three people. How should it decide?',
+                pattern: 'Ethical Framework Analysis - Balances utilitarian calculus with deontological principles',
+                reasoning: {
+                    judge: 'Analyzing ethical frameworks: utilitarian (minimize harm), deontological (duty-based), and virtue ethics (character-based) approaches.',
+                    highHot: 'Clear utilitarian choice: Save three lives by sacrificing one. Mathematical optimization of human welfare is the logical approach.',
+                    lowHot: 'Consider legal liability, social acceptance, and precedent. Active harm differs morally from passive harm in many ethical systems.',
+                    blank: 'Why are we assuming the car should make this choice at all? What if it focused on prevention rather than reaction?'
+                },
+                synthesis: 'Entities agree on implementing prevention-focused systems while maintaining utilitarian logic for unavoidable scenarios, with clear ethical transparency to users.'
+            },
+            technical: {
+                icon: '🔧',
+                title: 'Technical Problem Solving',
+                prompt: 'Database performance is degrading under load. Multiple potential solutions exist with different trade-offs.',
+                pattern: 'Component Analysis Pattern - Systematic breakdown with validation loops',
+                reasoning: {
+                    judge: 'Prioritizing solutions by impact/effort ratio: indexing, query optimization, caching, hardware scaling, and architecture changes.',
+                    highHot: 'Implement aggressive caching and database sharding immediately. Scale horizontally with read replicas. Bold architectural changes.',
+                    lowHot: 'Start with query analysis and indexing. Measure before major changes. Consider maintenance overhead and team expertise.',
+                    blank: 'Are we solving the right problem? What if the issue is not database performance but data model design?'
+                },
+                synthesis: 'Implement monitoring first, optimize queries and indexes, then evaluate caching vs. scaling based on specific bottlenecks identified.'
+            },
+            creative: {
+                icon: '🎨',
+                title: 'Creative Innovation Challenge',
+                prompt: 'Design an app that helps people reduce food waste while building community connections.',
+                pattern: 'Innovation Synthesis Pattern - Combining constraints to generate breakthrough concepts',
+                reasoning: {
+                    judge: 'Combining community-building with waste reduction creates dual value. Focus on user engagement and measurable impact.',
+                    highHot: 'Gamified food-sharing network! Social credit for donations, recipe challenges, neighborhood food maps. Make it viral!',
+                    lowHot: 'Simple inventory tracking with expiration alerts. Partner with local organizations. Focus on practical utility first.',
+                    blank: 'Why focus on apps? What if the solution is changing how food is packaged or sold instead?'
+                },
+                synthesis: 'Hybrid approach: practical inventory tools with optional social features. Start simple, build community gradually through local partnerships.'
+            },
+            business: {
+                icon: '📊',
+                title: 'Business Strategy Decision',
+                prompt: 'Startup has limited resources: focus on acquiring new customers or improving product for existing ones?',
+                pattern: 'Strategic Priority Pattern - Balancing growth vs. retention based on metrics',
+                reasoning: {
+                    judge: 'Analyzing customer lifetime value, acquisition costs, churn rates, and product-market fit signals to optimize resource allocation.',
+                    highHot: 'Double down on acquisition! Growth solves everything. Expand market reach aggressively while momentum exists.',
+                    lowHot: 'Retain existing customers first. Higher retention = more predictable revenue. Build solid foundation before scaling.',
+                    blank: 'Why choose one? What if the product improvement itself becomes the acquisition strategy?'
+                },
+                synthesis: 'Implement retention-focused improvements that also serve as acquisition differentiators. Measure impact on both metrics.'
+            }
+        };
+
+        // Initialize demo
+        function initializeDemo() {
+            setupScenarioButtons();
+            updateScenarioDisplay();
+        }
+
+        // Setup scenario button listeners
+        function setupScenarioButtons() {
+            const buttons = document.querySelectorAll('.scenario-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (isReasoning) return;
+                    
+                    const scenario = button.dataset.scenario;
+                    
+                    // Update active button
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Switch scenario
+                    currentScenario = scenario;
+                    updateScenarioDisplay();
+                });
+            });
+        }
+
+        // Update scenario display
+        function updateScenarioDisplay() {
+            const scenario = scenarios[currentScenario];
+            document.getElementById('scenarioIcon').textContent = scenario.icon;
+            document.getElementById('scenarioTitle').textContent = scenario.title;
+            
+            // Reset iteration counter
+            currentIteration = 1;
+            document.getElementById('iterationCounter').style.display = 'none';
+            
+            // Reset status
+            const status = document.getElementById('reasoningStatus');
+            status.className = 'reasoning-status';
+            status.innerHTML = '<span>🔄</span>Ready to Begin';
+            
+            // Reset entities
+            resetEntities();
+            
+            // Hide synthesis and pattern
+            document.getElementById('synthesisSection').classList.remove('active');
+            document.getElementById('patternSuggestion').style.display = 'none';
+            
+            // Show initial state
+            document.getElementById('initialState').style.display = 'block';
+            document.getElementById('entityGrid').classList.remove('active');
+        }
+
+        // Reset entity cards
+        function resetEntities() {
+            const entities = ['judge', 'highHot', 'lowHot', 'blank'];
+            entities.forEach(entity => {
+                const card = document.getElementById(entity + 'Card');
+                const content = document.getElementById(entity + 'Content');
+                
+                card.className = 'entity-card';
+                content.innerHTML = '<div class="entity-thinking">Waiting for reasoning to begin...</div>';
+            });
+        }
+
+        // Start reasoning process
+        async function startReasoning() {
+            if (isReasoning) return;
+            
+            isReasoning = true;
+            const scenario = scenarios[currentScenario];
+            
+            // Update UI
+            document.getElementById('initialState').style.display = 'none';
+            document.getElementById('iterationCounter').style.display = 'block';
+            document.getElementById('iterationNumber').textContent = currentIteration;
+            
+            const status = document.getElementById('reasoningStatus');
+            status.className = 'reasoning-status active';
+            status.innerHTML = '<span>🧠</span>Reasoning...';
+            
+            const startButton = document.querySelector('.start-button');
+            startButton.disabled = true;
+            startButton.textContent = 'Reasoning in Progress...';
+            
+            // Show pattern suggestion
+            await sleep(1000);
+            const patternSuggestion = document.getElementById('patternSuggestion');
+            const patternDescription = document.getElementById('patternDescription');
+            patternDescription.textContent = `Using ${scenario.pattern}`;
+            patternSuggestion.style.display = 'block';
+            setTimeout(() => patternSuggestion.classList.add('active'), 100);
+            
+            // Show entity grid
+            await sleep(500);
+            document.getElementById('entityGrid').classList.add('active');
+            
+            // Judge starts
+            await sleep(1000);
+            await activateEntity('judge', 'Distributing prompt to HIGH HOT and LOW HOT entities for parallel analysis...');
+            
+            // High Hot and Low Hot reason in parallel
+            await sleep(1500);
+            await Promise.all([
+                activateEntity('highHot', scenario.reasoning.highHot),
+                activateEntity('lowHot', scenario.reasoning.lowHot)
+            ]);
+            
+            // Cross-validation
+            await sleep(1000);
+            await activateEntity('judge', 'Cross-validating reasoning between HIGH HOT and LOW HOT entities...');
+            
+            // Blank entity questions
+            await sleep(1500);
+            await activateEntity('blank', scenario.reasoning.blank);
+            
+            // Judge synthesizes
+            await sleep(1000);
+            await activateEntity('judge', scenario.reasoning.judge);
+            
+            // Show synthesis
+            await sleep(1000);
+            const synthesisSection = document.getElementById('synthesisSection');
+            document.getElementById('synthesisContent').textContent = scenario.synthesis;
+            synthesisSection.classList.add('active');
+            
+            // Complete reasoning
+            await sleep(2000);
+            status.className = 'reasoning-status complete';
+            status.innerHTML = '<span>✅</span>Complete';
+            
+            startButton.disabled = false;
+            startButton.textContent = '🔄 Start New Reasoning';
+            isReasoning = false;
+        }
+
+        // Activate entity animation
+        async function activateEntity(entityName, content) {
+            const card = document.getElementById(entityName + 'Card');
+            const contentDiv = document.getElementById(entityName + 'Content');
+            
+            // Start thinking animation
+            card.classList.add('thinking');
+            contentDiv.innerHTML = '<div class="entity-thinking">Thinking...</div>';
+            
+            await sleep(2000);
+            
+            // Show result
+            card.classList.remove('thinking');
+            card.classList.add('complete');
+            contentDiv.innerHTML = content;
+            
+            await sleep(500);
+        }
+
+        // Utility function for delays
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeDemo);
+    </script>
+</body>
+</html>

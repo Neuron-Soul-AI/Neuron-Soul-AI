@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron System - Multi-Modal AI Orchestration Demo</title>
+			<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #3730a3 60%, #1e40af 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #a5b4fc, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            color: #c7d2fe;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(59, 48, 129, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(165, 180, 252, 0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: #a5b4fc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Communication Modes */
+        .modes-section {
+            margin-bottom: 24px;
+        }
+
+        .mode-label {
+            color: rgba(199, 210, 254, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mode-button {
+            background: rgba(59, 48, 129, 0.4);
+            border: 1px solid rgba(165, 180, 252, 0.5);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+            position: relative;
+        }
+
+        .mode-button:hover {
+            background: rgba(165, 180, 252, 0.3);
+            border-color: rgba(165, 180, 252, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .mode-button.active {
+            background: rgba(165, 180, 252, 0.4);
+            border-color: rgba(165, 180, 252, 0.8);
+            box-shadow: 0 4px 20px rgba(165, 180, 252, 0.3);
+        }
+
+        .mode-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .mode-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #a5b4fc;
+        }
+
+        .mode-description {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.3;
+        }
+
+        /* AI Orchestration */
+        .orchestration-section {
+            margin-bottom: 24px;
+        }
+
+        .ai-agent {
+            background: rgba(59, 48, 129, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 4px solid #a5b4fc;
+            transition: all 0.3s ease;
+        }
+
+        .ai-agent.active {
+            background: rgba(165, 180, 252, 0.2);
+            border-left-color: #fbbf24;
+        }
+
+        .agent-name {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .agent-status {
+            color: rgba(199, 210, 254, 0.8);
+            font-size: 10px;
+        }
+
+        /* System Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(59, 48, 129, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #a5b4fc;
+        }
+
+        .metric-label {
+            color: rgba(199, 210, 254, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Workspace */
+        .workspace {
+            background: rgba(59, 48, 129, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(165, 180, 252, 0.3);
+            position: relative;
+            min-height: 600px;
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(165, 180, 252, 0.3);
+        }
+
+        .workspace-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .workspace-status {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Mode-specific workspaces */
+        .mode-workspace {
+            display: none;
+            height: 100%;
+            min-height: 500px;
+        }
+
+        .mode-workspace.active {
+            display: block;
+        }
+
+        /* Chat workspace */
+        .chat-workspace {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .chat-message.ai {
+            background: rgba(165, 180, 252, 0.2);
+            color: #c7d2fe;
+            border-left: 3px solid #a5b4fc;
+        }
+
+        .chat-message.user {
+            background: rgba(59, 48, 129, 0.3);
+            color: white;
+            border-left: 3px solid #fbbf24;
+            text-align: right;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(165, 180, 252, 0.3);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .chat-input input::placeholder {
+            color: rgba(199, 210, 254, 0.6);
+        }
+
+        .chat-input button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Nodes workspace */
+        .nodes-workspace {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node {
+            position: absolute;
+            background: rgba(165, 180, 252, 0.3);
+            border: 2px solid #a5b4fc;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+
+        .node:hover {
+            background: rgba(165, 180, 252, 0.5);
+            transform: scale(1.05);
+        }
+
+        .node-connection {
+            position: absolute;
+            height: 2px;
+            background: #a5b4fc;
+            z-index: 1;
+        }
+
+        /* Canvas workspace */
+        .canvas-workspace {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            height: 500px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .canvas-tools {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(165, 180, 252, 0.3);
+        }
+
+        .canvas-tool {
+            background: rgba(59, 48, 129, 0.3);
+            border: 1px solid rgba(165, 180, 252, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .canvas-tool.active {
+            background: rgba(165, 180, 252, 0.4);
+            border-color: #a5b4fc;
+        }
+
+        .canvas-area {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        /* Wave workspace */
+        .wave-workspace {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .audio-visualizer {
+            width: 100%;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .wave-bars {
+            display: flex;
+            align-items: end;
+            height: 100%;
+            gap: 2px;
+            padding: 10px;
+        }
+
+        .wave-bar {
+            background: linear-gradient(to top, #3b82f6, #a5b4fc);
+            flex: 1;
+            border-radius: 1px;
+            animation: waveAnimation 1s ease-in-out infinite;
+        }
+
+        @keyframes waveAnimation {
+            0%, 100% { height: 20%; }
+            50% { height: 80%; }
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .audio-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .audio-button:hover {
+            background: #2563eb;
+        }
+
+        /* Cross-modal translation */
+        .translation-panel {
+            background: rgba(59, 48, 129, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            border: 1px solid rgba(165, 180, 252, 0.3);
+        }
+
+        .translation-title {
+            color: #a5b4fc;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .translation-content {
+            color: rgba(199, 210, 254, 0.9);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .translation-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .translation-button {
+            background: rgba(165, 180, 252, 0.3);
+            color: white;
+            border: 1px solid rgba(165, 180, 252, 0.5);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .translation-button:hover {
+            background: rgba(165, 180, 252, 0.5);
+        }
+
+        /* Action Buttons */
+        .action-section {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .action-button:disabled {
+            background: rgba(55, 48, 163, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(165, 180, 252, 0.1);
+            border: 1px solid rgba(165, 180, 252, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #a5b4fc;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Collaboration Panel */
+        .collaboration-panel {
+            background: rgba(59, 48, 129, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(165, 180, 252, 0.3);
+        }
+
+        .collaboration-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .collaboration-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .collaboration-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .collaboration-user {
+            background: rgba(59, 48, 129, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 2px solid rgba(165, 180, 252, 0.3);
+        }
+
+        .user-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .user-info h4 {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .user-activity {
+            color: rgba(199, 210, 254, 0.8);
+            font-size: 12px;
+        }
+
+        .user-workspace {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            min-height: 80px;
+            color: rgba(199, 210, 254, 0.9);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(59, 48, 129, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(165, 180, 252, 0.3);
+        }
+
+        .comparison-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: rgba(59, 48, 129, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+        }
+
+        .traditional-ai {
+            border-color: #ef4444;
+        }
+
+        .neuron-system {
+            border-color: #a5b4fc;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: rgba(199, 210, 254, 0.9);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-ai .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-system .comparison-list li::before {
+            color: #a5b4fc;
+        }
+
+        /* Animation delays for wave bars */
+        .wave-bar:nth-child(1) { animation-delay: 0s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+        .wave-bar:nth-child(6) { animation-delay: 0.5s; }
+        .wave-bar:nth-child(7) { animation-delay: 0.6s; }
+        .wave-bar:nth-child(8) { animation-delay: 0.7s; }
+        .wave-bar:nth-child(9) { animation-delay: 0.8s; }
+        .wave-bar:nth-child(10) { animation-delay: 0.9s; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🌐 Neuron System</h1>
+            <p>Multi-modal AI orchestration platform enabling universal human-AI collaboration through diverse communication styles</p>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🎭 Communication Modes
+                </div>
+
+                <!-- Communication Modes -->
+                <div class="modes-section">
+                    <div class="mode-label">Select Communication Style:</div>
+                    <div class="mode-buttons">
+                        <button class="mode-button active" data-mode="chat">
+                            <span class="mode-icon">💬</span>
+                            <div class="mode-name">Neuron Chat</div>
+                            <div class="mode-description">Multi-AI orchestration for complex conversations and collaborative problem-solving</div>
+                        </button>
+                        <button class="mode-button" data-mode="nodes">
+                            <span class="mode-icon">🔗</span>
+                            <div class="mode-name">Neuron Nodes</div>
+                            <div class="mode-description">Visual logic building through connected concepts and relationship mapping</div>
+                        </button>
+                        <button class="mode-button" data-mode="canvas">
+                            <span class="mode-icon">🎨</span>
+                            <div class="mode-name">Neuron Canvas</div>
+                            <div class="mode-description">Artistic expression and visual communication for creative collaboration</div>
+                        </button>
+                        <button class="mode-button" data-mode="wave">
+                            <span class="mode-icon">🌊</span>
+                            <div class="mode-name">Neuron Wave</div>
+                            <div class="mode-description">Audio-based communication through sound, music, and voice interaction</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Orchestration -->
+                <div class="orchestration-section">
+                    <div class="mode-label">Active AI Agents:</div>
+                    
+                    <div class="ai-agent active" id="creativeAI">
+                        <div class="agent-name">Creative AI</div>
+                        <div class="agent-status">Processing artistic concepts</div>
+                    </div>
+
+                    <div class="ai-agent" id="logicAI">
+                        <div class="agent-name">Logic AI</div>
+                        <div class="agent-status">Standby mode</div>
+                    </div>
+
+                    <div class="ai-agent" id="communicationAI">
+                        <div class="agent-name">Communication AI</div>
+                        <div class="agent-status">Translation ready</div>
+                    </div>
+
+                    <div class="ai-agent" id="coordinatorAI">
+                        <div class="agent-name">Coordinator AI</div>
+                        <div class="agent-status">Managing workflow</div>
+                    </div>
+                </div>
+
+                <!-- System Metrics -->
+                <div class="metrics-section">
+                    <div class="mode-label">System Performance:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Cross-Modal Sync</div>
+                        <div class="metric-value" id="syncValue">
+                            98<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">AI Coordination</div>
+                        <div class="metric-value" id="coordinationValue">
+                            4<span class="metric-unit">Agents</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Response Time</div>
+                        <div class="metric-value" id="responseValue">
+                            120<span class="metric-unit">ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-section">
+                    <button class="action-button" id="demonstrateTranslation">
+                        Show Cross-Modal Translation
+                    </button>
+                </div>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Demonstrating cross-modal translation...
+                </div>
+            </div>
+
+            <!-- Workspace -->
+            <div class="workspace">
+                <div class="workspace-header">
+                    <div class="workspace-title" id="workspaceTitle">
+                        💬 Multi-AI Chat Orchestration
+                    </div>
+                    <div class="workspace-status">
+                        Active
+                    </div>
+                </div>
+
+                <!-- Chat Workspace -->
+                <div class="mode-workspace active" id="chatWorkspace">
+                    <div class="chat-workspace">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-message user">Design a meditation app that helps with anxiety</div>
+                            <div class="chat-message ai">Creative AI: I envision a calming interface with flowing water animations and nature sounds...</div>
+                            <div class="chat-message ai">Logic AI: We'll need user anxiety level tracking, personalized session recommendations, and progress analytics...</div>
+                            <div class="chat-message ai">Coordinator AI: Combining both perspectives - beautiful design with smart functionality. Let me orchestrate the optimal approach...</div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Describe your project or ask for collaboration..." id="chatInput">
+                            <button onclick="sendChatMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nodes Workspace -->
+                <div class="mode-workspace" id="nodesWorkspace">
+                    <div class="nodes-workspace">
+                        <div class="node" style="top: 50px; left: 100px;">Meditation App</div>
+                        <div class="node" style="top: 150px; left: 50px;">Anxiety Relief</div>
+                        <div class="node" style="top: 150px; left: 200px;">User Interface</div>
+                        <div class="node" style="top: 250px; left: 30px;">Breathing Exercises</div>
+                        <div class="node" style="top: 250px; left: 150px;">Progress Tracking</div>
+                        <div class="node" style="top: 250px; left: 270px;">Sound Design</div>
+                        <div class="node-connection" style="top: 70px; left: 150px; width: 80px; transform: rotate(25deg);"></div>
+                        <div class="node-connection" style="top: 70px; left: 200px; width: 80px; transform: rotate(-25deg);"></div>
+                        <div class="node-connection" style="top: 170px; left: 100px; width: 80px; transform: rotate(90deg);"></div>
+                        <div class="node-connection" style="top: 170px; left: 200px; width: 80px; transform: rotate(45deg);"></div>
+                        <div class="node-connection" style="top: 170px; left: 250px; width: 80px; transform: rotate(90deg);"></div>
+                    </div>
+                </div>
+
+                <!-- Canvas Workspace -->
+                <div class="mode-workspace" id="canvasWorkspace">
+                    <div class="canvas-workspace">
+                        <div class="canvas-tools">
+                            <button class="canvas-tool active">Brush</button>
+                            <button class="canvas-tool">Shape</button>
+                            <button class="canvas-tool">Text</button>
+                            <button class="canvas-tool">Color</button>
+                        </div>
+                        <div class="canvas-area" id="canvasArea">
+                            <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                                <circle cx="200" cy="150" r="80" fill="rgba(165, 180, 252, 0.3)" stroke="#a5b4fc" stroke-width="2"/>
+                                <circle cx="400" cy="200" r="60" fill="rgba(251, 191, 36, 0.3)" stroke="#fbbf24" stroke-width="2"/>
+                                <circle cx="300" cy="250" r="50" fill="rgba(34, 197, 94, 0.3)" stroke="#22c55e" stroke-width="2"/>
+                                <path d="M200 230 Q300 150 400 200" stroke="#a5b4fc" stroke-width="2" fill="none"/>
+                                <text x="200" y="160" text-anchor="middle" fill="#a5b4fc" font-size="12">Calm Mind</text>
+                                <text x="400" y="210" text-anchor="middle" fill="#fbbf24" font-size="12">Breathing</text>
+                                <text x="300" y="260" text-anchor="middle" fill="#22c55e" font-size="12">Peace</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wave Workspace -->
+                <div class="mode-workspace" id="waveWorkspace">
+                    <div class="wave-workspace">
+                        <div class="audio-visualizer">
+                            <div class="wave-bars">
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                            </div>
+                        </div>
+                        <div class="audio-controls">
+                            <button class="audio-button">🎤 Record</button>
+                            <button class="audio-button">🎵 Generate</button>
+                            <button class="audio-button">🔊 Play</button>
+                        </div>
+                        <div style="color: rgba(199, 210, 254, 0.8); text-align: center; margin-top: 16px; font-size: 14px;">
+                            Express your meditation app concept through sound, music, or voice
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cross-Modal Translation Panel -->
+                <div class="translation-panel" id="translationPanel" style="display: none;">
+                    <div class="translation-title">
+                        🔄 Cross-Modal Translation Active
+                    </div>
+                    <div class="translation-content" id="translationContent">
+                        Converting your chat conversation into visual nodes...
+                    </div>
+                    <div class="translation-actions">
+                        <button class="translation-button" onclick="switchMode('nodes')">View as Nodes</button>
+                        <button class="translation-button" onclick="switchMode('canvas')">View as Canvas</button>
+                        <button class="translation-button" onclick="switchMode('wave')">View as Audio</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multi-User Collaboration -->
+        <div class="collaboration-panel">
+            <h3 class="collaboration-title">Real-Time Multi-User Collaboration</h3>
+            <div class="collaboration-grid">
+                <div class="collaboration-user">
+                    <div class="user-header">
+                        <div class="user-avatar">👩</div>
+                        <div class="user-info">
+                            <h4>Sarah (Designer)</h4>
+                            <div class="user-activity">Working in Canvas mode</div>
+                        </div>
+                    </div>
+                    <div class="user-workspace">
+                        Currently sketching the meditation app's visual flow and creating mood boards with calming color palettes. AI is suggesting complementary design elements based on anxiety relief research.
+                    </div>
+                </div>
+                <div class="collaboration-user">
+                    <div class="user-header">
+                        <div class="user-avatar">👨</div>
+                        <div class="user-info">
+                            <h4>Marcus (Developer)</h4>
+                            <div class="user-activity">Working in Nodes mode</div>
+                        </div>
+                    </div>
+                    <div class="user-workspace">
+                        Building the logical architecture in Nodes view, connecting user authentication, session management, and progress tracking. AI is translating Sarah's designs into technical specifications.
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 16px; color: rgba(199, 210, 254, 0.8); font-size: 14px;">
+                Cross-modal translation allows seamless collaboration despite different working styles
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional AI Communication vs Neuron System</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-ai">
+                    <h4>Traditional AI Communication</h4>
+                    <ul class="comparison-list">
+                        <li>Single communication mode (usually text-based)</li>
+                        <li>One AI agent handling all tasks</li>
+                        <li>No adaptation to user's thinking style</li>
+                        <li>Limited accessibility for different needs</li>
+                        <li>No real-time collaboration features</li>
+                        <li>Static interface regardless of task type</li>
+                        <li>No cross-modal translation capabilities</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-system">
+                    <h4>Neuron System Multi-Modal Platform</h4>
+                    <ul class="comparison-list">
+                        <li>Four distinct communication modes (Chat, Nodes, Canvas, Wave)</li>
+                        <li>Multiple specialized AI agents working in coordination</li>
+                        <li>Adaptive interface matching user's natural thinking style</li>
+                        <li>Universal accessibility for all communication preferences</li>
+                        <li>Real-time multi-user collaboration across modes</li>
+                        <li>Cross-modal translation preserving context and meaning</li>
+                        <li>Seamless switching between visual, logical, artistic, and audio modes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'chat';
+        let isTranslating = false;
+
+        const modeData = {
+            chat: {
+                title: '💬 Multi-AI Chat Orchestration',
+                agents: ['creativeAI', 'logicAI', 'coordinatorAI'],
+                aiStatuses: {
+                    creativeAI: 'Processing artistic concepts',
+                    logicAI: 'Analyzing logical structure',
+                    coordinatorAI: 'Managing workflow',
+                    communicationAI: 'Translation ready'
+                }
+            },
+            nodes: {
+                title: '🔗 Visual Logic Building',
+                agents: ['logicAI', 'coordinatorAI'],
+                aiStatuses: {
+                    creativeAI: 'Standby mode',
+                    logicAI: 'Building relationships',
+                    coordinatorAI: 'Organizing structure',
+                    communicationAI: 'Translation ready'
+                }
+            },
+            canvas: {
+                title: '🎨 Artistic Expression Interface',
+                agents: ['creativeAI', 'communicationAI'],
+                aiStatuses: {
+                    creativeAI: 'Generating visual concepts',
+                    logicAI: 'Standby mode',
+                    coordinatorAI: 'Standby mode',
+                    communicationAI: 'Visual interpretation active'
+                }
+            },
+            wave: {
+                title: '🌊 Audio Communication System',
+                agents: ['creativeAI', 'communicationAI'],
+                aiStatuses: {
+                    creativeAI: 'Audio synthesis active',
+                    logicAI: 'Standby mode',
+                    coordinatorAI: 'Standby mode',
+                    communicationAI: 'Audio processing active'
+                }
+            }
+        };
+
+        const translationMessages = {
+            chat: "Converting your chat conversation into visual representations...",
+            nodes: "Translating logical structure from your current work...",
+            canvas: "Interpreting artistic concepts for cross-modal understanding...",
+            wave: "Processing audio patterns for translation to other modes..."
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mode selection
+            document.querySelectorAll('.mode-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const mode = this.dataset.mode;
+                    switchMode(mode);
+                });
+            });
+
+            // Cross-modal translation demo
+            const translationButton = document.getElementById('demonstrateTranslation');
+            if (translationButton) {
+                translationButton.addEventListener('click', demonstrateTranslation);
+            }
+
+            // Initialize with chat mode
+            updateModeDisplay();
+        });
+
+        function switchMode(mode) {
+            if (isTranslating) return;
+            
+            currentMode = mode;
+            
+            // Update mode buttons
+            document.querySelectorAll('.mode-button').forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.mode === mode) {
+                    button.classList.add('active');
+                }
+            });
+            
+            // Update workspace
+            document.querySelectorAll('.mode-workspace').forEach(workspace => {
+                workspace.classList.remove('active');
+            });
+            document.getElementById(mode + 'Workspace').classList.add('active');
+            
+            updateModeDisplay();
+        }
+
+        function updateModeDisplay() {
+            const data = modeData[currentMode];
+            
+            // Update workspace title
+            document.getElementById('workspaceTitle').textContent = data.title;
+            
+            // Update AI agent statuses
+            Object.keys(data.aiStatuses).forEach(agentId => {
+                const agent = document.getElementById(agentId);
+                const statusElement = agent.querySelector('.agent-status');
+                statusElement.textContent = data.aiStatuses[agentId];
+                
+                // Update active state
+                if (data.agents.includes(agentId)) {
+                    agent.classList.add('active');
+                } else {
+                    agent.classList.remove('active');
+                }
+            });
+            
+            // Update metrics
+            updateMetrics();
+        }
+
+        function updateMetrics() {
+            const metrics = {
+                chat: { sync: 98, coordination: 4, response: 120 },
+                nodes: { sync: 95, coordination: 2, response: 85 },
+                canvas: { sync: 92, coordination: 2, response: 150 },
+                wave: { sync: 89, coordination: 2, response: 200 }
+            };
+            
+            const current = metrics[currentMode];
+            document.getElementById('syncValue').innerHTML = `${current.sync}<span class="metric-unit">%</span>`;
+            document.getElementById('coordinationValue').innerHTML = `${current.coordination}<span class="metric-unit">Agents</span>`;
+            document.getElementById('responseValue').innerHTML = `${current.response}<span class="metric-unit">ms</span>`;
+        }
+
+        async function demonstrateTranslation() {
+            if (isTranslating) return;
+            
+            isTranslating = true;
+            const button = document.getElementById('demonstrateTranslation');
+            const message = document.getElementById('simulationMessage');
+            const translationPanel = document.getElementById('translationPanel');
+            const translationContent = document.getElementById('translationContent');
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Translating...';
+            
+            // Show simulation message
+            message.style.display = 'block';
+            message.textContent = 'Initiating cross-modal translation...';
+            
+            try {
+                // Phase 1: Analyzing current mode
+                message.textContent = `Analyzing ${currentMode} content for translation...`;
+                await delay(1500);
+                
+                // Phase 2: Processing translation
+                message.textContent = 'Processing cross-modal translation algorithms...';
+                translationContent.textContent = translationMessages[currentMode];
+                await delay(1500);
+                
+                // Phase 3: Show translation panel
+                message.textContent = 'Translation complete! Cross-modal options available.';
+                translationPanel.style.display = 'block';
+                await delay(1000);
+                
+                // Phase 4: Highlight different modes
+                translationContent.textContent = `Your ${currentMode} content is now available in all communication modes. Choose how you want to experience your project:`;
+                
+            } catch (error) {
+                console.error('Error during translation:', error);
+                message.textContent = 'Cross-modal translation demonstration completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isTranslating = false;
+                button.disabled = false;
+                button.textContent = 'Show Cross-Modal Translation';
+                message.style.display = 'none';
+                // Keep translation panel visible for user interaction
+            }, 3000);
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const messages = document.getElementById('chatMessages');
+            
+            if (input.value.trim()) {
+                // Add user message
+                const userMessage = document.createElement('div');
+                userMessage.className = 'chat-message user';
+                userMessage.textContent = input.value;
+                messages.appendChild(userMessage);
+                
+                // Simulate AI responses
+                setTimeout(() => {
+                    const aiMessage = document.createElement('div');
+                    aiMessage.className = 'chat-message ai';
+                    aiMessage.textContent = 'AI agents are collaborating on your request...';
+                    messages.appendChild(aiMessage);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+                
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Allow Enter key in chat input
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+    </script>
+</body>
+</html>
