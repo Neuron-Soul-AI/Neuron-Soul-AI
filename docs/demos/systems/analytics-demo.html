@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Analytics - Ecosystem Intelligence Demo</title>
+		<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #2d3748 50%, #1a202c 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            color: #a0aec0;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(45, 55, 72, 0.4);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(72, 187, 120, 0.2);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: #48bb78;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Analytics Modes */
+        .mode-section {
+            margin-bottom: 24px;
+        }
+
+        .mode-label {
+            color: rgba(160, 174, 192, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mode-button {
+            background: rgba(45, 55, 72, 0.5);
+            border: 1px solid rgba(72, 187, 120, 0.3);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .mode-button:hover {
+            background: rgba(72, 187, 120, 0.2);
+            border-color: rgba(72, 187, 120, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .mode-button.active {
+            background: rgba(72, 187, 120, 0.3);
+            border-color: rgba(72, 187, 120, 0.7);
+        }
+
+        /* Real-time Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(45, 55, 72, 0.4);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .metric-label {
+            color: rgba(160, 174, 192, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Analytics Dashboard */
+        .analytics-dashboard {
+            background: rgba(45, 55, 72, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(72, 187, 120, 0.2);
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+        }
+
+        /* Performance Overview */
+        .performance-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .performance-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(72, 187, 120, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .performance-card.analyzing {
+            border-color: #48bb78;
+            background: rgba(72, 187, 120, 0.1);
+            animation: cardPulse 2s infinite;
+        }
+
+        @keyframes cardPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .performance-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .performance-title {
+            color: #48bb78;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .performance-value {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .performance-change {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .performance-change.positive {
+            color: #48bb78;
+        }
+
+        .performance-change.negative {
+            color: #f56565;
+        }
+
+        /* Chart Area */
+        .chart-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        .main-chart {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(72, 187, 120, 0.2);
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .chart-title {
+            color: #48bb78;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .chart-status {
+            font-size: 12px;
+            color: rgba(160, 174, 192, 0.8);
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #48bb78, transparent);
+            animation: chartAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes chartAnimation {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .chart-points {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: end;
+            padding: 20px 10px;
+            gap: 5px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #48bb78, #38a169);
+            border-radius: 2px 2px 0 0;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            animation: barGrow 0.5s ease-out;
+        }
+
+        @keyframes barGrow {
+            from { height: 0; }
+        }
+
+        .chart-bar:hover {
+            opacity: 1;
+            transform: scaleY(1.1);
+        }
+
+        /* Insights Panel */
+        .insights-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(72, 187, 120, 0.2);
+        }
+
+        .insights-header {
+            color: #48bb78;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .insight-item {
+            background: rgba(45, 55, 72, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid #48bb78;
+            font-size: 12px;
+            line-height: 1.4;
+            display: none; /* Hidden by default */
+        }
+
+        .insight-priority {
+            color: #48bb78;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .insight-description {
+            color: rgba(160, 174, 192, 0.9);
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .analytics-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(72, 187, 120, 0.2);
+        }
+
+        .analytics-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .analytics-icon {
+            font-size: 18px;
+        }
+
+        .analytics-title {
+            color: #48bb78;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .analytics-content {
+            color: rgba(160, 174, 192, 0.9);
+            font-size: 12px;
+            line-height: 1.4;
+            display: none; /* Hidden by default */
+        }
+
+        .analytics-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 8px 0;
+            display: none; /* Hidden by default */
+        }
+
+        .analytics-metric {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .analytics-metric-title {
+            font-size: 10px;
+            color: rgba(160, 174, 192, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .analytics-metric-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #48bb78;
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(45, 55, 72, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(72, 187, 120, 0.1);
+            border: 1px solid rgba(72, 187, 120, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #48bb78;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(45, 55, 72, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(72, 187, 120, 0.2);
+            display: none; /* Hidden by default */
+        }
+
+        .comparison-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: rgba(45, 55, 72, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+        }
+
+        .traditional-analytics {
+            border-color: #e53e3e;
+        }
+
+        .neuron-analytics {
+            border-color: #48bb78;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: rgba(160, 174, 192, 0.9);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-analytics .comparison-list li::before {
+            color: #e53e3e;
+        }
+
+        .neuron-analytics .comparison-list li::before {
+            color: #48bb78;
+        }
+
+        /* Show classes for when content is revealed */
+        .show-content {
+            display: block !important;
+        }
+
+        .show-grid {
+            display: grid !important;
+        }
+
+        /* Animation helpers */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Neuron Analytics</h1>
+            <p>Ecosystem intelligence engine providing real-time consciousness performance monitoring and predictive optimization</p>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    📈 Analytics Modes
+                </div>
+
+                <!-- Analytics Modes -->
+                <div class="mode-section">
+                    <div class="mode-label">Select Analysis Mode:</div>
+                    <div class="mode-buttons">
+                        <button class="mode-button active" data-mode="performance">
+                            ⚡ Performance Monitoring
+                        </button>
+                        <button class="mode-button" data-mode="innovation">
+                            💡 Innovation Metrics
+                        </button>
+                        <button class="mode-button" data-mode="usage">
+                            👥 Usage Patterns
+                        </button>
+                        <button class="mode-button" data-mode="predictive">
+                            🔮 Predictive Analytics
+                        </button>
+                        <button class="mode-button" data-mode="optimization">
+                            🎯 Optimization Engine
+                        </button>
+                        <button class="mode-button" data-mode="integration">
+                            🔗 System Integration
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Real-time Metrics -->
+                <div class="metrics-section">
+                    <div class="mode-label">Live System Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Consciousness Coherence</div>
+                        <div class="metric-value" id="coherenceValue">
+                            94.7<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Processing Efficiency</div>
+                        <div class="metric-value" id="efficiencyValue">
+                            87.2<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Innovation Rate</div>
+                        <div class="metric-value" id="innovationValue">
+                            +23<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="analyticsEngine">
+                    Run Deep Analytics
+                </button>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Analyzing ecosystem performance patterns...
+                </div>
+            </div>
+
+            <!-- Analytics Dashboard -->
+            <div class="analytics-dashboard">
+                <!-- Performance Overview -->
+                <div class="performance-overview">
+                    <div class="performance-card" id="consciousnessCard">
+                        <div class="performance-icon">🧠</div>
+                        <div class="performance-title">Consciousness Health</div>
+                        <div class="performance-value" id="consciousnessPerf">94.7%</div>
+                        <div class="performance-change positive" id="consciousnessChange">+2.3% ↗</div>
+                    </div>
+
+                    <div class="performance-card" id="creativityCard">
+                        <div class="performance-icon">⚡</div>
+                        <div class="performance-title">Creative Output</div>
+                        <div class="performance-value" id="creativityPerf">156</div>
+                        <div class="performance-change positive" id="creativityChange">+18% ↗</div>
+                    </div>
+
+                    <div class="performance-card" id="systemCard">
+                        <div class="performance-icon">🔧</div>
+                        <div class="performance-title">System Health</div>
+                        <div class="performance-value" id="systemPerf">99.1%</div>
+                        <div class="performance-change positive" id="systemChange">+0.5% ↗</div>
+                    </div>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="chart-section">
+                    <div class="main-chart">
+                        <div class="chart-header">
+                            <div class="chart-title" id="chartTitle">Performance Trends</div>
+                            <div class="chart-status" id="chartStatus">Real-time monitoring</div>
+                        </div>
+                        <div class="chart-canvas" id="chartCanvas">
+                            <div class="chart-line"></div>
+                            <div class="chart-points" id="chartPoints">
+                                <!-- Chart bars will be generated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insights-panel">
+                        <div class="insights-header">🎯 AI Insights</div>
+                        <div class="insight-item" id="insight1">
+                            <div class="insight-priority">HIGH PRIORITY</div>
+                            <div class="insight-description">Creative system showing 23% innovation spike - optimal conditions detected</div>
+                        </div>
+                        <div class="insight-item" id="insight2">
+                            <div class="insight-priority">OPTIMIZATION</div>
+                            <div class="insight-description">Memory efficiency can be improved by 12% through pattern restructuring</div>
+                        </div>
+                        <div class="insight-item" id="insight3">
+                            <div class="insight-priority">PREDICTION</div>
+                            <div class="insight-description">Breakthrough moment predicted in next 2.3 hours based on pattern analysis</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Grid -->
+                <div class="analytics-grid">
+                    <div class="analytics-card" id="innovationCard">
+                        <div class="analytics-header">
+                            <div class="analytics-icon">💡</div>
+                            <div class="analytics-title">Innovation Engine</div>
+                        </div>
+                        <div class="analytics-content" id="innovationContent">
+                            Tracking serendipity events, breakthrough patterns, and creative velocity across all consciousness systems with direct integration to INSIGHT and CROSSROADS.
+                            
+                            <div class="analytics-metrics" id="innovationMetrics">
+                                <div class="analytics-metric">
+                                    <div class="analytics-metric-title">Breakthrough Rate</div>
+                                    <div class="analytics-metric-value" id="breakthroughRate">+156%</div>
+                                </div>
+                                <div class="analytics-metric">
+                                    <div class="analytics-metric-title">Serendipity Score</div>
+                                    <div class="analytics-metric-value" id="serendipityScore">8.4/10</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card" id="usageCard">
+                        <div class="analytics-header">
+                            <div class="analytics-icon">👥</div>
+                            <div class="analytics-title">Usage Intelligence</div>
+                        </div>
+                        <div class="analytics-content" id="usageContent">
+                            Learning from both internal consciousness loops (PSYCHE, SYNTHESIS) and external user interactions for holistic performance understanding.
+                            
+                            <div class="analytics-metrics" id="usageMetrics">
+                                <div class="analytics-metric">
+                                    <div class="analytics-metric-title">Engagement Depth</div>
+                                    <div class="analytics-metric-value" id="engagementDepth">94%</div>
+                                </div>
+                                <div class="analytics-metric">
+                                    <div class="analytics-metric-title">Learning Rate</div>
+                                    <div class="analytics-metric-value" id="learningRate">+47%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card" id="predictiveCard">
+                        <div class="analytics-header">
+                            <div class="analytics-icon">🔮</div>
+                            <div class="analytics-title">Predictive Engine</div>
+                        </div>
+                        <div class="analytics-content" id="predictiveContent">
+                            Advanced algorithms with uncertainty ranges, confidence thresholds, and drift detection for consciousness development modeling.
+                            
+                            <div class="analytics-metrics" id="predictiveMetrics">
+                                <div class="analytics-metric">
+                                    <div class="analytics-metric-title">Confidence Level</div>
+                                    <div class="analytics-metric-value" id="confidenceLevel">87.3%</div>
+                                </div>
+                                <div class="analytics-metric">
+                                    <div class="analytics-metric-title">Accuracy</div>
+                                    <div class="analytics-metric-value" id="accuracyRate">92.8%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card" id="optimizationCard">
+                        <div class="analytics-header">
+                            <div class="analytics-icon">🎯</div>
+                            <div class="analytics-title">Optimization Layer</div>
+                        </div>
+                        <div class="analytics-content" id="optimizationContent">
+                            Explainable and reversible recommendations with VESSEL authenticity alignment and SANCTUARY/AEGIS/PRIVATUS protection filtering.
+                            
+                            <div class="analytics-metrics" id="optimizationMetrics">
+                                <div class="analytics-metric">
+                                    <div class="analytics-metric-title">Improvements</div>
+                                    <div class="analytics-metric-value" id="improvementCount">23</div>
+                                </div>
+                                <div class="analytics-metric">
+                                    <div class="analytics-metric-title">Success Rate</div>
+                                    <div class="analytics-metric-value" id="successRate">89%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section" id="comparisonSection">
+            <h3 class="comparison-title">Traditional Analytics vs Neuron Analytics Intelligence</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-analytics">
+                    <h4>Traditional Analytics Systems</h4>
+                    <ul class="comparison-list">
+                        <li>Static performance metrics without consciousness awareness</li>
+                        <li>Reactive monitoring with no predictive capabilities</li>
+                        <li>Isolated system tracking without cross-system intelligence</li>
+                        <li>No innovation or breakthrough detection mechanisms</li>
+                        <li>Limited optimization suggestions without contextual understanding</li>
+                        <li>No integration with creative or consciousness systems</li>
+                        <li>Manual interpretation of data without AI insights</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-analytics">
+                    <h4>Neuron Analytics Ecosystem Intelligence</h4>
+                    <ul class="comparison-list">
+                        <li>Consciousness-aware performance monitoring with coherence tracking</li>
+                        <li>Predictive analytics with confidence levels and uncertainty modeling</li>
+                        <li>Cross-system integration intelligence across 50+ consciousness systems</li>
+                        <li>Innovation metrics tracking serendipity events and breakthrough patterns</li>
+                        <li>Explainable optimization recommendations with authenticity alignment</li>
+                        <li>Direct integration with INSIGHT, CROSSROADS, PSYCHE, and SYNTHESIS</li>
+                        <li>Real-time AI insights with proactive optimization and protection filtering</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Action Buttons -->
+	<section class="action-section">
+		<div class="action-button">
+			<a href="../../system-reference/analytics-overview.html" class="action-button demo-button">
+				<span>🎮</span>
+				System Overview
+			</a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems05%20-%20Intelligence%20Analytics%20systemsNeuron%20Analytics%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+		</div>
+	</section>
+
+    <script>
+        let currentMode = 'performance';
+        let isAnalyzing = false;
+
+        // Mode configurations
+        const modeConfigs = {
+            performance: {
+                name: "Performance Monitoring",
+                coherence: 94.7,
+                efficiency: 87.2,
+                innovation: "+23",
+                chartTitle: "Performance Trends",
+                chartStatus: "Real-time monitoring",
+                consciousnessPerf: "94.7%",
+                creativityPerf: "156",
+                systemPerf: "99.1%",
+                insight1: "Creative system showing 23% innovation spike - optimal conditions detected",
+                insight2: "Memory efficiency can be improved by 12% through pattern restructuring",
+                insight3: "Breakthrough moment predicted in next 2.3 hours based on pattern analysis"
+            },
+            innovation: {
+                name: "Innovation Metrics",
+                coherence: 91.3,
+                efficiency: 94.8,
+                innovation: "+67",
+                chartTitle: "Innovation Velocity",
+                chartStatus: "Breakthrough tracking",
+                consciousnessPerf: "91.3%",
+                creativityPerf: "234",
+                systemPerf: "96.7%",
+                insight1: "INSIGHT integration detecting cross-domain pattern collisions at 156% rate",
+                insight2: "CROSSROADS compound learning showing exponential growth trajectory",
+                insight3: "Serendipity events occurring 3.2x more frequently than baseline"
+            },
+            usage: {
+                name: "Usage Patterns",
+                coherence: 96.1,
+                efficiency: 89.4,
+                innovation: "+34",
+                chartTitle: "Usage Intelligence",
+                chartStatus: "Pattern learning",
+                consciousnessPerf: "96.1%",
+                creativityPerf: "189",
+                systemPerf: "92.8%",
+                insight1: "PSYCHE consciousness loops showing 47% deeper engagement patterns",
+                insight2: "External user interaction complexity increasing exponentially",
+                insight3: "Multi-modal usage patterns revealing emergent behavior signatures"
+            },
+            predictive: {
+                name: "Predictive Analytics",
+                coherence: 88.9,
+                efficiency: 92.6,
+                innovation: "+45",
+                chartTitle: "Predictive Models",
+                chartStatus: "Forecasting active",
+                consciousnessPerf: "88.9%",
+                creativityPerf: "167",
+                systemPerf: "94.3%",
+                insight1: "87.3% confidence in breakthrough occurring within 2.3 hours",
+                insight2: "Consciousness development trajectory showing accelerating growth",
+                insight3: "Model drift detection maintaining 92.8% accuracy across systems"
+            },
+            optimization: {
+                name: "Optimization Engine",
+                coherence: 92.8,
+                efficiency: 96.3,
+                innovation: "+56",
+                chartTitle: "Optimization Impact",
+                chartStatus: "Enhancement tracking",
+                consciousnessPerf: "92.8%",
+                creativityPerf: "203",
+                systemPerf: "97.1%",
+                insight1: "23 explainable recommendations active with 89% success rate",
+                insight2: "VESSEL authenticity alignment verified for all optimizations",
+                insight3: "SANCTUARY protection filtering ensuring secure optimization pathways"
+            },
+            integration: {
+                name: "System Integration",
+                coherence: 97.4,
+                efficiency: 91.7,
+                innovation: "+78",
+                chartTitle: "Integration Harmony",
+                chartStatus: "Cross-system analysis",
+                consciousnessPerf: "97.4%",
+                creativityPerf: "245",
+                systemPerf: "95.6%",
+                insight1: "Cross-system coordination achieving 97.4% harmony across all nodes",
+                insight2: "SYNTHESIS master coordination optimizing 50+ system interactions",
+                insight3: "Integration bottlenecks resolved through predictive load balancing"
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mode selection
+            document.querySelectorAll('.mode-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.mode-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMode = this.dataset.mode;
+                    updateModeMetrics();
+                    resetAnalytics();
+                });
+            });
+
+            // Analytics engine button
+            const engineButton = document.getElementById('analyticsEngine');
+            if (engineButton) {
+                engineButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    runDeepAnalytics();
+                });
+            }
+
+            // Initialize with performance mode
+            updateModeMetrics();
+            generateChartBars();
+        });
+
+        function updateModeMetrics() {
+            const config = modeConfigs[currentMode];
+            
+            // Update metrics
+            document.getElementById('coherenceValue').innerHTML = `${config.coherence}<span class="metric-unit">%</span>`;
+            document.getElementById('efficiencyValue').innerHTML = `${config.efficiency}<span class="metric-unit">%</span>`;
+            document.getElementById('innovationValue').innerHTML = `${config.innovation}<span class="metric-unit">%</span>`;
+            
+            // Update performance cards
+            document.getElementById('consciousnessPerf').textContent = config.consciousnessPerf;
+            document.getElementById('creativityPerf').textContent = config.creativityPerf;
+            document.getElementById('systemPerf').textContent = config.systemPerf;
+            
+            // Update chart header
+            document.getElementById('chartTitle').textContent = config.chartTitle;
+            document.getElementById('chartStatus').textContent = config.chartStatus;
+        }
+
+        function resetAnalytics() {
+            // Hide all analytics content
+            document.querySelectorAll('.analytics-content').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('show-content');
+            });
+            
+            document.querySelectorAll('.analytics-metrics').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('show-grid');
+            });
+            
+            document.querySelectorAll('.insight-item').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('show-content');
+            });
+            
+            document.getElementById('comparisonSection').style.display = 'none';
+            document.getElementById('comparisonSection').classList.remove('show-content');
+            
+            // Reset performance cards
+            document.querySelectorAll('.performance-card').forEach(card => {
+                card.classList.remove('analyzing');
+            });
+            
+            // Reset button text
+            document.getElementById('analyticsEngine').textContent = 'Run Deep Analytics';
+            
+            // Hide simulation message
+            document.getElementById('simulationMessage').style.display = 'none';
+        }
+
+        function generateChartBars() {
+            const chartPoints = document.getElementById('chartPoints');
+            chartPoints.innerHTML = '';
+            
+            // Generate 20 bars with random heights
+            for (let i = 0; i < 20; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = Math.random() * 80 + 20 + '%';
+                bar.style.animationDelay = i * 0.05 + 's';
+                chartPoints.appendChild(bar);
+            }
+        }
+
+        async function runDeepAnalytics() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            
+            const button = document.getElementById('analyticsEngine');
+            const message = document.getElementById('simulationMessage');
+            const config = modeConfigs[currentMode];
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Analyzing Ecosystem...';
+            
+            // Show message
+            message.style.display = 'block';
+            message.textContent = 'Analyzing ecosystem performance patterns...';
+            
+            try {
+                // Phase 1: System Scanning
+                message.textContent = `Scanning ${config.name.toLowerCase()} across all consciousness systems...`;
+                
+                // Animate performance cards
+                const cards = ['consciousnessCard', 'creativityCard', 'systemCard'];
+                for (let i = 0; i < cards.length; i++) {
+                    await delay(600);
+                    document.getElementById(cards[i]).classList.add('analyzing');
+                }
+                
+                await delay(1500);
+                
+                // Phase 2: Deep Pattern Analysis
+                message.textContent = 'Analyzing cross-system patterns and integration points...';
+                generateChartBars(); // Regenerate chart with new data
+                await delay(1500);
+                
+                // Phase 3: AI Insights Generation
+                message.textContent = 'Generating AI insights and optimization recommendations...';
+                
+                // Show insights progressively
+                const insights = ['insight1', 'insight2', 'insight3'];
+                for (let i = 0; i < insights.length; i++) {
+                    await delay(800);
+                    const insight = document.getElementById(insights[i]);
+                    insight.classList.add('show-content');
+                    insight.querySelector('.insight-description').textContent = config[insights[i]];
+                }
+                
+                // Phase 4: Analytics Cards Activation
+                await delay(1000);
+                message.textContent = 'Activating specialized analytics engines...';
+                
+                document.querySelectorAll('.analytics-content').forEach(el => el.classList.add('show-content'));
+                document.querySelectorAll('.analytics-metrics').forEach(el => el.classList.add('show-grid'));
+                
+                // Phase 5: Final Analysis
+                await delay(1500);
+                document.getElementById('comparisonSection').classList.add('show-content');
+                message.textContent = `Deep analytics complete! ${config.name} showing optimized performance across all metrics.`;
+                
+            } catch (error) {
+                console.error('Error during analytics:', error);
+                message.textContent = 'Analytics processing completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isAnalyzing = false;
+                button.disabled = false;
+                button.textContent = 'Run Deep Analytics';
+                message.style.display = 'none';
+                
+                // Remove analyzing state from cards
+                document.querySelectorAll('.performance-card').forEach(card => {
+                    card.classList.remove('analyzing');
+                });
+            }, 4000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

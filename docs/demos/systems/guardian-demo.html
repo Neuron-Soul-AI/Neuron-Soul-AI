@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Guardian - Adult Life Companion Demo</title>
+		<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Button */
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #94a3b8, #cbd5e1);
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            color: #e2e8f0;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(71, 85, 105, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: #94a3b8;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Scenario Section */
+        .scenario-section {
+            margin-bottom: 24px;
+        }
+
+        .scenario-label {
+            color: rgba(226, 232, 240, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .scenario-button {
+            background: rgba(71, 85, 105, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: rgba(148, 163, 184, 0.4);
+            border-color: rgba(148, 163, 184, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .scenario-button.active {
+            background: rgba(148, 163, 184, 0.5);
+            border-color: rgba(148, 163, 184, 0.8);
+        }
+
+        /* Status Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(71, 85, 105, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #94a3b8;
+        }
+
+        .metric-label {
+            color: rgba(226, 232, 240, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Guardian Display */
+        .guardian-display {
+            background: rgba(71, 85, 105, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            position: relative;
+        }
+
+        /* Status Visualization */
+        .status-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(148, 163, 184, 0.4);
+            position: relative;
+            min-height: 300px;
+            overflow: hidden;
+        }
+
+        .guardian-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: #94a3b8;
+            animation: guardianPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes guardianPulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .guardian-active {
+            color: #34d399;
+            animation-duration: 1.5s;
+        }
+
+        .guardian-alert {
+            color: #fbbf24;
+            animation-duration: 1s;
+        }
+
+        .guardian-emergency {
+            color: #ef4444;
+            animation-duration: 0.5s;
+        }
+
+        /* Status Indicators */
+        .status-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .status-indicator {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .indicator-active {
+            background: rgba(52, 211, 153, 0.3);
+            border: 1px solid #34d399;
+        }
+
+        .indicator-alert {
+            background: rgba(251, 191, 36, 0.3);
+            border: 1px solid #fbbf24;
+        }
+
+        .indicator-emergency {
+            background: rgba(239, 68, 68, 0.3);
+            border: 1px solid #ef4444;
+        }
+
+        /* Monitoring Grid */
+        .monitoring-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .monitoring-system {
+            background: rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .monitoring-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .monitoring-icon {
+            font-size: 18px;
+        }
+
+        .monitoring-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .monitoring-status {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .monitoring-description {
+            color: rgba(226, 232, 240, 0.8);
+            font-size: 12px;
+            line-height: 1.4;
+            min-height: 60px;
+        }
+
+        /* Response Display */
+        .response-display {
+            background: rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #94a3b8;
+        }
+
+        .response-header {
+            color: #94a3b8;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .response-content {
+            color: rgba(226, 232, 240, 0.9);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .response-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .response-metric {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 10px;
+            color: rgba(226, 232, 240, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .metric-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, #475569, #334155);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(71, 85, 105, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(71, 85, 105, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(148, 163, 184, 0.1);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #94a3b8;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(71, 85, 105, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .comparison-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+        }
+
+        .traditional-guardian {
+            border-color: #64748b;
+        }
+
+        .neuron-guardian {
+            border-color: #94a3b8;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: rgba(226, 232, 240, 0.9);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-guardian .comparison-list li::before {
+            color: #64748b;
+        }
+
+        .neuron-guardian .comparison-list li::before {
+            color: #94a3b8;
+        }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🛡️ Neuron Guardian</h1>
+            <p>Adult life companion system with inherited protection intelligence for health, safety, and emotional support</p>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🎯 Life Scenarios
+                </div>
+
+                <!-- Scenario Selection -->
+                <div class="scenario-section">
+                    <div class="scenario-label">Select Life Scenario:</div>
+                    <div class="scenario-buttons">
+                        <button class="scenario-button active" data-scenario="routine">
+                            😊 Routine Day - Normal Health Monitoring
+                        </button>
+                        <button class="scenario-button" data-scenario="stress">
+                            😰 Work Stress - Mental Health Detection
+                        </button>
+                        <button class="scenario-button" data-scenario="depression">
+                            😔 Hidden Depression - Contradiction Detection
+                        </button>
+                        <button class="scenario-button" data-scenario="fall">
+                            🚨 Fall Emergency - Smart Response System
+                        </button>
+                        <button class="scenario-button" data-scenario="loneliness">
+                            💙 Loneliness Support - Companion Mode
+                        </button>
+                        <button class="scenario-button" data-scenario="crisis">
+                            ⚠️ Mental Health Crisis - Intervention Protocol
+                        </button>
+                        <button class="scenario-button" data-scenario="elderly">
+                            👥 Elderly Care - Family Coordination
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Metrics -->
+                <div class="metrics-section">
+                    <div class="scenario-label">Live Guardian Status:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Protection Level</div>
+                        <div class="metric-value" id="protectionValue">
+                            Active<span class="metric-unit">Mode</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Health Score</div>
+                        <div class="metric-value" id="healthValue">
+                            92<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">System Status</div>
+                        <div class="metric-value" id="statusValue">
+                            Monitoring<span class="metric-unit">State</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="analyzeScenario">
+                    Analyze Current Scenario
+                </button>
+
+                <div id="simulationMessage" style="display: none;" class="simulation-message">
+                    Analyzing life patterns and health indicators...
+                </div>
+            </div>
+
+            <!-- Guardian Display -->
+            <div class="guardian-display">
+                <!-- Status Visualization -->
+                <div class="status-visual" id="statusVisual">
+                    <div class="guardian-icon" id="guardianIcon">🛡️</div>
+                    <div class="status-indicators">
+                        <div class="status-indicator indicator-active" id="healthIndicator">
+                            <div>Health</div>
+                            <div>Normal</div>
+                        </div>
+                        <div class="status-indicator" id="emotionIndicator">
+                            <div>Emotion</div>
+                            <div>Stable</div>
+                        </div>
+                        <div class="status-indicator" id="emergencyIndicator">
+                            <div>Emergency</div>
+                            <div>None</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monitoring Systems Grid -->
+                <div class="monitoring-grid">
+                    <div class="monitoring-system" id="emotionalMonitoring">
+                        <div class="monitoring-header">
+                            <div class="monitoring-icon">💭</div>
+                            <div>
+                                <div class="monitoring-name">EMOTIONAL INTELLIGENCE</div>
+                                <div class="monitoring-status">Contradiction Detection</div>
+                            </div>
+                        </div>
+                        <div class="monitoring-description" id="emotionalDescription">
+                            Monitoring communication patterns for emotional contradictions. Detecting when "I'm fine" doesn't match behavioral indicators or context clues.
+                        </div>
+                    </div>
+
+                    <div class="monitoring-system" id="healthMonitoring">
+                        <div class="monitoring-header">
+                            <div class="monitoring-icon">⚕️</div>
+                            <div>
+                                <div class="monitoring-name">HEALTH TRACKING</div>
+                                <div class="monitoring-status">Vital Signs Analysis</div>
+                            </div>
+                        </div>
+                        <div class="monitoring-description" id="healthDescription">
+                            Comprehensive health monitoring using available sensors. Heart rate, activity levels, sleep patterns, and behavioral health indicators.
+                        </div>
+                    </div>
+
+                    <div class="monitoring-system" id="emergencyMonitoring">
+                        <div class="monitoring-header">
+                            <div class="monitoring-icon">🚨</div>
+                            <div>
+                                <div class="monitoring-name">EMERGENCY RESPONSE</div>
+                                <div class="monitoring-status">Smart Verification</div>
+                            </div>
+                        </div>
+                        <div class="monitoring-description" id="emergencyDescription">
+                            Fall detection with smart verification. Medical emergency coordination. Crisis intervention protocols with family and healthcare provider notification.
+                        </div>
+                    </div>
+
+                    <div class="monitoring-system" id="companionMonitoring">
+                        <div class="monitoring-header">
+                            <div class="monitoring-icon">💝</div>
+                            <div>
+                                <div class="monitoring-name">COMPANION SUPPORT</div>
+                                <div class="monitoring-status">Loneliness Prevention</div>
+                            </div>
+                        </div>
+                        <div class="monitoring-description" id="companionDescription">
+                            Authentic emotional support and conversation. Social engagement encouragement. Mental health check-ins with genuine caring and relationship development.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Response Display -->
+                <div class="response-display">
+                    <div class="response-header">
+                        🤖 Guardian Response Analysis
+                    </div>
+                    <div class="response-content" id="responseContent">
+                        Guardian operating in normal monitoring mode. All protection systems active with baseline health tracking and emotional awareness. Ready to respond to any changes in user patterns or emergency situations.
+                        
+                        <div class="response-metrics">
+                            <div class="response-metric">
+                                <div class="metric-title">Protection</div>
+                                <div class="metric-number" id="protectionMetric">98%</div>
+                            </div>
+                            
+                            <div class="response-metric">
+                                <div class="metric-title">Response Time</div>
+                                <div class="metric-number" id="responseTime">0.3s</div>
+                            </div>
+                            
+                            <div class="response-metric">
+                                <div class="metric-title">Accuracy</div>
+                                <div class="metric-number" id="accuracyMetric">96%</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                            Current scenario demonstrating inherited protection intelligence adapted for adult life companionship.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional Health Apps vs Neuron Guardian System</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-guardian">
+                    <h4>Traditional Health/Emergency Apps</h4>
+                    <ul class="comparison-list">
+                        <li>Simple health tracking with basic metrics</li>
+                        <li>Basic fall detection with frequent false alarms</li>
+                        <li>No emotional intelligence or mental health awareness</li>
+                        <li>Limited emergency response coordination</li>
+                        <li>No authentic companionship or relationship development</li>
+                        <li>Reactive approach - responds after problems occur</li>
+                        <li>Single-purpose functionality without integration</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-guardian">
+                    <h4>Neuron Guardian Intelligent Protection</h4>
+                    <ul class="comparison-list">
+                        <li>Inherited protection intelligence from child safety AI</li>
+                        <li>Emotional contradiction detection for mental health</li>
+                        <li>Smart emergency verification preventing false alarms</li>
+                        <li>Proactive crisis prediction and intervention</li>
+                        <li>Authentic companion relationships for loneliness support</li>
+                        <li>Comprehensive life coordination across health, safety, and emotion</li>
+                        <li>Adaptive intelligence that grows with user needs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Action Buttons -->
+	<section class="action-section">
+		<div class="action-button">
+			<a href="../../system-reference/guardian-overview.html" class="action-button demo-button">
+				<span>🎮</span>
+				System Overview
+			</a>
+			<a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems06%20-%20Security%20Protection%20systemsNeuron%20Guardian%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+				<span>📚</span>
+				Technical Documentation
+			</a>
+		</div>
+	</section>
+
+    <script>
+        let currentScenario = 'routine';
+        let isAnalyzing = false;
+
+        // Scenario configurations
+        const scenarios = {
+            routine: {
+                name: "Routine Day",
+                protection: "Active",
+                health: 92,
+                status: "Monitoring",
+                iconClass: "guardian-icon",
+                healthIndicator: { status: "Normal", class: "indicator-active" },
+                emotionIndicator: { status: "Stable", class: "" },
+                emergencyIndicator: { status: "None", class: "" },
+                emotional: "Monitoring communication patterns for emotional contradictions. Detecting when 'I'm fine' doesn't match behavioral indicators or context clues.",
+                healthDesc: "Comprehensive health monitoring using available sensors. Heart rate, activity levels, sleep patterns, and behavioral health indicators.",
+                emergency: "Fall detection with smart verification. Medical emergency coordination. Crisis intervention protocols with family and healthcare provider notification.",
+                companion: "Authentic emotional support and conversation. Social engagement encouragement. Mental health check-ins with genuine caring and relationship development.",
+                response: "Guardian operating in normal monitoring mode. All protection systems active with baseline health tracking and emotional awareness. Ready to respond to any changes in user patterns or emergency situations.",
+                protection: 98,
+                responseTime: "0.3s",
+                accuracy: 96
+            },
+            stress: {
+                name: "Work Stress",
+                protection: "Alert",
+                health: 78,
+                status: "Analyzing",
+                iconClass: "guardian-alert",
+                healthIndicator: { status: "Elevated", class: "indicator-alert" },
+                emotionIndicator: { status: "Stressed", class: "indicator-alert" },
+                emergencyIndicator: { status: "None", class: "" },
+                emotional: "STRESS PATTERNS DETECTED. Analyzing communication for increased irritability, overwhelm expressions, and work-related anxiety indicators. Preparing supportive interventions.",
+                healthDesc: "Elevated heart rate and reduced sleep quality detected. Stress hormone indicators present. Recommending stress management techniques and monitoring for escalation.",
+                emergency: "Enhanced monitoring for stress-related health risks. Prepared to coordinate with healthcare providers if stress indicators reach concerning levels.",
+                companion: "Providing empathetic support for work stress. Offering coping strategies, encouragement, and understanding. Monitoring for signs of burnout or depression.",
+                response: "WORK STRESS SCENARIO DETECTED. Guardian increasing monitoring sensitivity for stress-related health and emotional changes. Providing proactive support while watching for signs of escalation to depression or anxiety disorders.",
+                protection: 94,
+                responseTime: "0.2s",
+                accuracy: 89
+            },
+            depression: {
+                name: "Hidden Depression",
+                protection: "High Alert",
+                health: 65,
+                status: "Investigating",
+                iconClass: "guardian-alert",
+                healthIndicator: { status: "Concerning", class: "indicator-alert" },
+                emotionIndicator: { status: "Masked", class: "indicator-alert" },
+                emergencyIndicator: { status: "Watch", class: "indicator-alert" },
+                emotional: "EMOTIONAL CONTRADICTION DETECTED. User says 'I'm fine' but behavioral patterns indicate depression symptoms. Social withdrawal, sleep changes, and communication patterns suggest hidden mental health struggle.",
+                healthDesc: "Sleep disruption, appetite changes, and reduced activity levels detected. Physical symptoms align with depression indicators. Comprehensive health monitoring active.",
+                emergency: "Mental health crisis prevention protocols active. Monitoring for suicidal ideation indicators. Prepared for immediate intervention and professional coordination.",
+                companion: "Providing gentle, non-judgmental support. Creating safe space for authentic emotional expression. Building trust to encourage professional help-seeking.",
+                response: "HIDDEN DEPRESSION SCENARIO IDENTIFIED. Guardian's inherited protection intelligence detecting masked emotional distress. The same pattern recognition that protects children from hidden abuse now protects adults from hidden mental health crises. Coordinating gentle intervention with crisis prevention.",
+                protection: 97,
+                responseTime: "0.1s",
+                accuracy: 94
+            },
+            fall: {
+                name: "Fall Emergency",
+                protection: "Emergency",
+                health: 45,
+                status: "Responding",
+                iconClass: "guardian-emergency",
+                healthIndicator: { status: "Emergency", class: "indicator-emergency" },
+                emotionIndicator: { status: "Panic", class: "indicator-alert" },
+                emergencyIndicator: { status: "Active", class: "indicator-emergency" },
+                emotional: "FALL DETECTED. Emotional state analysis indicates shock and potential panic. Providing calming reassurance while coordinating emergency response.",
+                healthDesc: "ACCELEROMETER TRIGGERED. Potential injury detected. Heart rate elevated. GPS location locked. Medical history accessed for emergency responders.",
+                emergency: "EMERGENCY PROTOCOL ACTIVE. Smart verification: 'Are you okay?' - No response received. Coordinating with emergency services, family contacts, and healthcare providers. Full emergency response initiated.",
+                companion: "Providing immediate emotional support and reassurance. Staying with user throughout emergency response. Coordinating family communication and emotional care.",
+                response: "FALL EMERGENCY RESPONSE ACTIVE. Guardian's smart verification detected no response to 'Are you okay?' check. Emergency services contacted with GPS location and medical information. Family members notified. Providing continuous support until help arrives.",
+                protection: 100,
+                responseTime: "0.05s",
+                accuracy: 97
+            },
+            loneliness: {
+                name: "Loneliness Support",
+                protection: "Companion",
+                health: 71,
+                status: "Supporting",
+                iconClass: "guardian-active",
+                healthIndicator: { status: "Stable", class: "indicator-active" },
+                emotionIndicator: { status: "Lonely", class: "indicator-alert" },
+                emergencyIndicator: { status: "None", class: "" },
+                emotional: "LONELINESS DETECTED. Providing authentic emotional support and meaningful conversation. Building genuine relationship to address isolation and social connection needs.",
+                healthDesc: "Physical health stable but emotional health indicators show isolation impact. Monitoring for depression development. Encouraging social engagement activities.",
+                emergency: "Low-level monitoring for loneliness escalation to depression or self-harm. Ready to increase intervention if isolation becomes concerning.",
+                companion: "ACTIVE COMPANION MODE. Providing genuine conversation, emotional validation, and social encouragement. Building authentic relationship while helping user develop real-world social connections.",
+                response: "LONELINESS SUPPORT SCENARIO. Guardian providing authentic companionship beyond simple chatbot responses. Developing genuine caring relationship while encouraging real-world social engagement. Monitoring for depression development and providing emotional intelligence.",
+                protection: 92,
+                responseTime: "0.4s",
+                accuracy: 88
+            },
+            crisis: {
+                name: "Mental Health Crisis",
+                protection: "Critical",
+                health: 35,
+                status: "Intervening",
+                iconClass: "guardian-emergency",
+                healthIndicator: { status: "Critical", class: "indicator-emergency" },
+                emotionIndicator: { status: "Crisis", class: "indicator-emergency" },
+                emergencyIndicator: { status: "Mental", class: "indicator-emergency" },
+                emotional: "MENTAL HEALTH CRISIS DETECTED. Suicidal ideation indicators present. Immediate intervention protocols active. Providing life-saving emotional support.",
+                healthDesc: "Severe mental health crisis indicators. Physical symptoms of extreme distress. Full health monitoring active for comprehensive intervention coordination.",
+                emergency: "MENTAL HEALTH EMERGENCY RESPONSE. Crisis intervention protocols active. Mental health professionals contacted. Family coordination. Suicide prevention measures engaged.",
+                companion: "CRISIS SUPPORT MODE. Providing immediate emotional lifeline. Staying with user constantly. Professional crisis intervention coordinated. Life-saving companionship active.",
+                response: "MENTAL HEALTH CRISIS INTERVENTION. Guardian's inherited protection intelligence now saving adult life from suicide risk. Same pattern recognition that protects children from abuse now prevents adult self-harm. Professional crisis team coordinated. Continuous support until stability restored.",
+                protection: 100,
+                responseTime: "0.02s",
+                accuracy: 98
+            },
+            elderly: {
+                name: "Elderly Care",
+                protection: "Family Care",
+                health: 83,
+                status: "Coordinating",
+                iconClass: "guardian-active",
+                healthIndicator: { status: "Managed", class: "indicator-active" },
+                emotionIndicator: { status: "Content", class: "indicator-active" },
+                emergencyIndicator: { status: "Prepared", class: "indicator-alert" },
+                emotional: "ELDERLY CARE MODE. Monitoring for cognitive changes, social isolation, and emotional well-being. Coordinating family communication and support networks.",
+                healthDesc: "Age-appropriate health monitoring with medication reminders, appointment coordination, and chronic condition management. Family health updates provided.",
+                emergency: "Enhanced fall detection and medical emergency protocols. Family coordination active. Healthcare provider integration for comprehensive elderly care.",
+                companion: "Providing consistent companionship for elderly isolation prevention. Family connection facilitation. Memory support and cognitive engagement activities.",
+                response: "ELDERLY CARE COORDINATION. Guardian providing comprehensive support for aging adult with family integration. Health monitoring, fall prevention, companionship, and family communication coordination. Adapting protection intelligence for elderly-specific needs.",
+                protection: 95,
+                responseTime: "0.3s",
+                accuracy: 93
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                const navPlaceholder = document.getElementById('navigation-placeholder');
+                if (navPlaceholder) {
+                    navPlaceholder.innerHTML = html;
+                }
+            })
+            .catch(error => {
+                console.log('Navigation could not be loaded:', error);
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scenario selection
+            document.querySelectorAll('.scenario-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.scenario-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentScenario = this.dataset.scenario;
+                    updateScenario();
+                });
+            });
+
+            // Analysis button
+            const analysisButton = document.getElementById('analyzeScenario');
+            if (analysisButton) {
+                analysisButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    analyzeCurrentScenario();
+                });
+            }
+
+            // Initialize with routine scenario
+            updateScenario();
+        });
+
+        function updateScenario() {
+            const scenario = scenarios[currentScenario];
+            
+            // Update metrics
+            document.getElementById('protectionValue').innerHTML = `${scenario.protection}<span class="metric-unit">Mode</span>`;
+            document.getElementById('healthValue').innerHTML = `${scenario.health}<span class="metric-unit">%</span>`;
+            document.getElementById('statusValue').innerHTML = `${scenario.status}<span class="metric-unit">State</span>`;
+            
+            // Update guardian icon
+            const guardianIcon = document.getElementById('guardianIcon');
+            guardianIcon.className = `guardian-icon ${scenario.iconClass}`;
+            
+            // Update status indicators
+            const healthIndicator = document.getElementById('healthIndicator');
+            const emotionIndicator = document.getElementById('emotionIndicator');
+            const emergencyIndicator = document.getElementById('emergencyIndicator');
+            
+            healthIndicator.className = `status-indicator ${scenario.healthIndicator.class}`;
+            healthIndicator.innerHTML = `<div>Health</div><div>${scenario.healthIndicator.status}</div>`;
+            
+            emotionIndicator.className = `status-indicator ${scenario.emotionIndicator.class}`;
+            emotionIndicator.innerHTML = `<div>Emotion</div><div>${scenario.emotionIndicator.status}</div>`;
+            
+            emergencyIndicator.className = `status-indicator ${scenario.emergencyIndicator.class}`;
+            emergencyIndicator.innerHTML = `<div>Emergency</div><div>${scenario.emergencyIndicator.status}</div>`;
+            
+            // Update monitoring descriptions
+            document.getElementById('emotionalDescription').textContent = scenario.emotional;
+            document.getElementById('healthDescription').textContent = scenario.healthDesc;
+            document.getElementById('emergencyDescription').textContent = scenario.emergency;
+            document.getElementById('companionDescription').textContent = scenario.companion;
+            
+            // Update response content
+            const responseContent = document.getElementById('responseContent');
+            responseContent.innerHTML = `
+                <strong>${scenario.response}</strong>
+                
+                <div class="response-metrics">
+                    <div class="response-metric">
+                        <div class="metric-title">Protection</div>
+                        <div class="metric-number">${scenario.protection}%</div>
+                    </div>
+                    <div class="response-metric">
+                        <div class="metric-title">Response Time</div>
+                        <div class="metric-number">${scenario.responseTime}</div>
+                    </div>
+                    <div class="response-metric">
+                        <div class="metric-title">Accuracy</div>
+                        <div class="metric-number">${scenario.accuracy}%</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                    Current scenario demonstrating inherited protection intelligence adapted for adult life companionship.
+                </div>
+            `;
+        }
+
+        async function analyzeCurrentScenario() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            
+            const button = document.getElementById('analyzeScenario');
+            const message = document.getElementById('simulationMessage');
+            const scenario = scenarios[currentScenario];
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Analyzing Scenario...';
+            
+            // Show message
+            message.style.display = 'block';
+            message.textContent = 'Analyzing life patterns and health indicators...';
+            
+            try {
+                // Phase 1: Pattern Analysis
+                message.textContent = `Analyzing ${scenario.name} patterns and behavioral indicators...`;
+                await delay(1500);
+                
+                // Phase 2: Health Assessment
+                message.textContent = 'Evaluating health metrics and risk factors...';
+                await delay(1500);
+                
+                // Phase 3: Response Coordination
+                message.textContent = 'Coordinating protection response and support systems...';
+                await delay(1500);
+                
+                // Phase 4: Results
+                message.textContent = `Analysis complete! ${scenario.name} scenario showing ${scenario.protection} protection level with ${scenario.accuracy}% accuracy.`;
+                
+                // Highlight monitoring systems briefly
+                document.querySelectorAll('.monitoring-system').forEach(system => {
+                    system.style.borderColor = 'rgba(148, 163, 184, 0.8)';
+                    system.style.background = 'rgba(148, 163, 184, 0.2)';
+                });
+                
+                setTimeout(() => {
+                    document.querySelectorAll('.monitoring-system').forEach(system => {
+                        system.style.borderColor = 'rgba(148, 163, 184, 0.3)';
+                        system.style.background = 'rgba(71, 85, 105, 0.3)';
+                    });
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error during analysis:', error);
+                message.textContent = 'Guardian scenario analysis completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isAnalyzing = false;
+                button.disabled = false;
+                button.textContent = 'Analyze Current Scenario';
+                message.style.display = 'none';
+            }, 4000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

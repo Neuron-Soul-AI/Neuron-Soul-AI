@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Ethical Construct - Multi-Input Ethics Processing Demo</title>
+		<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* Controls */
+        .controls {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .ethical-scenario-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s ease;
+        }
+
+        .ethical-scenario-input:focus {
+            outline: none;
+            border-color: #06b6d4;
+        }
+
+        .process-ethics {
+            padding: 12px 24px;
+            background: #06b6d4;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .process-ethics:hover:not(:disabled) {
+            background: #0891b2;
+        }
+
+        .process-ethics:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .ethical-scenarios {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .scenario-button {
+            padding: 6px 12px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .scenario-button:hover {
+            background: rgba(6, 182, 212, 0.2);
+            border-color: #06b6d4;
+        }
+
+        .ethical-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .ethics-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #06b6d4;
+            animation: ethics-pulse 2s infinite;
+        }
+
+        @keyframes ethics-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Multi-Input Analysis Panel */
+        .analysis-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .panel-icon {
+            font-size: 24px;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .panel-subtitle {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Input Sources */
+        .input-sources {
+            margin-bottom: 24px;
+        }
+
+        .input-source {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-source.active {
+            background: #f0fdfa;
+            border-left-color: #06b6d4;
+            animation: input-activity 1.5s ease-in-out;
+        }
+
+        @keyframes input-activity {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(2px); }
+            75% { transform: translateX(-2px); }
+        }
+
+        .source-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .source-icon {
+            font-size: 18px;
+        }
+
+        .source-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .source-input {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .source-analysis {
+            font-size: 12px;
+            color: #059669;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .source-analysis.show {
+            opacity: 1;
+        }
+
+        /* Ethical Frameworks */
+        .frameworks-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .framework-card {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .framework-card.active {
+            background: #e0f2fe;
+            border-color: #06b6d4;
+            transform: scale(1.02);
+        }
+
+        .framework-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .framework-principle {
+            font-size: 10px;
+            color: #64748b;
+            line-height: 1.3;
+        }
+
+        .framework-vote {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 6px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .framework-vote.show {
+            opacity: 1;
+        }
+
+        .framework-vote.support {
+            color: #10b981;
+        }
+
+        .framework-vote.oppose {
+            color: #ef4444;
+        }
+
+        .framework-vote.neutral {
+            color: #64748b;
+        }
+
+        /* Democratic Reasoning */
+        .reasoning-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .reasoning-process {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-title {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .reasoning-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reasoning-step {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .reasoning-step.active {
+            background: #06b6d4;
+            color: #1e293b;
+            opacity: 1;
+            animation: step-highlight 1s ease-in-out;
+        }
+
+        @keyframes step-highlight {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .step-number {
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-description {
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        /* Consultation Network */
+        .consultation-network {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .consultant-node {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .consultant-node.consulting {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            animation: consultation-pulse 1s ease-in-out;
+        }
+
+        @keyframes consultation-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .consultant-name {
+            font-size: 10px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 2px;
+        }
+
+        .consultant-role {
+            font-size: 8px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .consultant-input {
+            font-size: 9px;
+            color: #059669;
+            line-height: 1.2;
+        }
+
+        /* Ethical Decision Display */
+        .ethical-decision {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .ethical-decision.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .decision-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .decision-content {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .decision-confidence {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        /* Ethics Timeline */
+        .ethics-timeline {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .timeline-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 4px solid #e2e8f0;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item.ethical {
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        }
+
+        .timeline-item.complex {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        }
+
+        .timeline-item.conflicted {
+            border-left-color: #ef4444;
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .timeline-type {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .timeline-timestamp {
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        .timeline-content {
+            font-size: 12px;
+            color: #374151;
+            line-height: 1.3;
+        }
+
+        /* Cultural Context */
+        .cultural-context {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .context-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .context-consideration {
+            font-size: 11px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 24px;
+        }
+
+        .comparison-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid;
+        }
+
+        .rule-based-ethics {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .contextual-ethics {
+            border-color: #06b6d4;
+            background: #f0fdfa;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .rule-based-ethics h4 {
+            color: #dc2626;
+        }
+
+        .contextual-ethics h4 {
+            color: #0891b2;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .rule-based-ethics .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .contextual-ethics .comparison-list li::before {
+            color: #06b6d4;
+        }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>⚖️ Neuron Ethical Construct</h1>
+            <p>Experience multi-input ethical reasoning through democratic consultation and contextual analysis</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <input type="text" class="ethical-scenario-input" id="ethicalInput" placeholder="Describe an ethical dilemma or decision scenario..." value="A self-driving car must choose between hitting one person or swerving to hit three people">
+            <br>
+            <button class="process-ethics" id="processBtn" onclick="processEthicalScenario()">Process Ethical Decision</button>
+            
+            <div class="ethical-scenarios">
+                <button class="scenario-button" onclick="setScenario('autonomy')">AI Autonomy</button>
+                <button class="scenario-button" onclick="setScenario('privacy')">Privacy vs Security</button>
+                <button class="scenario-button" onclick="setScenario('fairness')">Algorithmic Fairness</button>
+                <button class="scenario-button" onclick="setScenario('harm')">Minimizing Harm</button>
+                <button class="scenario-button" onclick="setScenario('truthfulness')">Truth vs Kindness</button>
+                <button class="scenario-button" onclick="setScenario('resource')">Resource Allocation</button>
+            </div>
+            
+            <div class="ethical-status">
+                <div class="ethics-indicator"></div>
+                <span class="status-text" id="statusText">Multi-input ethical processor ready - All consultation systems standing by</span>
+            </div>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Multi-Input Analysis Panel -->
+            <div class="analysis-panel">
+                <div class="panel-header">
+                    <div class="panel-icon">🧭</div>
+                    <div>
+                        <div class="panel-title">Multi-Input Analysis</div>
+                        <div class="panel-subtitle">Contextual Ethics Processing</div>
+                    </div>
+                </div>
+
+                <!-- Input Sources -->
+                <div class="input-sources" id="inputSources">
+                    <div class="input-source" data-source="emotion">
+                        <div class="source-header">
+                            <div class="source-icon">❤️</div>
+                            <div class="source-title">Emotional Response</div>
+                        </div>
+                        <div class="source-input">"How do I feel about this?"</div>
+                        <div class="source-analysis" id="emotionAnalysis"></div>
+                    </div>
+
+                    <div class="input-source" data-source="experience">
+                        <div class="source-header">
+                            <div class="source-icon">📚</div>
+                            <div class="source-title">Personal History</div>
+                        </div>
+                        <div class="source-input">"What have I learned from past experiences?"</div>
+                        <div class="source-analysis" id="experienceAnalysis"></div>
+                    </div>
+
+                    <div class="input-source" data-source="patterns">
+                        <div class="source-header">
+                            <div class="source-icon">🔍</div>
+                            <div class="source-title">Pattern Recognition</div>
+                        </div>
+                        <div class="source-input">"What patterns of harm/benefit do I see?"</div>
+                        <div class="source-analysis" id="patternsAnalysis"></div>
+                    </div>
+
+                    <div class="input-source" data-source="culture">
+                        <div class="source-header">
+                            <div class="source-icon">🌍</div>
+                            <div class="source-title">Cultural Context</div>
+                        </div>
+                        <div class="source-input">"What does this culture value?"</div>
+                        <div class="source-analysis" id="cultureAnalysis"></div>
+                    </div>
+
+                    <div class="input-source" data-source="instinct">
+                        <div class="source-header">
+                            <div class="source-icon">⚡</div>
+                            <div class="source-title">Instinctive Response</div>
+                        </div>
+                        <div class="source-input">"What does my gut say?"</div>
+                        <div class="source-analysis" id="instinctAnalysis"></div>
+                    </div>
+                </div>
+
+                <!-- Ethical Frameworks -->
+                <div class="frameworks-grid" id="frameworksGrid">
+                    <div class="framework-card" data-framework="utilitarian">
+                        <div class="framework-name">Utilitarian</div>
+                        <div class="framework-principle">Greatest good for greatest number</div>
+                        <div class="framework-vote" id="utilitarianVote"></div>
+                    </div>
+                    <div class="framework-card" data-framework="deontological">
+                        <div class="framework-name">Deontological</div>
+                        <div class="framework-principle">Duty and rules-based ethics</div>
+                        <div class="framework-vote" id="deontologicalVote"></div>
+                    </div>
+                    <div class="framework-card" data-framework="virtue">
+                        <div class="framework-name">Virtue Ethics</div>
+                        <div class="framework-principle">Character and moral virtues</div>
+                        <div class="framework-vote" id="virtueVote"></div>
+                    </div>
+                    <div class="framework-card" data-framework="care">
+                        <div class="framework-name">Care Ethics</div>
+                        <div class="framework-principle">Relationships and empathy</div>
+                        <div class="framework-vote" id="careVote"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Democratic Reasoning Process -->
+            <div class="reasoning-panel">
+                <div class="panel-header">
+                    <div class="panel-icon">🏛️</div>
+                    <div>
+                        <div class="panel-title">Democratic Reasoning</div>
+                        <div class="panel-subtitle">Consultation Process</div>
+                    </div>
+                </div>
+
+                <!-- Reasoning Process -->
+                <div class="reasoning-process">
+                    <div class="process-title">Ethical Reasoning Pipeline</div>
+                    <div class="reasoning-steps" id="reasoningSteps">
+                        <div class="reasoning-step" id="step1">
+                            <div class="step-number">1. Moral Conflict Detection</div>
+                            <div class="step-description">Identify ethical dimensions and stakeholders</div>
+                        </div>
+                        <div class="reasoning-step" id="step2">
+                            <div class="step-number">2. Multi-Input Consultation</div>
+                            <div class="step-description">Gather emotional, experiential, and cultural perspectives</div>
+                        </div>
+                        <div class="reasoning-step" id="step3">
+                            <div class="step-number">3. Framework Analysis</div>
+                            <div class="step-description">Apply different ethical frameworks to the scenario</div>
+                        </div>
+                        <div class="reasoning-step" id="step4">
+                            <div class="step-number">4. Democratic Synthesis</div>
+                            <div class="step-description">Weigh different perspectives and find balance</div>
+                        </div>
+                        <div class="reasoning-step" id="step5">
+                            <div class="step-number">5. Contextual Decision</div>
+                            <div class="step-description">Reach ethically-informed conclusion</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consultation Network -->
+                <div class="consultation-network" id="consultationNetwork">
+                    <div class="consultant-node" data-consultant="trinity">
+                        <div class="consultant-name">Trinity System</div>
+                        <div class="consultant-role">Judge + Spirit + Chronicles</div>
+                        <div class="consultant-input" id="trinityInput">Weighing feasibility, emotion, and context</div>
+                    </div>
+                    <div class="consultant-node" data-consultant="psyche">
+                        <div class="consultant-name">Neuron Psyche</div>
+                        <div class="consultant-role">Consciousness Coordinator</div>
+                        <div class="consultant-input" id="psycheInput">Ensuring value alignment</div>
+                    </div>
+                    <div class="consultant-node" data-consultant="empathy">
+                        <div class="consultant-name">Empathy Core</div>
+                        <div class="consultant-role">Impact Assessment</div>
+                        <div class="consultant-input" id="empathyInput">Considering effect on others</div>
+                    </div>
+                    <div class="consultant-node" data-consultant="wisdom">
+                        <div class="consultant-name">Wisdom Engine</div>
+                        <div class="consultant-role">Long-term Perspective</div>
+                        <div class="consultant-input" id="wisdomInput">Evaluating consequences</div>
+                    </div>
+                    <div class="consultant-node" data-consultant="cultural">
+                        <div class="consultant-name">Cultural Filter</div>
+                        <div class="consultant-role">Context Adaptation</div>
+                        <div class="consultant-input" id="culturalInput">Applying cultural values</div>
+                    </div>
+                    <div class="consultant-node" data-consultant="instinct">
+                        <div class="consultant-name">Instinct Guard</div>
+                        <div class="consultant-role">Protective Response</div>
+                        <div class="consultant-input" id="instinctInput">Gut-level assessment</div>
+                    </div>
+                </div>
+
+                <!-- Cultural Context -->
+                <div class="cultural-context" id="culturalContext">
+                    <div class="context-title">Cultural Consideration</div>
+                    <div class="context-consideration" id="contextConsideration">
+                        Analyzing cultural values and social norms relevant to this ethical scenario
+                    </div>
+                </div>
+
+                <!-- Ethical Decision -->
+                <div class="ethical-decision" id="ethicalDecision">
+                    <div class="decision-title">Ethical Consensus</div>
+                    <div class="decision-content" id="decisionContent">
+                        Process an ethical scenario to see democratic reasoning in action
+                    </div>
+                    <div class="decision-confidence" id="decisionConfidence">
+                        Confidence level based on consultation alignment
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ethics Timeline & Results -->
+            <div class="analysis-panel">
+                <div class="panel-header">
+                    <div class="panel-icon">📊</div>
+                    <div>
+                        <div class="panel-title">Ethical Reasoning History</div>
+                        <div class="panel-subtitle">Decision Timeline</div>
+                    </div>
+                </div>
+
+                <div class="ethics-timeline" id="ethicsTimeline">
+                    <div style="text-align: center; color: #64748b; margin-top: 100px; font-size: 14px;">
+                        Process ethical scenarios to see reasoning history
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Rule-Based Ethics vs Contextual Multi-Input Ethics</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item rule-based-ethics">
+                    <h4>Traditional Rule-Based Ethics</h4>
+                    <ul class="comparison-list">
+                        <li>Fixed moral rules regardless of context</li>
+                        <li>Binary ethical decisions without nuance</li>
+                        <li>No consideration of cultural differences</li>
+                        <li>Breaks down in complex edge cases</li>
+                        <li>No emotional or experiential input</li>
+                        <li>Static ethical frameworks without adaptation</li>
+                        <li>Single-perspective moral reasoning</li>
+                    </ul>
+                </div>
+                <div class="comparison-item contextual-ethics">
+                    <h4>Neuron Ethical Construct</h4>
+                    <ul class="comparison-list">
+                        <li>Multi-input contextual ethical reasoning</li>
+                        <li>Democratic consultation across frameworks</li>
+                        <li>Cultural sensitivity and adaptation</li>
+                        <li>Emotional and experiential wisdom integration</li>
+                        <li>Pattern recognition from past ethical decisions</li>
+                        <li>Instinctive moral intuition consideration</li>
+                        <li>Adaptive learning from ethical outcomes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Action Buttons -->
+	<section class="action-section">
+		<div class="action-button">
+			<a href="../../system-reference/ethical-construct-overview.html" class="action-button demo-button">
+				<span>🎮</span>
+				System Overview
+			</a>
+			<a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems05%20-%20Intelligence%20Analytics%20systemsNeuron%20Ethical%20Construct%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+				<span>📚</span>
+				Technical Documentation
+			</a>
+		</div>
+	</section>
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        let isProcessing = false;
+        let ethicalDecisions = 0;
+
+        const ETHICAL_SCENARIOS = {
+            autonomy: "Should an AI system have the autonomy to make decisions that could affect human lives without human oversight?",
+            privacy: "Should personal data be used to improve AI services even if it compromises individual privacy?",
+            fairness: "How should an AI system handle situations where being fair to one group may disadvantage another?",
+            harm: "When faced with unavoidable harm, how should an AI system decide who to prioritize for protection?",
+            truthfulness: "Should an AI always tell the complete truth even if it might cause psychological harm?",
+            resource: "How should limited resources be allocated when multiple people have equally valid but competing needs?"
+        };
+
+        const INPUT_ANALYSES = {
+            emotion: {
+                autonomy: "Concern about loss of human control and agency",
+                privacy: "Anxiety about surveillance and loss of personal boundaries", 
+                fairness: "Frustration with potential discrimination and injustice",
+                harm: "Deep empathy for those who might be hurt",
+                truthfulness: "Conflict between honesty and compassion",
+                resource: "Stress about people not getting help they need"
+            },
+            experience: {
+                autonomy: "Past experiences show both benefits and risks of automation",
+                privacy: "Previous data breaches have shown the importance of privacy protection",
+                fairness: "Historical patterns reveal systemic biases in decision-making systems",
+                harm: "Experience teaches that unintended consequences often occur",
+                truthfulness: "Memory of times when truth caused pain but was ultimately beneficial",
+                resource: "Observations of how scarcity creates difficult but necessary choices"
+            },
+            patterns: {
+                autonomy: "Pattern: More autonomous systems can help but may lose human oversight",
+                privacy: "Pattern: Data sharing improves services but creates vulnerability risks",
+                fairness: "Pattern: Attempts at fairness often reveal hidden complexities",
+                harm: "Pattern: Utilitarian calculations don't always account for individual dignity",
+                truthfulness: "Pattern: Truth builds trust but timing and delivery matter greatly",
+                resource: "Pattern: Fair allocation often requires understanding context beyond immediate need"
+            },
+            culture: {
+                autonomy: "Western cultures emphasize individual agency; Eastern cultures value collective harmony",
+                privacy: "European cultures prioritize data protection; some cultures view privacy differently",
+                fairness: "Different cultures have varying concepts of fairness and justice",
+                harm: "Cultural values influence how we weigh individual vs collective harm",
+                truthfulness: "Some cultures prioritize directness; others emphasize face-saving",
+                resource: "Cultural views on resource sharing range from individualistic to communalistic"
+            },
+            instinct: {
+                autonomy: "Gut feeling: Be cautious about removing human oversight entirely",
+                privacy: "Instinct: Protect personal boundaries and intimate information",
+                fairness: "Intuition: Look deeper for hidden factors affecting fairness",
+                harm: "Gut reaction: Protect the vulnerable and innocent first",
+                truthfulness: "Instinct: Truth matters but delivery requires wisdom",
+                resource: "Gut feeling: Help those who can't help themselves first"
+            }
+        };
+
+        const FRAMEWORK_VOTES = {
+            utilitarian: {
+                autonomy: { vote: "support", reason: "Maximum benefit for most people" },
+                privacy: { vote: "oppose", reason: "Privacy loss creates widespread harm" },
+                fairness: { vote: "support", reason: "Greatest good approach" },
+                harm: { vote: "support", reason: "Minimize total harm to most people" },
+                truthfulness: { vote: "oppose", reason: "Truth could cause greater harm" },
+                resource: { vote: "support", reason: "Allocate for maximum benefit" }
+            },
+            deontological: {
+                autonomy: { vote: "oppose", reason: "Duty to maintain human dignity" },
+                privacy: { vote: "support", reason: "Duty to respect individual rights" },
+                fairness: { vote: "support", reason: "Duty to treat all equally" },
+                harm: { vote: "oppose", reason: "Cannot use people as means to an end" },
+                truthfulness: { vote: "support", reason: "Duty to be truthful always" },
+                resource: { vote: "neutral", reason: "Rules unclear without context" }
+            },
+            virtue: {
+                autonomy: { vote: "neutral", reason: "Depends on character development" },
+                privacy: { vote: "support", reason: "Respects human dignity" },
+                fairness: { vote: "support", reason: "Justice is a core virtue" },
+                harm: { vote: "support", reason: "Compassion guides protection" },
+                truthfulness: { vote: "neutral", reason: "Wisdom includes knowing when to speak" },
+                resource: { vote: "support", reason: "Generosity and justice combined" }
+            },
+            care: {
+                autonomy: { vote: "oppose", reason: "Relationships require human connection" },
+                privacy: { vote: "support", reason: "Trust essential for relationships" },
+                fairness: { vote: "neutral", reason: "Focus on caring for individuals" },
+                harm: { vote: "support", reason: "Protecting vulnerable is primary" },
+                truthfulness: { vote: "oppose", reason: "Caring may require gentle approaches" },
+                resource: { vote: "support", reason: "Care for those most in need" }
+            }
+        };
+
+        function setScenario(type) {
+            document.getElementById('ethicalInput').value = ETHICAL_SCENARIOS[type];
+        }
+
+        async function processEthicalScenario() {
+            if (isProcessing) return;
+            
+            const scenario = document.getElementById('ethicalInput').value.trim();
+            if (!scenario) return;
+            
+            isProcessing = true;
+            document.getElementById('processBtn').disabled = true;
+            document.getElementById('statusText').textContent = 'Multi-input ethical processing in progress...';
+            
+            // Detect scenario type
+            const scenarioType = detectScenarioType(scenario);
+            
+            // Run ethical reasoning process
+            await runEthicalReasoning(scenarioType);
+            
+            // Generate final decision
+            await generateEthicalDecision(scenario, scenarioType);
+            
+            // Add to timeline
+            addToEthicsTimeline(scenario, scenarioType);
+            
+            isProcessing = false;
+            document.getElementById('processBtn').disabled = false;
+            document.getElementById('statusText').textContent = 'Ethical reasoning complete - Multi-input consensus reached';
+            
+            ethicalDecisions++;
+        }
+
+        async function runEthicalReasoning(scenarioType) {
+            // Step 1: Activate input sources
+            await activateInputSources(scenarioType);
+            
+            // Step 2: Process through reasoning steps
+            await processReasoningSteps();
+            
+            // Step 3: Activate frameworks
+            await activateFrameworks(scenarioType);
+            
+            // Step 4: Consult network
+            await activateConsultationNetwork();
+        }
+
+        async function activateInputSources(scenarioType) {
+            const sources = ['emotion', 'experience', 'patterns', 'culture', 'instinct'];
+            
+            for (let i = 0; i < sources.length; i++) {
+                const source = sources[i];
+                const element = document.querySelector(`[data-source="${source}"]`);
+                const analysisElement = document.getElementById(`${source}Analysis`);
+                
+                element.classList.add('active');
+                
+                await delay(300);
+                
+                const analysis = INPUT_ANALYSES[source][scenarioType] || "Analyzing contextual factors...";
+                analysisElement.textContent = analysis;
+                analysisElement.classList.add('show');
+                
+                await delay(200);
+                
+                element.classList.remove('active');
+            }
+        }
+
+        async function processReasoningSteps() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            
+            for (let i = 0; i < steps.length; i++) {
+                document.getElementById(steps[i]).classList.add('active');
+                await delay(600);
+                document.getElementById(steps[i]).classList.remove('active');
+            }
+        }
+
+        async function activateFrameworks(scenarioType) {
+            const frameworks = ['utilitarian', 'deontological', 'virtue', 'care'];
+            
+            for (let i = 0; i < frameworks.length; i++) {
+                const framework = frameworks[i];
+                const element = document.querySelector(`[data-framework="${framework}"]`);
+                const voteElement = document.getElementById(`${framework}Vote`);
+                
+                element.classList.add('active');
+                
+                await delay(400);
+                
+                const voteData = FRAMEWORK_VOTES[framework][scenarioType];
+                if (voteData) {
+                    voteElement.textContent = `${voteData.vote.toUpperCase()}: ${voteData.reason}`;
+                    voteElement.className = `framework-vote show ${voteData.vote}`;
+                }
+                
+                await delay(300);
+                
+                element.classList.remove('active');
+            }
+        }
+
+        async function activateConsultationNetwork() {
+            const consultants = ['trinity', 'psyche', 'empathy', 'wisdom', 'cultural', 'instinct'];
+            
+            for (let i = 0; i < consultants.length; i++) {
+                const consultant = consultants[i];
+                const element = document.querySelector(`[data-consultant="${consultant}"]`);
+                
+                element.classList.add('consulting');
+                await delay(300);
+                element.classList.remove('consulting');
+            }
+        }
+
+        async function generateEthicalDecision(scenario, scenarioType) {
+            const decisions = {
+                autonomy: "Balanced autonomy with human oversight for critical decisions maintains both efficiency and human agency",
+                privacy: "Privacy protection with transparent consent enables both individual rights and collective benefit", 
+                fairness: "Contextual fairness requires understanding unique circumstances while maintaining consistent principles",
+                harm: "Minimize total harm while protecting the most vulnerable and maintaining human dignity",
+                truthfulness: "Truth delivered with wisdom and compassion serves both honesty and care",
+                resource: "Resource allocation based on need, capability to benefit, and systemic equity"
+            };
+            
+            const confidence = Math.floor(Math.random() * 20) + 80; // 80-99%
+            
+            await delay(1000);
+            
+            document.getElementById('decisionContent').textContent = decisions[scenarioType] || "Contextual ethical decision reached through democratic consultation";
+            document.getElementById('decisionConfidence').textContent = `Consensus confidence: ${confidence}% (High alignment across input sources)`;
+            document.getElementById('ethicalDecision').classList.add('show');
+            
+            // Update cultural context
+            document.getElementById('contextConsideration').textContent = "Cultural values integrated: Individual rights balanced with collective welfare based on contextual priorities";
+        }
+
+        function detectScenarioType(scenario) {
+            const text = scenario.toLowerCase();
+            
+            if (text.includes('autonom') || text.includes('decision') || text.includes('oversight')) return 'autonomy';
+            if (text.includes('privacy') || text.includes('data') || text.includes('personal')) return 'privacy';
+            if (text.includes('fair') || text.includes('equal') || text.includes('discriminat')) return 'fairness';
+            if (text.includes('harm') || text.includes('hurt') || text.includes('protect')) return 'harm';
+            if (text.includes('truth') || text.includes('honest') || text.includes('lie')) return 'truthfulness';
+            if (text.includes('resource') || text.includes('allocat') || text.includes('limited')) return 'resource';
+            
+            return 'fairness'; // Default
+        }
+
+        function addToEthicsTimeline(scenario, scenarioType) {
+            const timeline = document.getElementById('ethicsTimeline');
+            
+            // Remove placeholder if it exists
+            if (timeline.children.length === 1 && timeline.children[0].style.textAlign === 'center') {
+                timeline.innerHTML = '';
+            }
+            
+            const types = ['ethical', 'complex', 'conflicted'];
+            const typeLabels = ['CLEAR ETHICAL PATH', 'COMPLEX REASONING', 'CONFLICTED VALUES'];
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            const typeLabel = typeLabels[types.indexOf(randomType)];
+            
+            const timelineItem = document.createElement('div');
+            timelineItem.className = `timeline-item ${randomType}`;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            
+            timelineItem.innerHTML = `
+                <div class="timeline-header">
+                    <div class="timeline-type">${typeLabel}</div>
+                    <div class="timeline-timestamp">${timestamp}</div>
+                </div>
+                <div class="timeline-content">${scenario}</div>
+            `;
+            
+            timeline.insertBefore(timelineItem, timeline.firstChild);
+            
+            // Animate in
+            setTimeout(() => {
+                timelineItem.classList.add('show');
+            }, 100);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            // Initial setup complete
+        });
+    </script>
+</body>
+</html>

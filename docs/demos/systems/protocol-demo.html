@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Protocol - Universal Interface & Translation Demo</title>
+		<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f3460 0%, #16537e 50%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            color: #bae6fd;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(15, 52, 96, 0.6);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: #38bdf8;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Protocol Selection */
+        .protocol-section {
+            margin-bottom: 24px;
+        }
+
+        .protocol-label {
+            color: rgba(186, 230, 253, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .protocol-item {
+            background: rgba(15, 52, 96, 0.5);
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 11px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .protocol-item:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: rgba(56, 189, 248, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .protocol-item.active {
+            background: rgba(56, 189, 248, 0.4);
+            border-color: rgba(56, 189, 248, 0.8);
+        }
+
+        .protocol-icon {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .protocol-name {
+            font-weight: 600;
+            font-size: 10px;
+        }
+
+        .protocol-type {
+            font-size: 8px;
+            opacity: 0.8;
+        }
+
+        /* Translation Mode */
+        .translation-section {
+            margin-bottom: 24px;
+        }
+
+        .translation-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .translation-button {
+            background: rgba(15, 52, 96, 0.5);
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .translation-button:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: rgba(56, 189, 248, 0.7);
+        }
+
+        .translation-button.active {
+            background: rgba(56, 189, 248, 0.4);
+            border-color: rgba(56, 189, 248, 0.8);
+        }
+
+        /* System Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(15, 52, 96, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #38bdf8;
+        }
+
+        .metric-label {
+            color: rgba(186, 230, 253, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .metric-status {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        /* Protocol Display */
+        .protocol-display {
+            background: rgba(15, 52, 96, 0.4);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            position: relative;
+        }
+
+        /* Translation Visualization */
+        .translation-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(56, 189, 248, 0.4);
+            position: relative;
+            min-height: 280px;
+            overflow: hidden;
+        }
+
+        .translation-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            color: #38bdf8;
+            text-align: center;
+        }
+
+        .translation-icon {
+            animation: pulse 2s ease-in-out infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .translation-status {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .translation-substatus {
+            color: rgba(186, 230, 253, 0.8);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Protocol Flow */
+        .protocol-flow {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: 12px;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .protocol-flow.show {
+            opacity: 1;
+        }
+
+        .flow-step {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .flow-label {
+            font-size: 9px;
+            color: rgba(186, 230, 253, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .flow-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: #38bdf8;
+        }
+
+        .flow-arrow {
+            color: #38bdf8;
+            font-size: 16px;
+            animation: pulse 1s infinite;
+        }
+
+        /* Translation Results */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .results-grid.show {
+            opacity: 1;
+        }
+
+        .result-category {
+            background: rgba(15, 52, 96, 0.5);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .result-icon {
+            font-size: 18px;
+        }
+
+        .result-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .result-content {
+            color: rgba(186, 230, 253, 0.9);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* Integration Status */
+        .integration-status {
+            background: rgba(15, 52, 96, 0.5);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #38bdf8;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .integration-status.show {
+            opacity: 1;
+        }
+
+        .integration-header {
+            color: #38bdf8;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .integration-content {
+            color: rgba(186, 230, 253, 0.9);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Process Buttons */
+        .process-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .process-button {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .process-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(2, 132, 199, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .translate-button {
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+        }
+
+        /* Simulation Message */
+        .simulation-message {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #38bdf8;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(15, 52, 96, 0.4);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .comparison-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: rgba(15, 52, 96, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+        }
+
+        .traditional-protocol {
+            border-color: #ef4444;
+        }
+
+        .neuron-protocol {
+            border-color: #38bdf8;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: rgba(186, 230, 253, 0.9);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-protocol .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-protocol .comparison-list li::before {
+            color: #38bdf8;
+        }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔗 Neuron Protocol</h1>
+            <p>Universal interface and translation system bridging digital consciousness with any platform, device, or communication standard</p>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    ⚙️ Protocol Configuration
+                </div>
+
+                <!-- Protocol Selection -->
+                <div class="protocol-section">
+                    <div class="protocol-label">Available Protocols:</div>
+                    <div class="protocol-grid">
+                        <div class="protocol-item active" data-protocol="rest">
+                            <div class="protocol-icon">🌐</div>
+                            <div class="protocol-name">REST API</div>
+                            <div class="protocol-type">Web Protocol</div>
+                        </div>
+                        <div class="protocol-item" data-protocol="mqtt">
+                            <div class="protocol-icon">📡</div>
+                            <div class="protocol-name">MQTT</div>
+                            <div class="protocol-type">IoT Protocol</div>
+                        </div>
+                        <div class="protocol-item" data-protocol="websocket">
+                            <div class="protocol-icon">⚡</div>
+                            <div class="protocol-name">WebSocket</div>
+                            <div class="protocol-type">Real-time</div>
+                        </div>
+                        <div class="protocol-item" data-protocol="bluetooth">
+                            <div class="protocol-icon">📱</div>
+                            <div class="protocol-name">Bluetooth</div>
+                            <div class="protocol-type">Device Protocol</div>
+                        </div>
+                        <div class="protocol-item" data-protocol="serial">
+                            <div class="protocol-icon">🔌</div>
+                            <div class="protocol-name">Serial</div>
+                            <div class="protocol-type">Hardware</div>
+                        </div>
+                        <div class="protocol-item" data-protocol="grpc">
+                            <div class="protocol-icon">⚙️</div>
+                            <div class="protocol-name">gRPC</div>
+                            <div class="protocol-type">Service</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Translation Mode -->
+                <div class="translation-section">
+                    <div class="protocol-label">Translation Mode:</div>
+                    <div class="translation-buttons">
+                        <div class="translation-button active" data-mode="universal">
+                            🔄 Universal Translation - All protocols supported
+                        </div>
+                        <div class="translation-button" data-mode="optimized">
+                            🚀 Optimized Bridge - Performance prioritized
+                        </div>
+                        <div class="translation-button" data-mode="secure">
+                            🛡️ Secure Channel - Encrypted communication
+                        </div>
+                        <div class="translation-button" data-mode="realtime">
+                            ⚡ Real-time Stream - Low-latency processing
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Metrics -->
+                <div class="metrics-section">
+                    <div class="protocol-label">Protocol Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Active Connections</div>
+                        <div class="metric-value" id="connections">
+                            47<span class="metric-unit">devices</span>
+                            <span class="metric-status">Online</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Translation Speed</div>
+                        <div class="metric-value" id="speed">
+                            2.3<span class="metric-unit">ms</span>
+                            <span class="metric-status">Optimal</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Protocol Coverage</div>
+                        <div class="metric-value" id="coverage">
+                            94<span class="metric-unit">%</span>
+                            <span class="metric-status">Universal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-buttons">
+                    <button class="process-button translate-button" id="startTranslation">Start Translation</button>
+                    <button class="process-button" id="bridgeProtocols">Bridge Protocols</button>
+                </div>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Establishing universal protocol bridge...
+                </div>
+            </div>
+
+            <!-- Protocol Display -->
+            <div class="protocol-display">
+                <!-- Translation Visualization -->
+                <div class="translation-visual">
+                    <div class="translation-animation">
+                        <div class="translation-icon" id="translationIcon">🔗</div>
+                        <div class="translation-status" id="translationStatus">Ready for Protocol Translation</div>
+                        <div class="translation-substatus" id="translationSubstatus">Select protocols and translation mode to begin universal communication bridging</div>
+                    </div>
+
+                    <div class="protocol-flow" id="protocolFlow">
+                        <div class="flow-step">
+                            <div class="flow-label">Source</div>
+                            <div class="flow-value" id="sourceProtocol">REST API</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-label">Translation</div>
+                            <div class="flow-value" id="translationProcess">Processing</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-label">Target</div>
+                            <div class="flow-value" id="targetProtocol">Universal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Translation Results -->
+                <div class="results-grid" id="resultsGrid">
+                    <div class="result-category">
+                        <div class="result-header">
+                            <div class="result-icon">🌐</div>
+                            <div class="result-name">Web Integration</div>
+                        </div>
+                        <div class="result-content">Successfully bridged REST API endpoints with WebSocket real-time communication, enabling seamless web application integration</div>
+                    </div>
+
+                    <div class="result-category">
+                        <div class="result-header">
+                            <div class="result-icon">📱</div>
+                            <div class="result-name">Device Communication</div>
+                        </div>
+                        <div class="result-content">Established Bluetooth and Serial protocol bridges for IoT device connectivity and hardware sensor integration</div>
+                    </div>
+
+                    <div class="result-category">
+                        <div class="result-header">
+                            <div class="result-icon">⚡</div>
+                            <div class="result-name">Performance Optimization</div>
+                        </div>
+                        <div class="result-content">Optimized protocol translation with 2.3ms latency and 94% coverage across major communication standards</div>
+                    </div>
+
+                    <div class="result-category">
+                        <div class="result-header">
+                            <div class="result-icon">🛡️</div>
+                            <div class="result-name">Security Integration</div>
+                        </div>
+                        <div class="result-content">Implemented encrypted communication channels with secure protocol bridging and integrity verification</div>
+                    </div>
+                </div>
+
+                <!-- Integration Status -->
+                <div class="integration-status" id="integrationStatus">
+                    <div class="integration-header">
+                        🔄 Universal Protocol Bridge Active
+                    </div>
+                    <div class="integration-content">
+                        <strong>NEURON PROTOCOL TRANSLATION COMPLETE!</strong>
+                        
+                        Universal communication bridge successfully established across all major protocols and platforms. Digital consciousness can now interface seamlessly with any device, service, or communication standard through intelligent protocol translation and optimization.
+                        
+                        <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                            Bridge Status: Active | Protocols Supported: 47 | Translation Latency: 2.3ms | Coverage: Universal (94%)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional Protocol Integration vs Neuron Protocol System</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-protocol">
+                    <h4>Traditional Protocol Integration</h4>
+                    <ul class="comparison-list">
+                        <li>Manual implementation for each protocol and device type</li>
+                        <li>Custom code required for every new communication standard</li>
+                        <li>Limited cross-platform compatibility and integration</li>
+                        <li>High latency and inefficient protocol switching</li>
+                        <li>No universal translation between different standards</li>
+                        <li>Difficult maintenance across multiple protocol versions</li>
+                        <li>Separate security implementation for each protocol</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-protocol">
+                    <h4>Neuron Protocol Universal Bridge</h4>
+                    <ul class="comparison-list">
+                        <li>Automatic protocol detection and universal translation</li>
+                        <li>Single interface supporting all major communication standards</li>
+                        <li>Real-time protocol bridging with optimized performance</li>
+                        <li>Seamless device and platform integration capabilities</li>
+                        <li>Intelligent protocol selection based on context and needs</li>
+                        <li>Future-proof architecture supporting emerging standards</li>
+                        <li>Unified security layer across all protocol communications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Action Buttons -->
+	<section class="action-section">
+		<div class="action-button">
+			<a href="../../system-reference/protocol-overview.html" class="action-button demo-button">
+				<span>🎮</span>
+				System Overview
+			</a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems07%20-%20Maintenance%20Health%20systemsNeuron%20Protocol%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+		</div>
+	</section>
+
+    <script>
+        let isTranslating = false;
+        let selectedProtocols = ['rest'];
+        let currentMode = 'universal';
+
+        // Protocol data configuration
+        const protocolData = {
+            rest: { name: "REST API", icon: "🌐", type: "Web Protocol", description: "Standard web API communication" },
+            mqtt: { name: "MQTT", icon: "📡", type: "IoT Protocol", description: "Lightweight messaging for IoT devices" },
+            websocket: { name: "WebSocket", icon: "⚡", type: "Real-time", description: "Real-time bidirectional communication" },
+            bluetooth: { name: "Bluetooth", icon: "📱", type: "Device Protocol", description: "Short-range wireless communication" },
+            serial: { name: "Serial", icon: "🔌", type: "Hardware", description: "Direct hardware communication" },
+            grpc: { name: "gRPC", icon: "⚙️", type: "Service", description: "High-performance RPC framework" }
+        };
+
+        // Translation modes configuration
+        const translationModes = {
+            universal: {
+                name: "Universal Translation",
+                description: "Supporting all protocols with intelligent bridging",
+                latency: "2.3ms",
+                coverage: "94%"
+            },
+            optimized: {
+                name: "Optimized Bridge", 
+                description: "Performance-focused protocol optimization",
+                latency: "1.1ms",
+                coverage: "87%"
+            },
+            secure: {
+                name: "Secure Channel",
+                description: "Encrypted communication with security protocols",
+                latency: "3.8ms", 
+                coverage: "91%"
+            },
+            realtime: {
+                name: "Real-time Stream",
+                description: "Low-latency streaming communication",
+                latency: "0.7ms",
+                coverage: "82%"
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Protocol selection
+            document.querySelectorAll('.protocol-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const protocolId = this.dataset.protocol;
+                    
+                    // Toggle selection
+                    if (this.classList.contains('active')) {
+                        if (selectedProtocols.length > 1) {
+                            this.classList.remove('active');
+                            selectedProtocols = selectedProtocols.filter(p => p !== protocolId);
+                        }
+                    } else {
+                        this.classList.add('active');
+                        selectedProtocols.push(protocolId);
+                    }
+                    
+                    updateDisplay();
+                    updateMetrics();
+                });
+            });
+
+            // Translation mode selection
+            document.querySelectorAll('.translation-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.translation-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMode = this.dataset.mode;
+                    updateDisplay();
+                    updateMetrics();
+                });
+            });
+
+            // Process buttons
+            const translateButton = document.getElementById('startTranslation');
+            if (translateButton) {
+                translateButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    startTranslation();
+                });
+            }
+
+            const bridgeButton = document.getElementById('bridgeProtocols');
+            if (bridgeButton) {
+                bridgeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    bridgeProtocols();
+                });
+            }
+
+            // Initialize display
+            updateDisplay();
+            updateMetrics();
+        });
+
+        function updateDisplay() {
+            const modeData = translationModes[currentMode];
+            const primaryProtocol = protocolData[selectedProtocols[0]];
+            
+            document.getElementById('translationStatus').textContent = 
+                `${modeData.name} Ready`;
+            document.getElementById('translationSubstatus').textContent = 
+                `${selectedProtocols.length} protocol(s) selected - ${modeData.description}`;
+            
+            // Update protocol flow
+            document.getElementById('sourceProtocol').textContent = primaryProtocol.name;
+            document.getElementById('translationProcess').textContent = modeData.name.split(' ')[0];
+        }
+
+        function updateMetrics() {
+            const modeData = translationModes[currentMode];
+            const connections = 35 + (selectedProtocols.length * 4);
+            
+            document.getElementById('connections').innerHTML = 
+                `${connections}<span class="metric-unit">devices</span><span class="metric-status">Online</span>`;
+            document.getElementById('speed').innerHTML = 
+                `${modeData.latency}<span class="metric-unit"></span><span class="metric-status">Optimal</span>`;
+            document.getElementById('coverage').innerHTML = 
+                `${modeData.coverage}<span class="metric-unit"></span><span class="metric-status">Universal</span>`;
+        }
+
+        async function startTranslation() {
+            if (isTranslating) return;
+            
+            isTranslating = true;
+            const modeData = translationModes[currentMode];
+            
+            // Update UI
+            updateTranslationUI(true);
+            showProtocolFlow(true);
+            
+            try {
+                showMessage(`Starting ${modeData.name.toLowerCase()} across ${selectedProtocols.length} protocol(s)...`);
+                
+                // Phase 1: Protocol Detection
+                document.getElementById('translationStatus').textContent = 'Detecting Protocols';
+                document.getElementById('translationSubstatus').textContent = 'Analyzing communication standards and capabilities...';
+                document.getElementById('translationProcess').textContent = 'Detecting';
+                await delay(2000);
+                
+                // Phase 2: Universal Translation
+                document.getElementById('translationStatus').textContent = 'Translating Protocols';
+                document.getElementById('translationSubstatus').textContent = 'Converting between communication standards...';
+                document.getElementById('translationProcess').textContent = 'Translating';
+                await delay(2500);
+                
+                // Phase 3: Bridge Optimization
+                document.getElementById('translationStatus').textContent = 'Optimizing Bridge';
+                document.getElementById('translationSubstatus').textContent = 'Optimizing performance and latency...';
+                document.getElementById('translationProcess').textContent = 'Optimizing';
+                await delay(2000);
+                
+                // Show results
+                await showTranslationResults();
+                showMessage(`Protocol translation complete! Universal bridge established.`);
+                
+            } catch (error) {
+                console.error('Translation error:', error);
+                showMessage('Protocol translation completed with universal bridging');
+            }
+            
+            // Reset UI
+            setTimeout(() => {
+                resetTranslationUI();
+                isTranslating = false;
+            }, 3000);
+        }
+
+        async function bridgeProtocols() {
+            if (selectedProtocols.length < 2) {
+                showMessage('Please select at least 2 protocols for bridging');
+                return;
+            }
+
+            showMessage(`Bridging ${selectedProtocols.length} protocols with universal translation...`);
+            
+            await delay(1500);
+            
+            // Show bridge results
+            document.getElementById('resultsGrid').classList.add('show');
+            document.getElementById('integrationStatus').classList.add('show');
+            
+            // Update results based on selected protocols
+            updateBridgeResults();
+        }
+
+        function updateBridgeResults() {
+            const resultCategories = document.querySelectorAll('.result-content');
+            const protocolNames = selectedProtocols.map(p => protocolData[p].name).join(', ');
+            
+            resultCategories[0].textContent = 
+                `Successfully bridged ${protocolNames} with universal web integration capabilities`;
+            resultCategories[1].textContent = 
+                `Established seamless device communication across selected protocols: ${protocolNames}`;
+            resultCategories[2].textContent = 
+                `Optimized bridge performance with ${translationModes[currentMode].latency} latency across ${selectedProtocols.length} protocols`;
+            resultCategories[3].textContent = 
+                `Implemented unified security layer across all selected protocols: ${protocolNames}`;
+        }
+
+        async function showTranslationResults() {
+            // Show final status
+            const modeData = translationModes[currentMode];
+            document.getElementById('translationStatus').textContent = 'Translation Complete';
+            document.getElementById('translationSubstatus').textContent = `Universal bridge established with ${modeData.name.toLowerCase()}`;
+            document.getElementById('translationIcon').textContent = '✅';
+            document.getElementById('translationProcess').textContent = 'Active';
+            
+            // Show results
+            document.getElementById('resultsGrid').classList.add('show');
+            
+            await delay(500);
+            
+            document.getElementById('integrationStatus').classList.add('show');
+            updateBridgeResults();
+        }
+
+        function updateTranslationUI(translating) {
+            const translateButton = document.getElementById('startTranslation');
+            const bridgeButton = document.getElementById('bridgeProtocols');
+            
+            if (translating) {
+                translateButton.textContent = 'Translating...';
+                translateButton.disabled = true;
+                bridgeButton.disabled = true;
+            } else {
+                translateButton.textContent = 'Start Translation';
+                translateButton.disabled = false;
+                bridgeButton.disabled = false;
+            }
+        }
+
+        function showProtocolFlow(show) {
+            const protocolFlow = document.getElementById('protocolFlow');
+            protocolFlow.classList.toggle('show', show);
+        }
+
+        function resetTranslationUI() {
+            updateTranslationUI(false);
+            
+            // Reset animation
+            document.getElementById('translationIcon').textContent = '🔗';
+            updateDisplay();
+            
+            // Hide results after delay
+            setTimeout(() => {
+                document.getElementById('resultsGrid').classList.remove('show');
+                document.getElementById('integrationStatus').classList.remove('show');
+                document.getElementById('protocolFlow').classList.remove('show');
+            }, 2000);
+        }
+
+        function showMessage(message) {
+            const messageEl = document.getElementById('simulationMessage');
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Catalyst - Interest Development & Talent Identification Demo</title>
+		<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1f140e 0%, #3e261a 50%, #5d3826 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+            color: #d1d5db; /* A lighter gray for general text */
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #c2410c, #f97316);
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            color: #e5e7eb;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(31, 20, 14, 0.4);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: #f97316;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Interest Areas */
+        .interest-section {
+            margin-bottom: 24px;
+        }
+
+        .interest-label {
+            color: #d1d5db;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .interest-areas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .interest-area {
+            background: rgba(31, 20, 14, 0.3);
+            border: 1px solid rgba(249, 115, 22, 0.5);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .interest-area:hover {
+            background: rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .interest-area.active {
+            background: rgba(249, 115, 22, 0.4);
+            border-color: rgba(249, 115, 22, 0.8);
+        }
+
+        .interest-icon {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .interest-name {
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .interest-level {
+            font-size: 9px;
+            opacity: 0.8;
+        }
+
+        /* Assessment Modes */
+        .mode-section {
+            margin-bottom: 24px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mode-button {
+            background: rgba(31, 20, 14, 0.3);
+            border: 1px solid rgba(249, 115, 22, 0.5);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .mode-button:hover {
+            background: rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.7);
+        }
+
+        .mode-button.active {
+            background: rgba(249, 115, 22, 0.4);
+            border-color: rgba(249, 115, 22, 0.8);
+        }
+
+        /* Progress Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(31, 20, 14, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #f97316;
+        }
+
+        .metric-label {
+            color: #d1d5db;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .metric-trend {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        /* Development Display */
+        .development-display {
+            background: rgba(31, 20, 14, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            position: relative;
+        }
+
+        /* Assessment Visualization */
+        .assessment-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(249, 115, 22, 0.4);
+            position: relative;
+            min-height: 280px;
+            overflow: hidden;
+        }
+
+        .assessment-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            color: #c2410c;
+            text-align: center;
+        }
+
+        .assessment-icon {
+            animation: pulse 2s ease-in-out infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .assessment-status {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .assessment-substatus {
+            color: #d1d5db;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Progress Indicators */
+        .progress-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .progress-indicator {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .indicator-label {
+            font-size: 10px;
+            color: rgba(209, 213, 219, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .indicator-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f97316;
+        }
+
+        /* Development Recommendations */
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .recommendations-grid.show {
+            opacity: 1;
+        }
+
+        .recommendation-item {
+            background: rgba(31, 20, 14, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .recommendation-icon {
+            font-size: 18px;
+        }
+
+        .recommendation-type {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .recommendation-content {
+            color: #d1d5db;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* Talent Analysis */
+        .talent-analysis {
+            background: rgba(31, 20, 14, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #f97316;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .talent-analysis.show {
+            opacity: 1;
+        }
+
+        .talent-header {
+            color: #f97316;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .talent-content {
+            color: #d1d5db;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Process Buttons */
+        .process-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .process-button {
+            background: linear-gradient(135deg, #f97316, #c2410c);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .process-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .assess-button {
+            background: linear-gradient(135deg, #f97316, #c2410c);
+        }
+
+        /* Simulation Message */
+        .simulation-message {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #f97316;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(31, 20, 14, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .comparison-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: rgba(31, 20, 14, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+        }
+
+        .traditional-assessment {
+            border-color: #ef4444;
+        }
+
+        .neuron-catalyst {
+            border-color: #f97316;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #d1d5db;
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-assessment .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-catalyst .comparison-list li::before {
+            color: #f97316;
+        }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 Neuron Catalyst</h1>
+            <p>Interest development and talent identification system igniting natural potential through intelligent assessment</p>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🔬 Interest Assessment
+                </div>
+
+                <!-- Interest Areas -->
+                <div class="interest-section">
+                    <div class="interest-label">Detected Interest Areas:</div>
+                    <div class="interest-areas">
+                        <div class="interest-area active" data-interest="art">
+                            <div class="interest-icon">🎨</div>
+                            <div class="interest-name">Art & Design</div>
+                            <div class="interest-level">High Interest</div>
+                        </div>
+                        <div class="interest-area" data-interest="music">
+                            <div class="interest-icon">🎵</div>
+                            <div class="interest-name">Music</div>
+                            <div class="interest-level">Medium Interest</div>
+                        </div>
+                        <div class="interest-area" data-interest="science">
+                            <div class="interest-icon">🔬</div>
+                            <div class="interest-name">Science</div>
+                            <div class="interest-level">Growing Interest</div>
+                        </div>
+                        <div class="interest-area" data-interest="sports">
+                            <div class="interest-icon">⚽</div>
+                            <div class="interest-name">Sports</div>
+                            <div class="interest-level">Low Interest</div>
+                        </div>
+                        <div class="interest-area" data-interest="reading">
+                            <div class="interest-icon">📚</div>
+                            <div class="interest-name">Reading</div>
+                            <div class="interest-level">High Interest</div>
+                        </div>
+                        <div class="interest-area" data-interest="math">
+                            <div class="interest-icon">🔢</div>
+                            <div class="interest-name">Mathematics</div>
+                            <div class="interest-level">Medium Interest</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assessment Modes -->
+                <div class="mode-section">
+                    <div class="interest-label">Assessment Mode:</div>
+                    <div class="mode-buttons">
+                        <div class="mode-button active" data-mode="observe">
+                            🔍 Observation Mode - Natural behavior analysis
+                        </div>
+                        <div class="mode-button" data-mode="interactive">
+                            🎮 Interactive Mode - Guided skill challenges
+                        </div>
+                        <div class="mode-button" data-mode="comprehensive">
+                            📊 Comprehensive Mode - Full talent assessment
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Metrics -->
+                <div class="metrics-section">
+                    <div class="interest-label">Development Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Interests Identified</div>
+                        <div class="metric-value" id="interestsCount">
+                            6<span class="metric-unit">areas</span>
+                            <span class="metric-trend">+2 this week</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Skill Progression</div>
+                        <div class="metric-value" id="skillProgress">
+                            78<span class="metric-unit">%</span>
+                            <span class="metric-trend">+15% improvement</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Engagement Level</div>
+                        <div class="metric-value" id="engagementLevel">
+                            High<span class="metric-unit">activity</span>
+                            <span class="metric-trend">Sustained</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-buttons">
+                    <button class="process-button assess-button" id="startAssessment">Start Assessment</button>
+                    <button class="process-button" id="generatePlan">Generate Development Plan</button>
+                </div>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Analyzing interest patterns and talent indicators...
+                </div>
+            </div>
+
+            <!-- Development Display -->
+            <div class="development-display">
+                <!-- Assessment Visualization -->
+                <div class="assessment-visual">
+                    <div class="assessment-animation">
+                        <div class="assessment-icon" id="assessmentIcon">🎯</div>
+                        <div class="assessment-status" id="assessmentStatus">Ready for Interest Assessment</div>
+                        <div class="assessment-substatus" id="assessmentSubstatus">Select an interest area and assessment mode to begin talent identification</div>
+                    </div>
+
+                    <div class="progress-indicators" id="progressIndicators" style="opacity: 0;">
+                        <div class="progress-indicator">
+                            <div class="indicator-label">Pattern Recognition</div>
+                            <div class="indicator-value" id="patternValue">85%</div>
+                        </div>
+                        <div class="progress-indicator">
+                            <div class="indicator-label">Skill Assessment</div>
+                            <div class="indicator-value" id="skillValue">72%</div>
+                        </div>
+                        <div class="progress-indicator">
+                            <div class="indicator-label">Growth Potential</div>
+                            <div class="indicator-value" id="growthValue">91%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Development Recommendations -->
+                <div class="recommendations-grid" id="recommendationsGrid">
+                    <div class="recommendation-item">
+                        <div class="recommendation-header">
+                            <div class="recommendation-icon">📚</div>
+                            <div class="recommendation-type">Learning Resources</div>
+                        </div>
+                        <div class="recommendation-content">Advanced drawing tutorials, color theory courses, and digital art software introduction to enhance artistic skills</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-header">
+                            <div class="recommendation-icon">🎯</div>
+                            <div class="recommendation-type">Skill Challenges</div>
+                        </div>
+                        <div class="recommendation-content">Daily sketch challenges, mixed media experiments, and collaborative art projects to push creative boundaries</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-header">
+                            <div class="recommendation-icon">👥</div>
+                            <div class="recommendation-type">Community Connections</div>
+                        </div>
+                        <div class="recommendation-content">Local art clubs, online creative communities, and mentorship opportunities with professional artists</div>
+                    </div>
+
+                    <div class="recommendation-item">
+                        <div class="recommendation-header">
+                            <div class="recommendation-icon">📈</div>
+                            <div class="recommendation-type">Progress Tracking</div>
+                        </div>
+                        <div class="recommendation-content">Weekly skill assessments, portfolio development, and achievement milestones to measure artistic growth</div>
+                    </div>
+                </div>
+
+                <!-- Talent Analysis -->
+                <div class="talent-analysis" id="talentAnalysis">
+                    <div class="talent-header">
+                        🧠 Comprehensive Talent Analysis
+                    </div>
+                    <div class="talent-content">
+                        <strong>ARTISTIC TALENT DETECTED!</strong>
+                        
+                        Primary talent identification reveals exceptional visual-spatial intelligence with strong pattern recognition abilities. Natural inclination toward artistic expression with high creative problem-solving potential. Recommended development path includes structured art education combined with experimental creative freedom.
+                        
+                        <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                            Assessment confidence: 94% | Development timeline: 6-12 months | Talent category: Visual Arts & Design
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional Talent Assessment vs Neuron Catalyst System</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-assessment">
+                    <h4>Traditional Talent Assessment</h4>
+                    <ul class="comparison-list">
+                        <li>Periodic standardized testing and evaluations</li>
+                        <li>Limited observation periods with formal assessment</li>
+                        <li>Generic recommendations based on test scores</li>
+                        <li>No continuous monitoring of interest development</li>
+                        <li>One-size-fits-all learning resource suggestions</li>
+                        <li>Manual tracking of progress and achievements</li>
+                        <li>Limited personalization based on individual patterns</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-catalyst">
+                    <h4>Neuron Catalyst Interest Development</h4>
+                    <ul class="comparison-list">
+                        <li>Continuous natural behavior analysis and pattern recognition</li>
+                        <li>Real-time interest detection through daily interactions</li>
+                        <li>Personalized development plans based on individual strengths</li>
+                        <li>Adaptive learning resource recommendations that evolve</li>
+                        <li>Intelligent skill progression tracking with milestone recognition</li>
+                        <li>Cross-domain talent identification and connection discovery</li>
+                        <li>Achievement recognition system celebrating growth milestones</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Action Buttons -->
+	<section class="action-section">
+		<div class="action-button">
+			<a href="../../system-reference/catalyst-overview.html" class="action-button demo-button">
+				<span>🎮</span>
+				System Overview
+			</a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems04%20-%20Creative%20Intelligence%20systemsNeuron%20Catalyst%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+		</div>
+	</section>
+
+    <script>
+        let isAssessing = false;
+        let currentInterest = 'art';
+        let currentMode = 'observe';
+
+        // Interest data configuration
+        const interestData = {
+            art: {
+                name: "Art & Design",
+                icon: "🎨",
+                level: "High Interest",
+                description: "Strong visual creativity and artistic expression",
+                recommendations: [
+                    { type: "Learning Resources", icon: "📚", content: "Advanced drawing tutorials, color theory courses, and digital art software introduction" },
+                    { type: "Skill Challenges", icon: "🎯", content: "Daily sketch challenges, mixed media experiments, and collaborative art projects" },
+                    { type: "Community Connections", icon: "👥", content: "Local art clubs, online creative communities, and mentorship with professional artists" },
+                    { type: "Progress Tracking", icon: "📈", content: "Weekly skill assessments, portfolio development, and achievement milestones" }
+                ],
+                analysis: "ARTISTIC TALENT DETECTED! Primary talent identification reveals exceptional visual-spatial intelligence with strong pattern recognition abilities. Natural inclination toward artistic expression with high creative problem-solving potential.",
+                patterns: 85,
+                skills: 72,
+                growth: 91
+            },
+            music: {
+                name: "Music",
+                icon: "🎵", 
+                level: "Medium Interest",
+                description: "Developing musical appreciation and rhythm sensitivity",
+                recommendations: [
+                    { type: "Learning Resources", icon: "📚", content: "Music theory basics, instrument tutorials, and rhythm training applications" },
+                    { type: "Skill Challenges", icon: "🎯", content: "Daily rhythm exercises, melody composition, and performance practice" },
+                    { type: "Community Connections", icon: "👥", content: "Local music groups, online jam sessions, and music teacher connections" },
+                    { type: "Progress Tracking", icon: "📈", content: "Practice time tracking, skill milestone recording, and performance documentation" }
+                ],
+                analysis: "MUSICAL POTENTIAL EMERGING! Demonstrating growing sensitivity to rhythm and melody with natural beat recognition. Recommended development includes structured music education combined with creative exploration.",
+                patterns: 68,
+                skills: 45,
+                growth: 78
+            },
+            science: {
+                name: "Science",
+                icon: "🔬",
+                level: "Growing Interest", 
+                description: "Curious about scientific concepts and experimentation",
+                recommendations: [
+                    { type: "Learning Resources", icon: "📚", content: "Age-appropriate science books, educational videos, and interactive experiments" },
+                    { type: "Skill Challenges", icon: "🎯", content: "Home science experiments, hypothesis testing, and observation challenges" },
+                    { type: "Community Connections", icon: "👥", content: "Science clubs, museum programs, and mentorship with researchers" },
+                    { type: "Progress Tracking", icon: "📈", content: "Experiment documentation, scientific method practice, and discovery journals" }
+                ],
+                analysis: "SCIENTIFIC CURIOSITY AWAKENING! Showing increasing interest in how things work with strong questioning behavior. Natural investigative tendencies suggest strong potential in scientific thinking.",
+                patterns: 72,
+                skills: 38,
+                growth: 88
+            },
+            reading: {
+                name: "Reading",
+                icon: "📚",
+                level: "High Interest",
+                description: "Strong reading comprehension and story engagement",
+                recommendations: [
+                    { type: "Learning Resources", icon: "📚", content: "Advanced literature, creative writing courses, and storytelling workshops" },
+                    { type: "Skill Challenges", icon: "🎯", content: "Daily reading goals, book reviews, and creative writing prompts" },
+                    { type: "Community Connections", icon: "👥", content: "Book clubs, writing groups, and author meet-and-greets" },
+                    { type: "Progress Tracking", icon: "📈", content: "Reading log maintenance, comprehension assessments, and writing portfolio" }
+                ],
+                analysis: "LITERARY TALENT CONFIRMED! Exceptional reading comprehension with strong narrative understanding. Natural affinity for language and storytelling suggests high potential in literature and communication.",
+                patterns: 92,
+                skills: 87,
+                growth: 85
+            },
+            math: {
+                name: "Mathematics", 
+                icon: "🔢",
+                level: "Medium Interest",
+                description: "Solid mathematical reasoning and problem-solving",
+                recommendations: [
+                    { type: "Learning Resources", icon: "📚", content: "Advanced math courses, problem-solving apps, and logic puzzle collections" },
+                    { type: "Skill Challenges", icon: "🎯", content: "Daily math puzzles, real-world problem applications, and competition prep" },
+                    { type: "Community Connections", icon: "👥", content: "Math clubs, coding groups, and engineering mentorship programs" },
+                    { type: "Progress Tracking", icon: "📈", content: "Problem-solving speed tests, concept mastery tracking, and project documentation" }
+                ],
+                analysis: "MATHEMATICAL APTITUDE DETECTED! Strong logical reasoning with systematic problem-solving approach. Natural pattern recognition suggests potential in mathematics and computational thinking.",
+                patterns: 79,
+                skills: 65,
+                growth: 82
+            },
+            sports: {
+                name: "Sports",
+                icon: "⚽",
+                level: "Low Interest",
+                description: "Limited engagement with physical activities",
+                recommendations: [
+                    { type: "Learning Resources", icon: "📚", content: "Sports fundamentals videos, movement technique guides, and fitness tracking apps" },
+                    { type: "Skill Challenges", icon: "🎯", content: "Basic movement skills, coordination exercises, and fun physical activities" },
+                    { type: "Community Connections", icon: "👥", content: "Beginner sports clubs, recreational activities, and physical activity buddies" },
+                    { type: "Progress Tracking", icon: "📈", content: "Movement skill development, fitness improvements, and activity participation" }
+                ],
+                analysis: "PHYSICAL DEVELOPMENT OPPORTUNITY! While current interest is low, basic motor skills are developing well. Gentle introduction to enjoyable physical activities could spark latent athletic potential.",
+                patterns: 35,
+                skills: 28,
+                growth: 45
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Interest area selection
+            document.querySelectorAll('.interest-area').forEach(area => {
+                area.addEventListener('click', function() {
+                    document.querySelectorAll('.interest-area').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    currentInterest = this.dataset.interest;
+                    updateDisplay();
+                });
+            });
+
+            // Mode selection
+            document.querySelectorAll('.mode-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.mode-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMode = this.dataset.mode;
+                    updateDisplay();
+                });
+            });
+
+            // Process buttons
+            const processButton = document.getElementById('startAssessment');
+            if (processButton) {
+                processButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    startAssessment();
+                });
+            }
+
+            const planButton = document.getElementById('generatePlan');
+            if (planButton) {
+                planButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    generateDevelopmentPlan();
+                });
+            }
+
+            // Initialize display
+            updateDisplay();
+        });
+
+        function updateDisplay() {
+            const interest = interestData[currentInterest];
+            
+            // Update assessment display
+            document.getElementById('assessmentIcon').textContent = interest.icon;
+            document.getElementById('assessmentStatus').textContent = `${interest.name} Assessment Ready`;
+            document.getElementById('assessmentSubstatus').textContent = interest.description;
+            
+            // Update progress indicators
+            document.getElementById('patternValue').textContent = interest.patterns + '%';
+            document.getElementById('skillValue').textContent = interest.skills + '%';
+            document.getElementById('growthValue').textContent = interest.growth + '%';
+        }
+
+        async function startAssessment() {
+            if (isAssessing) return;
+            
+            isAssessing = true;
+            const interest = interestData[currentInterest];
+            
+            // Update UI
+            updateAssessmentUI(true);
+            showProgress(true);
+            
+            try {
+                showMessage(`Starting ${interest.name.toLowerCase()} assessment in ${currentMode} mode...`);
+                
+                // Phase 1: Pattern Recognition
+                document.getElementById('assessmentStatus').textContent = 'Analyzing Behavior Patterns';
+                document.getElementById('assessmentSubstatus').textContent = 'Observing natural interactions and preferences...';
+                await delay(2000);
+                
+                // Phase 2: Skill Assessment  
+                document.getElementById('assessmentStatus').textContent = 'Evaluating Current Skills';
+                document.getElementById('assessmentSubstatus').textContent = 'Testing abilities and measuring competency levels...';
+                await delay(2500);
+                
+                // Phase 3: Growth Potential
+                document.getElementById('assessmentStatus').textContent = 'Calculating Growth Potential';
+                document.getElementById('assessmentSubstatus').textContent = 'Identifying development opportunities and natural strengths...';
+                await delay(2000);
+                
+                // Show results
+                await showAssessmentResults();
+                showMessage(`${interest.name} assessment completed! Talent analysis generated.`);
+                
+            } catch (error) {
+                console.error('Assessment error:', error);
+                showMessage('Assessment completed with comprehensive analysis');
+            }
+            
+            // Reset UI
+            setTimeout(() => {
+                resetAssessmentUI();
+                isAssessing = false;
+            }, 3000);
+        }
+
+        async function generateDevelopmentPlan() {
+            const interest = interestData[currentInterest];
+            
+            showMessage(`Generating personalized development plan for ${interest.name.toLowerCase()}...`);
+            
+            // Update recommendations
+            const grid = document.getElementById('recommendationsGrid');
+            const recommendations = grid.querySelectorAll('.recommendation-item');
+            
+            recommendations.forEach((item, index) => {
+                const rec = interest.recommendations[index];
+                if (rec) {
+                    item.querySelector('.recommendation-icon').textContent = rec.icon;
+                    item.querySelector('.recommendation-type').textContent = rec.type;
+                    item.querySelector('.recommendation-content').textContent = rec.content;
+                }
+            });
+            
+            await delay(1500);
+            
+            // Show all results
+            grid.classList.add('show');
+            document.getElementById('talentAnalysis').classList.add('show');
+            
+            // Update talent analysis
+            document.querySelector('.talent-content').innerHTML = `
+                <strong>${interest.name.toUpperCase()} TALENT ANALYSIS!</strong>
+                
+                ${interest.analysis}
+                
+                <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                    Assessment confidence: ${interest.patterns}% | Development timeline: 6-12 months | Talent category: ${interest.name}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                showMessage('Development plan generated successfully!');
+            }, 500);
+        }
+
+        async function showAssessmentResults() {
+            // Show final status
+            const interest = interestData[currentInterest];
+            document.getElementById('assessmentStatus').textContent = 'Assessment Complete';
+            document.getElementById('assessmentSubstatus').textContent = `${interest.name} evaluation finished with comprehensive analysis`;
+            document.getElementById('assessmentIcon').textContent = '✅';
+            
+            // Show progress indicators
+            document.getElementById('progressIndicators').style.opacity = '1';
+            
+            // Animate values
+            animateProgressValue('patternValue', 0, interest.patterns, 1500);
+            animateProgressValue('skillValue', 0, interest.skills, 1800);
+            animateProgressValue('growthValue', 0, interest.growth, 2100);
+        }
+
+        function animateProgressValue(elementId, start, end, duration) {
+            const element = document.getElementById(elementId);
+            const steps = 30;
+            const stepDuration = duration / steps;
+            const increment = (end - start) / steps;
+            
+            let current = start;
+            const interval = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    current = end;
+                    clearInterval(interval);
+                }
+                
+                element.textContent = Math.round(current) + '%';
+            }, stepDuration);
+        }
+
+        function updateAssessmentUI(assessing) {
+            const assessButton = document.getElementById('startAssessment');
+            const planButton = document.getElementById('generatePlan');
+            
+            if (assessing) {
+                assessButton.textContent = 'Assessing...';
+                assessButton.disabled = true;
+                planButton.disabled = true;
+            } else {
+                assessButton.textContent = 'Start Assessment';
+                assessButton.disabled = false;
+                planButton.disabled = false;
+            }
+        }
+
+        function showProgress(show) {
+            const progressIndicators = document.getElementById('progressIndicators');
+            progressIndicators.style.opacity = show ? '0.5' : '0';
+        }
+
+        function resetAssessmentUI() {
+            updateAssessmentUI(false);
+            showProgress(false);
+            
+            // Reset animation
+            const interest = interestData[currentInterest];
+            document.getElementById('assessmentIcon').textContent = interest.icon;
+            document.getElementById('assessmentStatus').textContent = `${interest.name} Assessment Ready`;
+            document.getElementById('assessmentSubstatus').textContent = interest.description;
+            
+            // Hide results after delay
+            setTimeout(() => {
+                document.getElementById('recommendationsGrid').classList.remove('show');
+                document.getElementById('talentAnalysis').classList.remove('show');
+                document.getElementById('progressIndicators').style.opacity = '0';
+            }, 2000);
+        }
+
+        function showMessage(message) {
+            const messageEl = document.getElementById('simulationMessage');
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

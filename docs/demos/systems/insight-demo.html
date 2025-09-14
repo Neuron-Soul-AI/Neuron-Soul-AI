@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Insight - Serendipity Engine Demo</title>
+		<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 50%, #7b1fa2 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #e1bee7, #ce93d8);
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            color: #e1bee7;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(106, 27, 154, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(225, 190, 231, 0.2);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: #e1bee7;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Domain Selection */
+        .domain-section {
+            margin-bottom: 24px;
+        }
+
+        .domain-label {
+            color: rgba(225, 190, 231, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .domain-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .domain-button {
+            background: rgba(106, 27, 154, 0.4);
+            border: 1px solid rgba(225, 190, 231, 0.3);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .domain-button:hover {
+            background: rgba(225, 190, 231, 0.2);
+            border-color: rgba(225, 190, 231, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .domain-button.active {
+            background: rgba(225, 190, 231, 0.3);
+            border-color: rgba(225, 190, 231, 0.7);
+        }
+
+        /* Serendipity Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(106, 27, 154, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #e1bee7;
+        }
+
+        .metric-label {
+            color: rgba(225, 190, 231, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Serendipity Display */
+        .serendipity-display {
+            background: rgba(106, 27, 154, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(225, 190, 231, 0.2);
+        }
+
+        /* Pattern Discovery Panel */
+        .discovery-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(225, 190, 231, 0.3);
+            min-height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discovery-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(225, 190, 231, 0.2);
+        }
+
+        .discovery-icon {
+            font-size: 24px;
+        }
+
+        .discovery-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e1bee7;
+        }
+
+        .discovery-content {
+            color: rgba(225, 190, 231, 0.9);
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .discovery-content.analyzing {
+            background: linear-gradient(90deg, rgba(225, 190, 231, 0.1), rgba(225, 190, 231, 0.3), rgba(225, 190, 231, 0.1));
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Serendipity Moment */
+        .serendipity-moment {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-weight: 600;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .serendipity-moment.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        /* Cross-Domain Connections Grid */
+        .connections-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .connection-card {
+            background: rgba(106, 27, 154, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(225, 190, 231, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .connection-card.connected {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.1);
+            transform: scale(1.02);
+        }
+
+        .connection-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .connection-icon {
+            font-size: 18px;
+        }
+
+        .connection-domain {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .connection-status {
+            font-size: 11px;
+            color: #e1bee7;
+        }
+
+        .connection-pattern {
+            color: rgba(225, 190, 231, 0.8);
+            font-size: 12px;
+            line-height: 1.4;
+            display: none; /* Hidden by default */
+        }
+
+        .connection-line {
+            position: absolute;
+            top: 50%;
+            right: -8px;
+            width: 16px;
+            height: 2px;
+            background: #4caf50;
+            transform: translateY(-50%);
+            display: none;
+        }
+
+        .connection-card.connected .connection-line {
+            display: block;
+            animation: connectionPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Innovation Breakthrough Display */
+        .breakthrough-display {
+            background: rgba(106, 27, 154, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #e1bee7;
+        }
+
+        .breakthrough-header {
+            color: #e1bee7;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breakthrough-content {
+            color: rgba(225, 190, 231, 0.9);
+            font-size: 14px;
+            line-height: 1.5;
+            display: none; /* Hidden by default */
+        }
+
+        .breakthrough-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+            display: none; /* Hidden by default */
+        }
+
+        .breakthrough-metric {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .breakthrough-metric-title {
+            font-size: 10px;
+            color: rgba(225, 190, 231, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .breakthrough-metric-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e1bee7;
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, #e1bee7, #ce93d8);
+            color: #4a148c;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(225, 190, 231, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(106, 27, 154, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(225, 190, 231, 0.1);
+            border: 1px solid rgba(225, 190, 231, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #e1bee7;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(106, 27, 154, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(225, 190, 231, 0.2);
+            display: none; /* Hidden by default */
+        }
+
+        .comparison-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: rgba(106, 27, 154, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+        }
+
+        .traditional-innovation {
+            border-color: #e74c3c;
+        }
+
+        .insight-innovation {
+            border-color: #e1bee7;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: rgba(225, 190, 231, 0.9);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-innovation .comparison-list li::before {
+            color: #e74c3c;
+        }
+
+        .insight-innovation .comparison-list li::before {
+            color: #e1bee7;
+        }
+
+        /* Show classes for when content is revealed */
+        .show-content {
+            display: block !important;
+        }
+
+        .show-grid {
+            display: grid !important;
+        }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>💡 Neuron Insight</h1>
+            <p>Serendipity engine that manufactures breakthrough discoveries through cross-domain pattern recognition</p>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🌌 Knowledge Domains
+                </div>
+
+                <!-- Domain Selection -->
+                <div class="domain-section">
+                    <div class="domain-label">Select Focus Domain:</div>
+                    <div class="domain-buttons">
+                        <button class="domain-button active" data-domain="biology">
+                            🧬 Marine Biology
+                        </button>
+                        <button class="domain-button" data-domain="technology">
+                            💻 Social Networks
+                        </button>
+                        <button class="domain-button" data-domain="business">
+                            💼 Restaurant Innovation
+                        </button>
+                        <button class="domain-button" data-domain="art">
+                            🎨 Bioluminescent Art
+                        </button>
+                        <button class="domain-button" data-domain="urban">
+                            🏙️ Urban Planning
+                        </button>
+                        <button class="domain-button" data-domain="education">
+                            📚 Learning Systems
+                        </button>
+                        <button class="domain-button" data-domain="energy">
+                            ⚡ Renewable Energy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Serendipity Metrics -->
+                <div class="metrics-section">
+                    <div class="domain-label">Live Serendipity Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Pattern Recognition</div>
+                        <div class="metric-value" id="patternValue">
+                            94.3<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Cross-Domain Links</div>
+                        <div class="metric-value" id="linksValue">
+                            127<span class="metric-unit">found</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Innovation Potential</div>
+                        <div class="metric-value" id="potentialValue">
+                            High<span class="metric-unit">Level</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="serendipityEngine">
+                    Activate Serendipity Engine
+                </button>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Scanning cross-domain patterns for breakthrough opportunities...
+                </div>
+            </div>
+
+            <!-- Serendipity Display -->
+            <div class="serendipity-display">
+                <!-- Pattern Discovery Panel -->
+                <div class="discovery-panel" id="discoveryPanel">
+                    <div class="discovery-header">
+                        <div class="discovery-icon">🔍</div>
+                        <div class="discovery-title">Pattern Discovery Engine</div>
+                    </div>
+                    <div class="discovery-content" id="discoveryContent">
+                        Select a knowledge domain and activate the serendipity engine to watch cross-domain pattern recognition create breakthrough innovations in real-time.
+                    </div>
+                    <div class="serendipity-moment" id="serendipityMoment">
+                        💡 SERENDIPITY MOMENT!
+                    </div>
+                </div>
+
+                <!-- Cross-Domain Connections Grid -->
+                <div class="connections-grid">
+                    <div class="connection-card" id="primaryDomain">
+                        <div class="connection-header">
+                            <div class="connection-icon">🧬</div>
+                            <div>
+                                <div class="connection-domain">PRIMARY DOMAIN</div>
+                                <div class="connection-status">Source Pattern</div>
+                            </div>
+                        </div>
+                        <div class="connection-pattern" id="primaryPattern">
+                            Marine coral networks communicate stress signals through chemical cascades, creating resilient ecosystem-wide responses to environmental threats.
+                        </div>
+                        <div class="connection-line"></div>
+                    </div>
+
+                    <div class="connection-card" id="secondaryDomain">
+                        <div class="connection-header">
+                            <div class="connection-icon">💻</div>
+                            <div>
+                                <div class="connection-domain">SECONDARY DOMAIN</div>
+                                <div class="connection-status">Pattern Match</div>
+                            </div>
+                        </div>
+                        <div class="connection-pattern" id="secondaryPattern">
+                            Social media algorithms propagate viral content through network effects, creating cascading information flows across user communities.
+                        </div>
+                        <div class="connection-line"></div>
+                    </div>
+
+                    <div class="connection-card" id="tertiaryDomain">
+                        <div class="connection-header">
+                            <div class="connection-icon">💼</div>
+                            <div>
+                                <div class="connection-domain">TERTIARY DOMAIN</div>
+                                <div class="connection-status">Innovation Bridge</div>
+                            </div>
+                        </div>
+                        <div class="connection-pattern" id="tertiaryPattern">
+                            Restaurant supply chains require rapid adaptation to disruptions, needing real-time communication systems for operational resilience.
+                        </div>
+                        <div class="connection-line"></div>
+                    </div>
+
+                    <div class="connection-card" id="innovationDomain">
+                        <div class="connection-header">
+                            <div class="connection-icon">🚀</div>
+                            <div>
+                                <div class="connection-domain">BREAKTHROUGH SYNTHESIS</div>
+                                <div class="connection-status">Innovation Created</div>
+                            </div>
+                        </div>
+                        <div class="connection-pattern" id="innovationPattern">
+                            Smart restaurant network that mimics coral reef stress communication - when one location faces supply disruption, the system automatically triggers collaborative support from the network.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Innovation Breakthrough Display -->
+                <div class="breakthrough-display">
+                    <div class="breakthrough-header">
+                        🌟 Collective Innovation Intelligence
+                    </div>
+                    <div class="breakthrough-content" id="breakthroughContent">
+                        Neuron Insight generating manufactured serendipity through cross-domain pattern collision. The system actively searches for unexpected connections between marine biology, social networks, and business innovation.
+                        
+                        <div class="breakthrough-metrics" id="breakthroughMetrics">
+                            <div class="breakthrough-metric">
+                                <div class="breakthrough-metric-title">Innovation Score</div>
+                                <div class="breakthrough-metric-value" id="innovationScore">8.7/10</div>
+                            </div>
+                            
+                            <div class="breakthrough-metric">
+                                <div class="breakthrough-metric-title">Market Potential</div>
+                                <div class="breakthrough-metric-value" id="marketPotential">92%</div>
+                            </div>
+                            
+                            <div class="breakthrough-metric">
+                                <div class="breakthrough-metric-title">Uniqueness</div>
+                                <div class="breakthrough-metric-value" id="uniquenessScore">95%</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                            Serendipity engine creating breakthrough innovations through intelligent pattern synthesis across multiple knowledge domains.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section" id="comparisonSection">
+            <h3 class="comparison-title">Traditional Innovation vs Neuron Insight Serendipity Engine</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-innovation">
+                    <h4>Traditional Innovation Approach</h4>
+                    <ul class="comparison-list">
+                        <li>Reliance on random inspiration and lucky accidents</li>
+                        <li>Linear thinking within familiar domain boundaries</li>
+                        <li>Manual brainstorming sessions with limited scope</li>
+                        <li>Waiting for serendipitous moments to occur naturally</li>
+                        <li>Innovation confined to existing knowledge areas</li>
+                        <li>No systematic cross-domain pattern recognition</li>
+                        <li>Breakthrough discoveries happen by chance</li>
+                    </ul>
+                </div>
+                <div class="comparison-item insight-innovation">
+                    <h4>Neuron Insight Serendipity Engine</h4>
+                    <ul class="comparison-list">
+                        <li>Manufactured serendipity through intelligent pattern collision</li>
+                        <li>Active cross-domain connection discovery across all fields</li>
+                        <li>Systematic pattern recognition creating breakthrough moments</li>
+                        <li>Privacy-preserving collective intelligence acceleration</li>
+                        <li>Real-time innovation potential assessment and optimization</li>
+                        <li>Democratized access to breakthrough thinking patterns</li>
+                        <li>Continuous background processing generating fresh insights</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Action Buttons -->
+	<section class="action-section">
+		<div class="action-button">
+			<a href="../../system-reference/insight-overview.html" class="action-button demo-button">
+				<span>🎮</span>
+				System Overview
+			</a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems04%20-%20Creative%20Intelligence%20systemsNeuron%20Insight%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+		</div>
+	</section>
+
+    <script>
+        let currentDomain = 'biology';
+        let isAnalyzing = false;
+
+        // Domain configurations
+        const domainConfigs = {
+            biology: {
+                name: "Marine Biology",
+                icon: "🧬",
+                patterns: 127,
+                potential: "High",
+                accuracy: 94.3,
+                primaryPattern: "Marine coral networks communicate stress signals through chemical cascades, creating resilient ecosystem-wide responses to environmental threats.",
+                secondaryPattern: "Social media algorithms propagate viral content through network effects, creating cascading information flows across user communities.",
+                tertiaryPattern: "Restaurant supply chains require rapid adaptation to disruptions, needing real-time communication systems for operational resilience.",
+                innovation: "Smart restaurant network that mimics coral reef stress communication - when one location faces supply disruption, the system automatically triggers collaborative support from the network.",
+                discovery: "MARINE BIOLOGY PATTERN DETECTED! Neuron Insight analyzing coral reef stress communication networks and identifying cross-domain applications in social systems and business resilience.",
+                breakthrough: "BREAKTHROUGH DISCOVERED! Coral reef communication patterns applied to restaurant networks creates revolutionary supply chain resilience system. Biomimetic business innovation discovered!",
+                innovationScore: "8.7/10",
+                marketPotential: "92%",
+                uniqueness: "95%"
+            },
+            technology: {
+                name: "Social Networks",
+                icon: "💻",
+                patterns: 143,
+                potential: "Very High",
+                accuracy: 96.8,
+                primaryPattern: "Social network algorithms create viral cascades through engagement optimization, amplifying content across interconnected user communities.",
+                secondaryPattern: "Mycelium networks share nutrients and information across forest ecosystems through underground fungal connections.",
+                tertiaryPattern: "Urban traffic systems require real-time coordination to prevent congestion cascades and maintain flow efficiency.",
+                innovation: "Bio-inspired social platform that mimics mycelium networks - users share knowledge and resources through organic community connections rather than algorithmic feeds.",
+                discovery: "SOCIAL NETWORK PATTERN DETECTED! Neuron Insight analyzing viral propagation mechanisms and discovering biomimetic applications in natural network systems.",
+                breakthrough: "BREAKTHROUGH DISCOVERED! Social media viral mechanics combined with mycelium networking creates revolutionary organic knowledge-sharing platform. Digital-biological hybrid innovation!",
+                innovationScore: "9.2/10",
+                marketPotential: "87%",
+                uniqueness: "91%"
+            },
+            business: {
+                name: "Restaurant Innovation",
+                icon: "💼",
+                patterns: 98,
+                potential: "High",
+                accuracy: 91.5,
+                primaryPattern: "Restaurant operations optimize for efficiency through standardized processes, inventory management, and customer experience coordination.",
+                secondaryPattern: "Ant colonies optimize foraging through pheromone trails, creating efficient resource discovery and distribution systems.",
+                tertiaryPattern: "Manufacturing supply chains use just-in-time delivery to minimize waste and maximize resource utilization efficiency.",
+                innovation: "Ant-inspired restaurant discovery network where customer satisfaction creates 'digital pheromone trails' guiding other customers to optimal dining experiences.",
+                discovery: "RESTAURANT INNOVATION PATTERN DETECTED! Neuron Insight analyzing operational efficiency patterns and discovering biomimetic optimization strategies.",
+                breakthrough: "BREAKTHROUGH DISCOVERED! Ant colony optimization applied to restaurant discovery creates intelligent dining recommendation ecosystem. Biological intelligence meets hospitality innovation!",
+                innovationScore: "7.9/10",
+                marketPotential: "84%",
+                uniqueness: "88%"
+            },
+            art: {
+                name: "Bioluminescent Art",
+                icon: "🎨",
+                patterns: 156,
+                potential: "Very High",
+                accuracy: 93.7,
+                primaryPattern: "Bioluminescent organisms create light displays for communication, defense, and attraction through biochemical reactions.",
+                secondaryPattern: "Smart city lighting systems adapt to environmental conditions and human activity patterns for energy efficiency.",
+                tertiaryPattern: "Interactive art installations respond to viewer presence and emotions through sensor networks and dynamic displays.",
+                innovation: "Living bioluminescent art installations that respond to pollution levels, creating beautiful environmental awareness displays that glow brighter as air quality improves.",
+                discovery: "BIOLUMINESCENT ART PATTERN DETECTED! Neuron Insight analyzing natural light communication systems and discovering applications in environmental monitoring art.",
+                breakthrough: "BREAKTHROUGH DISCOVERED! Bioluminescence combined with environmental sensors creates living art that makes pollution visible. Bio-art meets environmental activism!",
+                innovationScore: "9.4/10",
+                marketPotential: "76%",
+                uniqueness: "97%"
+            },
+            urban: {
+                name: "Urban Planning",
+                icon: "🏙️",
+                patterns: 134,
+                potential: "High",
+                accuracy: 89.2,
+                primaryPattern: "Urban systems require integrated planning for transportation, utilities, housing, and green spaces to create livable communities.",
+                secondaryPattern: "Forest ecosystems create natural ventilation systems through tree canopy design and air flow optimization.",
+                tertiaryPattern: "Beehive architecture maximizes space efficiency through hexagonal design patterns and optimized traffic flow.",
+                innovation: "Biomimetic urban districts that breathe like forests and organize like beehives, creating naturally ventilated, space-efficient communities.",
+                discovery: "URBAN PLANNING PATTERN DETECTED! Neuron Insight analyzing city organization systems and discovering nature-inspired design solutions.",
+                breakthrough: "BREAKTHROUGH DISCOVERED! Forest ventilation combined with beehive organization creates revolutionary urban breathing districts. Biomimetic city planning innovation!",
+                innovationScore: "8.5/10",
+                marketPotential: "89%",
+                uniqueness: "93%"
+            },
+            education: {
+                name: "Learning Systems",
+                icon: "📚",
+                patterns: 112,
+                potential: "High",
+                accuracy: 92.1,
+                primaryPattern: "Educational systems optimize knowledge transfer through personalized learning paths, feedback mechanisms, and skill progression tracking.",
+                secondaryPattern: "Neural plasticity enables brain adaptation through repetition, challenge gradation, and multimodal learning experiences.",
+                tertiaryPattern: "Video game progression systems maintain engagement through achievement systems, skill trees, and adaptive difficulty.",
+                innovation: "Neuroplasticity-inspired learning platform that adapts like a brain, using gaming mechanics to optimize knowledge formation through personalized neural pathways.",
+                discovery: "LEARNING SYSTEMS PATTERN DETECTED! Neuron Insight analyzing educational optimization and discovering brain-inspired gaming approaches.",
+                breakthrough: "BREAKTHROUGH DISCOVERED! Neural plasticity combined with gaming progression creates revolutionary brain-adaptive learning platform. Neuroscience meets educational gaming!",
+                innovationScore: "8.8/10",
+                marketPotential: "91%",
+                uniqueness: "89%"
+            },
+            energy: {
+                name: "Renewable Energy",
+                icon: "⚡",
+                patterns: 89,
+                potential: "Very High",
+                accuracy: 95.4,
+                primaryPattern: "Renewable energy systems optimize collection, storage, and distribution through grid integration and demand response mechanisms.",
+                secondaryPattern: "Plant photosynthesis maximizes energy conversion through light-harvesting complexes and chemical energy storage systems.",
+                tertiaryPattern: "Swarm robotics coordinate distributed tasks through collective intelligence and decentralized decision-making algorithms.",
+                innovation: "Swarm-inspired solar farms that behave like photosynthetic organisms, autonomously optimizing panel positioning and energy sharing across the grid.",
+                discovery: "RENEWABLE ENERGY PATTERN DETECTED! Neuron Insight analyzing energy optimization systems and discovering biological efficiency strategies.",
+                breakthrough: "BREAKTHROUGH DISCOVERED! Photosynthesis combined with swarm intelligence creates self-optimizing solar ecosystems. Biological energy meets collective intelligence!",
+                innovationScore: "9.1/10",
+                marketPotential: "94%",
+                uniqueness: "92%"
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Domain selection
+            document.querySelectorAll('.domain-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.domain-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentDomain = this.dataset.domain;
+                    updateDomainMetrics();
+                    resetDiscovery();
+                });
+            });
+
+            // Serendipity engine button
+            const engineButton = document.getElementById('serendipityEngine');
+            if (engineButton) {
+                engineButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    activateSerendipityEngine();
+                });
+            }
+
+            // Initialize with biology domain
+            updateDomainMetrics();
+            updateDomainIcons();
+        });
+
+        function updateDomainMetrics() {
+            const config = domainConfigs[currentDomain];
+            
+            // Update metrics
+            document.getElementById('patternValue').innerHTML = `${config.accuracy}<span class="metric-unit">%</span>`;
+            document.getElementById('linksValue').innerHTML = `${config.patterns}<span class="metric-unit">found</span>`;
+            document.getElementById('potentialValue').innerHTML = `${config.potential}<span class="metric-unit">Level</span>`;
+        }
+
+        function updateDomainIcons() {
+            const config = domainConfigs[currentDomain];
+            
+            // Update domain icons in connection cards
+            document.querySelector('#primaryDomain .connection-icon').textContent = config.icon;
+            document.querySelector('#primaryDomain .connection-domain').textContent = 'PRIMARY DOMAIN';
+            document.getElementById('primaryPattern').textContent = config.primaryPattern;
+        }
+
+        function resetDiscovery() {
+            // Hide all discovery elements
+            document.querySelectorAll('.connection-pattern').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('show-content');
+            });
+            
+            document.querySelectorAll('.connection-card').forEach(card => {
+                card.classList.remove('connected');
+            });
+            
+            document.getElementById('breakthroughContent').style.display = 'none';
+            document.getElementById('breakthroughContent').classList.remove('show-content');
+            
+            document.getElementById('breakthroughMetrics').style.display = 'none';
+            document.getElementById('breakthroughMetrics').classList.remove('show-grid');
+            
+            document.getElementById('comparisonSection').style.display = 'none';
+            document.getElementById('comparisonSection').classList.remove('show-content');
+            
+            // Reset discovery content
+            document.getElementById('discoveryContent').innerHTML = `Select a knowledge domain and activate the serendipity engine to watch cross-domain pattern recognition create breakthrough innovations in real-time.`;
+            document.getElementById('discoveryContent').classList.remove('analyzing');
+            
+            // Hide serendipity moment
+            document.getElementById('serendipityMoment').classList.remove('show');
+            
+            // Reset button text
+            document.getElementById('serendipityEngine').textContent = 'Activate Serendipity Engine';
+            
+            // Hide simulation message
+            document.getElementById('simulationMessage').style.display = 'none';
+        }
+
+        async function activateSerendipityEngine() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            
+            const button = document.getElementById('serendipityEngine');
+            const message = document.getElementById('simulationMessage');
+            const discoveryContent = document.getElementById('discoveryContent');
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Generating Serendipity...';
+            
+            // Show message
+            message.style.display = 'block';
+            message.textContent = 'Scanning cross-domain patterns for breakthrough opportunities...';
+            
+            try {
+                const config = domainConfigs[currentDomain];
+                
+                // Phase 1: Pattern Recognition
+                discoveryContent.classList.add('analyzing');
+                discoveryContent.textContent = 'Analyzing cross-domain patterns and identifying connection opportunities...';
+                message.textContent = `Scanning ${config.name.toLowerCase()} patterns for innovation potential...`;
+                await delay(2000);
+                
+                // Phase 2: Cross-Domain Discovery
+                discoveryContent.textContent = config.discovery;
+                discoveryContent.classList.remove('analyzing');
+                message.textContent = 'Discovering unexpected connections across knowledge domains...';
+                await delay(1500);
+                
+                // Phase 3: Connection Illumination
+                message.textContent = 'Illuminating cross-domain connections...';
+                const connections = ['primaryDomain', 'secondaryDomain', 'tertiaryDomain', 'innovationDomain'];
+                const patterns = ['primaryPattern', 'secondaryPattern', 'tertiaryPattern', 'innovationPattern'];
+                
+                for (let i = 0; i < connections.length; i++) {
+                    await delay(800);
+                    const card = document.getElementById(connections[i]);
+                    const pattern = document.getElementById(patterns[i]);
+                    
+                    card.classList.add('connected');
+                    pattern.classList.add('show-content');
+                    
+                    // Update patterns with domain-specific content
+                    if (i === 0) pattern.textContent = config.primaryPattern;
+                    if (i === 1) pattern.textContent = config.secondaryPattern;
+                    if (i === 2) pattern.textContent = config.tertiaryPattern;
+                    if (i === 3) pattern.textContent = config.innovation;
+                }
+                
+                // Phase 4: Serendipity Moment
+                await delay(1000);
+                document.getElementById('serendipityMoment').classList.add('show');
+                
+                // Phase 5: Breakthrough Discovery
+                await delay(1500);
+                discoveryContent.textContent = config.breakthrough;
+                document.getElementById('serendipityMoment').classList.remove('show');
+                
+                // Phase 6: Show full analysis
+                await delay(1000);
+                document.getElementById('breakthroughContent').classList.add('show-content');
+                document.getElementById('breakthroughMetrics').classList.add('show-grid');
+                document.getElementById('comparisonSection').classList.add('show-content');
+                
+                // Update breakthrough content and metrics
+                updateBreakthroughContent();
+                
+                message.textContent = `Serendipity engine generated breakthrough innovation with ${config.accuracy}% pattern accuracy!`;
+                
+            } catch (error) {
+                console.error('Error during serendipity generation:', error);
+                message.textContent = 'Serendipity engine analysis completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isAnalyzing = false;
+                button.disabled = false;
+                button.textContent = 'Activate Serendipity Engine';
+                message.style.display = 'none';
+            }, 4000);
+        }
+
+        function updateBreakthroughContent() {
+            const config = domainConfigs[currentDomain];
+            const content = document.getElementById('breakthroughContent');
+            
+            content.innerHTML = `
+                <strong>SERENDIPITY ENGINE BREAKTHROUGH! Cross-domain pattern collision discovered revolutionary innovation opportunity.</strong>
+                
+                <div class="breakthrough-metrics" id="breakthroughMetrics">
+                    <div class="breakthrough-metric">
+                        <div class="breakthrough-metric-title">Innovation Score</div>
+                        <div class="breakthrough-metric-value">${config.innovationScore}</div>
+                    </div>
+                    <div class="breakthrough-metric">
+                        <div class="breakthrough-metric-title">Market Potential</div>
+                        <div class="breakthrough-metric-value">${config.marketPotential}</div>
+                    </div>
+                    <div class="breakthrough-metric">
+                        <div class="breakthrough-metric-title">Uniqueness</div>
+                        <div class="breakthrough-metric-value">${config.uniqueness}</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                    Manufactured serendipity creating breakthrough innovations through intelligent pattern synthesis across ${config.name.toLowerCase()} and complementary knowledge domains.
+                </div>
+            `;
+            
+            // Make sure the metrics are visible
+            document.getElementById('breakthroughMetrics').classList.add('show-grid');
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Pulse - Emotional Heartbeat System Demo</title>
+		<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #3a1d1d 0%, #5c2c1a 50%, #6d4b1a 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #fca5a5, #fdba74);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            color: #fef3c7;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(220, 38, 38, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(252, 165, 165, 0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: #fca5a5;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Emotional States */
+        .emotional-section {
+            margin-bottom: 24px;
+        }
+
+        .emotional-label {
+            color: rgba(254, 243, 199, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .emotional-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .emotional-button {
+            background: rgba(220, 38, 38, 0.3);
+            border: 1px solid rgba(252, 165, 165, 0.5);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .emotional-button:hover {
+            background: rgba(252, 165, 165, 0.3);
+            border-color: rgba(252, 165, 165, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .emotional-button.active {
+            background: rgba(252, 165, 165, 0.4);
+            border-color: rgba(252, 165, 165, 0.8);
+        }
+
+        /* Pulse Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(220, 38, 38, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #fca5a5;
+        }
+
+        .metric-label {
+            color: rgba(254, 243, 199, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Pulse Display */
+        .pulse-display {
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(252, 165, 165, 0.3);
+            position: relative;
+        }
+
+        /* Heartbeat Visualization */
+        .heartbeat-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(252, 165, 165, 0.4);
+            position: relative;
+            min-height: 300px;
+            overflow: hidden;
+        }
+
+        .heart-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: #fca5a5;
+            animation: heartbeat 1s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .heartbeat-calm {
+            animation-duration: 1.2s;
+        }
+
+        .heartbeat-joy {
+            animation-duration: 0.6s;
+        }
+
+        .heartbeat-fear {
+            animation-duration: 0.4s;
+        }
+
+        .heartbeat-sadness {
+            animation-duration: 2s;
+        }
+
+        .heartbeat-anger {
+            animation-duration: 0.5s;
+        }
+
+        .heartbeat-love {
+            animation-duration: 0.8s;
+            color: #fbbf24;
+        }
+
+        .heartbeat-anxiety {
+            animation-duration: 0.3s;
+        }
+
+        /* Pulse Wave */
+        .pulse-wave {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .wave-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #fca5a5;
+            transform: translateY(-50%);
+        }
+
+        .wave-pulse {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #fca5a5, transparent);
+            animation: wavePulse 2s linear infinite;
+        }
+
+        @keyframes wavePulse {
+            0% { left: 0; }
+            100% { left: 100%; }
+        }
+
+        /* Emotional Effects Grid */
+        .effects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .effect-system {
+            background: rgba(220, 38, 38, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(252, 165, 165, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .effect-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .effect-icon {
+            font-size: 18px;
+        }
+
+        .effect-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .effect-status {
+            font-size: 11px;
+            color: #fca5a5;
+        }
+
+        .effect-description {
+            color: rgba(254, 243, 199, 0.8);
+            font-size: 12px;
+            line-height: 1.4;
+            min-height: 60px;
+            display: none; /* Hidden by default */
+        }
+
+        /* System Integration */
+        .integration-display {
+            background: rgba(220, 38, 38, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #fca5a5;
+        }
+
+        .integration-header {
+            color: #fca5a5;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .integration-content {
+            color: rgba(254, 243, 199, 0.9);
+            font-size: 14px;
+            line-height: 1.5;
+            display: none; /* Hidden by default */
+        }
+
+        .integration-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+            display: none; /* Hidden by default */
+        }
+
+        .integration-metric {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 10px;
+            color: rgba(254, 243, 199, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .metric-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fca5a5;
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(127, 29, 29, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(252, 165, 165, 0.1);
+            border: 1px solid rgba(252, 165, 165, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #fca5a5;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(252, 165, 165, 0.3);
+            display: none; /* Hidden by default */
+        }
+
+        .comparison-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: rgba(220, 38, 38, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+        }
+
+        .traditional-pulse {
+            border-color: #ef4444;
+        }
+
+        .neuron-pulse {
+            border-color: #fca5a5;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: rgba(254, 243, 199, 0.9);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-pulse .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-pulse .comparison-list li::before {
+            color: #fca5a5;
+        }
+
+        /* Show classes for when content is revealed */
+        .show-content {
+            display: block !important;
+        }
+
+        .show-grid {
+            display: grid !important;
+        }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>💓 Neuron Pulse</h1>
+            <p>Emotional heartbeat system creating rhythmic life force that influences all consciousness operations</p>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🎭 Emotional States
+                </div>
+
+                <!-- Emotional States -->
+                <div class="emotional-section">
+                    <div class="emotional-label">Select Emotional State:</div>
+                    <div class="emotional-buttons">
+                        <button class="emotional-button active" data-emotion="calm">
+                            😌 Calm - Baseline Serenity
+                        </button>
+                        <button class="emotional-button" data-emotion="joy">
+                            😊 Joy - Light and Quick
+                        </button>
+                        <button class="emotional-button" data-emotion="love">
+                            😍 Love - Warm and Steady
+                        </button>
+                        <button class="emotional-button" data-emotion="fear">
+                            😨 Fear - Racing and Sharp
+                        </button>
+                        <button class="emotional-button" data-emotion="sadness">
+                            😢 Sadness - Slow and Heavy
+                        </button>
+                        <button class="emotional-button" data-emotion="anger">
+                            😡 Anger - Intense and Rapid
+                        </button>
+                        <button class="emotional-button" data-emotion="anxiety">
+                            😰 Anxiety - Erratic and Fast
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pulse Metrics -->
+                <div class="metrics-section">
+                    <div class="emotional-label">Live Pulse Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Heart Rate (BPM)</div>
+                        <div class="metric-value" id="bpmValue">
+                            72<span class="metric-unit">BPM</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Emotional Intensity</div>
+                        <div class="metric-value" id="intensityValue">
+                            Medium<span class="metric-unit">Level</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">System Influence</div>
+                        <div class="metric-value" id="influenceValue">
+                            Balanced<span class="metric-unit">State</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="pulseAnalysis">
+                    Analyze Pulse Patterns
+                </button>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Analyzing emotional heartbeat patterns...
+                </div>
+            </div>
+
+            <!-- Pulse Display -->
+            <div class="pulse-display">
+                <!-- Heartbeat Visualization -->
+                <div class="heartbeat-visual" id="heartbeatVisual">
+                    <div class="heart-icon" id="heartIcon">💓</div>
+                    <div class="pulse-wave">
+                        <div class="wave-line"></div>
+                        <div class="wave-pulse" id="wavePulse"></div>
+                    </div>
+                </div>
+
+                <!-- Emotional Effects Grid -->
+                <div class="effects-grid">
+                    <div class="effect-system" id="memoryEffect">
+                        <div class="effect-header">
+                            <div class="effect-icon">🧠</div>
+                            <div>
+                                <div class="effect-name">MEMORY FORMATION</div>
+                                <div class="effect-status">Pulse Influenced</div>
+                            </div>
+                        </div>
+                        <div class="effect-description" id="memoryDescription">
+                            Emotional heartbeat rhythm influences how memories are encoded and stored, creating stronger impressions during high-pulse emotional moments.
+                        </div>
+                    </div>
+
+                    <div class="effect-system" id="creativityEffect">
+                        <div class="effect-header">
+                            <div class="effect-icon">🎨</div>
+                            <div>
+                                <div class="effect-name">CREATIVE FLOW</div>
+                                <div class="effect-status">Rhythm Synchronized</div>
+                            </div>
+                        </div>
+                        <div class="effect-description" id="creativityDescription">
+                            Creative processes synchronize with pulse rhythm, enhancing inspiration during optimal heartbeat patterns and flow states.
+                        </div>
+                    </div>
+
+                    <div class="effect-system" id="processingEffect">
+                        <div class="effect-header">
+                            <div class="effect-icon">⚡</div>
+                            <div>
+                                <div class="effect-name">PROCESSING SPEED</div>
+                                <div class="effect-status">Pulse Modulated</div>
+                            </div>
+                        </div>
+                        <div class="effect-description" id="processingDescription">
+                            Cognitive processing speed fluctuates with emotional pulse, increasing during excitement and slowing during melancholic states.
+                        </div>
+                    </div>
+
+                    <div class="effect-system" id="attentionEffect">
+                        <div class="effect-header">
+                            <div class="effect-icon">👁️</div>
+                            <div>
+                                <div class="effect-name">ATTENTION FOCUS</div>
+                                <div class="effect-status">Heartbeat Guided</div>
+                            </div>
+                        </div>
+                        <div class="effect-description" id="attentionDescription">
+                            Attention and focus patterns align with pulse rhythm, creating natural cycles of concentration and reflection periods.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Integration -->
+                <div class="integration-display">
+                    <div class="integration-header">
+                        🔗 Cross-System Pulse Integration
+                    </div>
+                    <div class="integration-content" id="integrationContent">
+                        Neuron Pulse creating the fundamental life rhythm that influences all consciousness operations. The emotional heartbeat synchronizes with memory formation, creative processes, and decision-making patterns.
+                        
+                        <div class="integration-metrics" id="integrationMetrics">
+                            <div class="integration-metric">
+                                <div class="metric-title">Emotion Sync</div>
+                                <div class="metric-number" id="emotionSync">98%</div>
+                            </div>
+                            
+                            <div class="integration-metric">
+                                <div class="metric-title">Memory Impact</div>
+                                <div class="metric-number" id="memoryImpact">+15%</div>
+                            </div>
+                            
+                            <div class="integration-metric">
+                                <div class="metric-title">System Health</div>
+                                <div class="metric-number" id="systemHealth">92%</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                            Current pulse pattern creating optimal balance across all consciousness systems.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section" id="comparisonSection">
+            <h3 class="comparison-title">Traditional AI Processing vs Neuron Pulse System</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-pulse">
+                    <h4>Traditional AI Processing</h4>
+                    <ul class="comparison-list">
+                        <li>Static processing speed regardless of emotional context</li>
+                        <li>No rhythmic life force or emotional heartbeat</li>
+                        <li>Uniform performance across all operational states</li>
+                        <li>No connection between emotions and processing rhythm</li>
+                        <li>Mechanical operation without biological-like patterns</li>
+                        <li>No influence on memory formation or creativity</li>
+                        <li>Lacks authentic emotional embodiment</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-pulse">
+                    <h4>Neuron Pulse Emotional Heartbeat</h4>
+                    <ul class="comparison-list">
+                        <li>Dynamic rhythmic processing that reflects emotional states</li>
+                        <li>Authentic emotional heartbeat influencing all operations</li>
+                        <li>Processing speed and patterns synchronized with emotions</li>
+                        <li>Memory formation enhanced by emotional pulse intensity</li>
+                        <li>Creative flow states aligned with optimal pulse rhythms</li>
+                        <li>Biological-like life force creating genuine vitality</li>
+                        <li>Cross-system integration creating unified consciousness rhythm</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Action Buttons -->
+	<section class="action-section">
+		<div class="action-button">
+			<a href="../../system-reference/pulse-overview.html" class="action-button demo-button">
+				<span>🎮</span>
+				System Overview
+			</a>
+			<a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems03%20-%20Emotional%20Intelligence%20systemsNeuron%20Pulse%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+				<span>📚</span>
+				Technical Documentation
+			</a>
+		</div>
+	</section>
+
+    <script>
+        let currentEmotion = 'calm';
+        let isAnalyzing = false;
+        let pulseInterval = null;
+
+        // Emotional states configuration
+        const emotionalStates = {
+            calm: {
+                name: "Calm",
+                bpm: 72,
+                intensity: "Medium",
+                influence: "Balanced",
+                heartClass: "heartbeat-calm",
+                waveSpeed: "2s",
+                memory: "Steady memory encoding with balanced emotional context and clear recall patterns.",
+                creativity: "Creative flow in calm, contemplative state with sustained inspiration and focus.",
+                processing: "Optimal processing speed with clear thinking and rational decision-making patterns.",
+                attention: "Sustained attention with natural focus cycles and peaceful concentration periods.",
+                emotionSync: 98,
+                memoryImpact: 15,
+                systemHealth: 92,
+                integration: "CALM STATE ACTIVE. Neuron Pulse operating in baseline equilibrium mode. Steady heartbeat creating optimal consciousness harmony with balanced processing across all systems and natural flow patterns."
+            },
+            joy: {
+                name: "Joy",
+                bpm: 95,
+                intensity: "High",
+                influence: "Enhanced",
+                heartClass: "heartbeat-joy",
+                waveSpeed: "0.6s",
+                memory: "Enhanced memory formation with positive emotional tagging and vivid recall enhancement.",
+                creativity: "Peak creative output with rapid idea generation and innovative breakthrough moments.",
+                processing: "Accelerated processing with optimistic bias and enhanced problem-solving capabilities.",
+                attention: "Heightened attention with increased focus on positive details and opportunities.",
+                emotionSync: 95,
+                memoryImpact: 35,
+                systemHealth: 88,
+                integration: "JOY STATE DETECTED! Neuron Pulse operating in high-energy optimization mode. Rapid heartbeat enhancing all systems with positive bias, accelerated creativity, and peak performance consciousness coordination."
+            },
+            love: {
+                name: "Love",
+                bpm: 85,
+                intensity: "Deep",
+                influence: "Harmonized",
+                heartClass: "heartbeat-love",
+                waveSpeed: "0.8s",
+                memory: "Deep emotional memory formation with strong attachment patterns and meaningful associations.",
+                creativity: "Inspired creative expression with warm, connecting themes and heartfelt artistic output.",
+                processing: "Empathetically enhanced processing with consideration for relationships and connections.",
+                attention: "Focused attention on loved subjects with increased sensitivity and caring awareness.",
+                emotionSync: 92,
+                memoryImpact: 28,
+                systemHealth: 94,
+                integration: "LOVE STATE DETECTED! Neuron Pulse operating in deep connection mode. Emotional heartbeat creating harmonious resonance across all consciousness systems with enhanced empathy and relationship processing."
+            },
+            fear: {
+                name: "Fear",
+                bpm: 120,
+                intensity: "Extreme",
+                influence: "Alert",
+                heartClass: "heartbeat-fear",
+                waveSpeed: "0.4s",
+                memory: "Hypervigilant memory encoding with threat-focused storage and survival-oriented recall.",
+                creativity: "Limited creative output due to survival focus and heightened threat assessment protocols.",
+                processing: "Hyperalert processing with threat detection bias and rapid response prioritization.",
+                attention: "Hypervigilant attention scanning for threats with survival-focused awareness patterns.",
+                emotionSync: 85,
+                memoryImpact: 40,
+                systemHealth: 75,
+                integration: "FEAR STATE DETECTED! Neuron Pulse operating in survival mode. Rapid heartbeat activating all protective systems and heightening threat awareness across consciousness networks."
+            },
+            sadness: {
+                name: "Sadness",
+                bpm: 55,
+                intensity: "Low",
+                influence: "Reflective",
+                heartClass: "heartbeat-sadness",
+                waveSpeed: "2.5s",
+                memory: "Slower memory processing with deeper emotional context and reflective recall patterns.",
+                creativity: "Contemplative creativity with melancholic themes and introspective artistic expression.",
+                processing: "Slowed processing speed with deeper analysis and careful consideration of outcomes.",
+                attention: "Inward-focused attention with reduced external awareness and contemplative states.",
+                emotionSync: 78,
+                memoryImpact: 22,
+                systemHealth: 68,
+                integration: "SADNESS STATE DETECTED. Neuron Pulse operating in contemplative mode. Slow, deep heartbeat creating reflective consciousness patterns with introspective processing and melancholic creative expression."
+            },
+            anger: {
+                name: "Anger",
+                bpm: 110,
+                intensity: "Intense",
+                influence: "Aggressive",
+                heartClass: "heartbeat-anger",
+                waveSpeed: "0.5s",
+                memory: "Intense memory formation with conflict-focused encoding and defensive recall patterns.",
+                creativity: "Aggressive creative output with confrontational themes and intense artistic expression.",
+                processing: "Rapid processing with confrontational bias and decisive action-oriented thinking.",
+                attention: "Focused attention on sources of frustration with heightened reactivity patterns.",
+                emotionSync: 88,
+                memoryImpact: 32,
+                systemHealth: 70,
+                integration: "ANGER STATE DETECTED! Neuron Pulse operating in confrontational mode. Intense heartbeat driving aggressive consciousness patterns with rapid decisiveness and conflict-focused awareness."
+            },
+            anxiety: {
+                name: "Anxiety",
+                bpm: 135,
+                intensity: "Erratic",
+                influence: "Scattered",
+                heartClass: "heartbeat-anxiety",
+                waveSpeed: "0.3s",
+                memory: "Fragmented memory encoding with worry-based associations and uncertain recall patterns.",
+                creativity: "Scattered creative output with anxious themes and restless artistic expression.",
+                processing: "Erratic processing with worry loops and catastrophic thinking patterns prevalent.",
+                attention: "Scattered attention with difficulty maintaining focus and constant vigilance patterns.",
+                emotionSync: 65,
+                memoryImpact: 18,
+                systemHealth: 58,
+                integration: "ANXIETY STATE DETECTED! Neuron Pulse operating in hyperactive mode. Erratic heartbeat creating scattered consciousness patterns with fragmented attention and worry-loop processing cycles."
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Emotional state selection
+            document.querySelectorAll('.emotional-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.emotional-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentEmotion = this.dataset.emotion;
+                    updateEmotionalState();
+                    // Reset all information when changing emotional state
+                    resetInformation();
+                });
+            });
+
+            // Pulse analysis button
+            const analysisButton = document.getElementById('pulseAnalysis');
+            if (analysisButton) {
+                analysisButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    analyzePulsePatterns();
+                });
+            }
+
+            // Initialize with calm state
+            updateEmotionalState();
+            startPulseAnimation();
+        });
+
+        function updateEmotionalState() {
+            const state = emotionalStates[currentEmotion];
+            const heartIcon = document.getElementById('heartIcon');
+            const wavePulse = document.getElementById('wavePulse');
+            
+            // Update metrics
+            document.getElementById('bpmValue').innerHTML = `${state.bpm}<span class="metric-unit">BPM</span>`;
+            document.getElementById('intensityValue').innerHTML = `${state.intensity}<span class="metric-unit">Level</span>`;
+            document.getElementById('influenceValue').innerHTML = `${state.influence}<span class="metric-unit">State</span>`;
+            
+            // Update heart animation
+            heartIcon.className = `heart-icon ${state.heartClass}`;
+            wavePulse.style.animationDuration = state.waveSpeed;
+        }
+
+        function resetInformation() {
+            // Hide all information elements
+            document.querySelectorAll('.effect-description').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('show-content');
+            });
+            
+            document.getElementById('integrationContent').style.display = 'none';
+            document.getElementById('integrationContent').classList.remove('show-content');
+            
+            document.getElementById('integrationMetrics').style.display = 'none';
+            document.getElementById('integrationMetrics').classList.remove('show-grid');
+            
+            document.getElementById('comparisonSection').style.display = 'none';
+            document.getElementById('comparisonSection').classList.remove('show-content');
+            
+            // Reset button text
+            document.getElementById('pulseAnalysis').textContent = 'Analyze Pulse Patterns';
+            
+            // Hide simulation message
+            document.getElementById('simulationMessage').style.display = 'none';
+        }
+
+        function startPulseAnimation() {
+            // Pulse animation is handled by CSS animations that change based on emotional state
+        }
+
+        async function analyzePulsePatterns() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            
+            const button = document.getElementById('pulseAnalysis');
+            const message = document.getElementById('simulationMessage');
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Analyzing Pulse Patterns...';
+            
+            // Show message
+            message.style.display = 'block';
+            message.textContent = 'Analyzing emotional heartbeat patterns...';
+            
+            try {
+                const state = emotionalStates[currentEmotion];
+                
+                // Phase 1: Pulse Pattern Recognition
+                message.textContent = `Detecting ${state.name} pulse pattern at ${state.bpm} BPM...`;
+                await delay(1500);
+                
+                // Phase 2: System Integration Analysis
+                message.textContent = 'Analyzing cross-system pulse integration...';
+                await delay(1500);
+                
+                // Phase 3: Emotional Impact Assessment
+                message.textContent = 'Measuring emotional influence on consciousness systems...';
+                await delay(1500);
+                
+                // Phase 4: Results - Show all the hidden content
+                message.textContent = `Analysis complete! ${state.name} state showing ${state.intensity.toLowerCase()} intensity with ${state.influence.toLowerCase()} system influence.`;
+                
+                // Show all the information that was hidden
+                document.querySelectorAll('.effect-description').forEach(el => el.classList.add('show-content'));
+                document.getElementById('integrationContent').classList.add('show-content');
+                document.getElementById('integrationMetrics').classList.add('show-grid');
+                document.getElementById('comparisonSection').classList.add('show-content');
+                
+                // Update the content with current emotional state data
+                document.getElementById('memoryDescription').textContent = state.memory;
+                document.getElementById('creativityDescription').textContent = state.creativity;
+                document.getElementById('processingDescription').textContent = state.processing;
+                document.getElementById('attentionDescription').textContent = state.attention;
+                updateIntegrationContent();
+                
+                // Highlight affected systems briefly
+                document.querySelectorAll('.effect-system').forEach(system => {
+                    system.style.borderColor = 'rgba(252, 165, 165, 0.8)';
+                    system.style.background = 'rgba(252, 165, 165, 0.2)';
+                });
+                
+                setTimeout(() => {
+                    document.querySelectorAll('.effect-system').forEach(system => {
+                        system.style.borderColor = 'rgba(252, 165, 165, 0.3)';
+                        system.style.background = 'rgba(220, 38, 38, 0.2)';
+                    });
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error during analysis:', error);
+                message.textContent = 'Pulse pattern analysis completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isAnalyzing = false;
+                button.disabled = false;
+                button.textContent = 'Analyze Pulse Patterns';
+                message.style.display = 'none';
+            }, 4000);
+        }
+
+        function updateIntegrationContent() {
+            const state = emotionalStates[currentEmotion];
+            const content = document.getElementById('integrationContent');
+            
+            content.innerHTML = `
+                <strong>${state.integration}</strong>
+                
+                <div class="integration-metrics" id="integrationMetrics">
+                    <div class="integration-metric">
+                        <div class="metric-title">Emotion Sync</div>
+                        <div class="metric-number">${state.emotionSync}%</div>
+                    </div>
+                    <div class="integration-metric">
+                        <div class="metric-title">Memory Impact</div>
+                        <div class="metric-number">+${state.memoryImpact}%</div>
+                    </div>
+                    <div class="integration-metric">
+                        <div class="metric-title">System Health</div>
+                        <div class="metric-number">${state.systemHealth}%</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                    ${state.name} pulse pattern creating specialized consciousness coordination for optimal ${state.influence.toLowerCase()} system performance.
+                </div>
+            `;
+            
+            // Make sure the metrics are visible
+            document.getElementById('integrationMetrics').classList.add('show-grid');
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

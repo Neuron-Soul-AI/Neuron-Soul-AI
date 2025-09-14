@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Vision - AI-Powered Design Generation Demo</title>
+		<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #451a03 0%, #7c2d12 30%, #a16207 60%, #713f12 100%);
+            min-height: 100vh;
+            padding: 16px;
+            padding-top: 90px !important;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            color: #fef3c7;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Generation Panel */
+        .generation-panel {
+            background: rgba(124, 45, 18, 0.4);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            height: fit-content;
+        }
+
+        .generation-title {
+            color: #fbbf24;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Design Requirements */
+        .requirements-section {
+            margin-bottom: 24px;
+        }
+
+        .requirements-label {
+            color: rgba(254, 243, 199, 0.9);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .requirement-group {
+            margin-bottom: 16px;
+        }
+
+        .requirement-select {
+            width: 100%;
+            background: rgba(69, 26, 3, 0.4);
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .requirement-select option {
+            background: #451a03;
+            color: white;
+        }
+
+        .requirement-input {
+            width: 100%;
+            background: rgba(69, 26, 3, 0.4);
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .requirement-input::placeholder {
+            color: rgba(254, 243, 199, 0.6);
+        }
+
+        /* Psychology Engine */
+        .psychology-section {
+            margin-bottom: 24px;
+        }
+
+        .psychology-engine {
+            background: rgba(69, 26, 3, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 4px solid #fbbf24;
+            transition: all 0.3s ease;
+        }
+
+        .psychology-engine.active {
+            background: rgba(251, 191, 36, 0.2);
+            border-left-color: #f59e0b;
+            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+        }
+
+        .engine-name {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .engine-status {
+            color: rgba(254, 243, 199, 0.8);
+            font-size: 10px;
+        }
+
+        /* Cultural Intelligence */
+        .cultural-section {
+            margin-bottom: 24px;
+        }
+
+        .cultural-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .cultural-button {
+            background: rgba(69, 26, 3, 0.3);
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .cultural-button:hover {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: rgba(251, 191, 36, 0.7);
+        }
+
+        .cultural-button.active {
+            background: rgba(251, 191, 36, 0.3);
+            border-color: rgba(251, 191, 36, 0.8);
+        }
+
+        /* Generation Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(69, 26, 3, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #fbbf24;
+        }
+
+        .metric-label {
+            color: rgba(254, 243, 199, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Generation Workspace */
+        .generation-workspace {
+            background: rgba(124, 45, 18, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            position: relative;
+            min-height: 600px;
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .workspace-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .generation-status {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Design Generations */
+        .design-generations {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .design-generations {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .design-option {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .design-option:hover {
+            border-color: rgba(251, 191, 36, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .design-option.selected {
+            border-color: #fbbf24;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .design-preview {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border-radius: 8px;
+            height: 120px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .preview-header {
+            background: #3b82f6;
+            height: 20px;
+            width: 100%;
+        }
+
+        .preview-content {
+            padding: 8px;
+        }
+
+        .preview-button {
+            border-radius: 4px;
+            height: 12px;
+            margin: 4px 0;
+        }
+
+        .preview-text {
+            background: #d1d5db;
+            height: 6px;
+            border-radius: 2px;
+            margin: 2px 0;
+        }
+
+        .design-info {
+            color: white;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .design-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .design-psychology {
+            color: rgba(254, 243, 199, 0.8);
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        .psychology-tags {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .psychology-tag {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        /* Color Psychology Display */
+        .color-psychology {
+            background: rgba(69, 26, 3, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .color-title {
+            color: #fbbf24;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid rgba(254, 243, 199, 0.3);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+            border-color: rgba(254, 243, 199, 0.6);
+        }
+
+        .color-info {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: rgba(254, 243, 199, 0.8);
+            text-align: center;
+            width: 60px;
+        }
+
+        .color-explanation {
+            color: rgba(254, 243, 199, 0.9);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        /* Cultural Adaptation */
+        .cultural-adaptation {
+            background: rgba(69, 26, 3, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .cultural-header {
+            color: #fbbf24;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .adaptation-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-left: 3px solid #10b981;
+        }
+
+        .adaptation-aspect {
+            color: #10b981;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .adaptation-description {
+            color: white;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        /* Process Buttons */
+        .generation-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .process-button {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #451a03;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(113, 63, 18, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .process-button.secondary {
+            background: rgba(69, 26, 3, 0.6);
+            color: white;
+            border: 1px solid rgba(251, 191, 36, 0.5);
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #fbbf24;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Innovation Showcase */
+        .innovation-showcase {
+            background: rgba(124, 45, 18, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .innovation-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .innovation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .innovation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .innovation-feature {
+            background: rgba(69, 26, 3, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 2px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .feature-icon {
+            font-size: 18px;
+            color: #fbbf24;
+        }
+
+        .feature-title {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .feature-description {
+            color: rgba(254, 243, 199, 0.9);
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .feature-stat {
+            color: #000000;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: rgba(124, 45, 18, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .comparison-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: rgba(69, 26, 3, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid;
+        }
+
+        .traditional-design {
+            border-color: #ef4444;
+        }
+
+        .neuron-vision {
+            border-color: #fbbf24;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: rgba(254, 243, 199, 0.9);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-design .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-vision .comparison-list li::before {
+            color: #fbbf24;
+        }
+
+        /* Design Preview Variations */
+        .preview-option1 .preview-header { background: #3b82f6; }
+        .preview-option1 .preview-button { background: #10b981; width: 60px; }
+        .preview-option1 .preview-text { width: 80%; }
+
+        .preview-option2 .preview-header { background: #7c3aed; }
+        .preview-option2 .preview-button { background: #f59e0b; width: 70px; }
+        .preview-option2 .preview-text { width: 75%; }
+
+        .preview-option3 .preview-header { background: #dc2626; }
+        .preview-option3 .preview-button { background: #059669; width: 55px; }
+        .preview-option3 .preview-text { width: 85%; }
+
+        .preview-option4 .preview-header { background: #0891b2; }
+        .preview-option4 .preview-button { background: #ea580c; width: 65px; }
+        .preview-option4 .preview-text { width: 70%; }
+		
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-button {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+		
+		.demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+		
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>👁️ Neuron Vision</h1>
+            <p>AI-powered design generation system creating psychologically optimized designs through cultural intelligence and scientific creativity</p>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Generation Panel -->
+            <div class="generation-panel">
+                <div class="generation-title">
+                    🎨 Design Generation Setup
+                </div>
+
+                <!-- Design Requirements -->
+                <div class="requirements-section">
+                    <div class="requirements-label">Project Requirements:</div>
+                    
+                    <div class="requirement-group">
+                        <select class="requirement-select" id="projectType">
+                            <option value="ecommerce">E-commerce Website</option>
+                            <option value="saas">SaaS Landing Page</option>
+                            <option value="portfolio">Creative Portfolio</option>
+                            <option value="blog">Content Blog</option>
+                            <option value="app">Mobile App Interface</option>
+                        </select>
+                    </div>
+
+                    <div class="requirement-group">
+                        <select class="requirement-select" id="targetAudience">
+                            <option value="professionals">Business Professionals</option>
+                            <option value="creatives">Creative Artists</option>
+                            <option value="consumers">General Consumers</option>
+                            <option value="youth">Young Adults (18-30)</option>
+                            <option value="seniors">Mature Adults (45+)</option>
+                        </select>
+                    </div>
+
+                    <div class="requirement-group">
+                        <select class="requirement-select" id="primaryGoal">
+                            <option value="conversion">Maximize Conversions</option>
+                            <option value="engagement">Increase Engagement</option>
+                            <option value="trust">Build Trust & Credibility</option>
+                            <option value="creativity">Showcase Creativity</option>
+                            <option value="information">Deliver Information</option>
+                        </select>
+                    </div>
+
+                    <div class="requirement-group">
+                        <input type="text" class="requirement-input" placeholder="Brand/Company Name" id="brandName" value="TechFlow Solutions">
+                    </div>
+                </div>
+
+                <!-- Psychology Engines -->
+                <div class="psychology-section">
+                    <div class="requirements-label">Active Psychology Engines:</div>
+                    
+                    <div class="psychology-engine active" id="colorPsychology">
+                        <div class="engine-name">Color Psychology Generator</div>
+                        <div class="engine-status">Optimizing emotional response</div>
+                    </div>
+
+                    <div class="psychology-engine active" id="layoutPsychology">
+                        <div class="engine-name">Spatial Psychology Engine</div>
+                        <div class="engine-status">Calculating visual hierarchy</div>
+                    </div>
+
+                    <div class="psychology-engine" id="behavioralPsychology">
+                        <div class="engine-name">Behavioral Trigger System</div>
+                        <div class="engine-status">Analyzing user flow patterns</div>
+                    </div>
+
+                    <div class="psychology-engine" id="culturalIntelligence">
+                        <div class="engine-name">Cultural Intelligence</div>
+                        <div class="engine-status">Adapting for global audience</div>
+                    </div>
+                </div>
+
+                <!-- Cultural Intelligence -->
+                <div class="cultural-section">
+                    <div class="requirements-label">Cultural Adaptation:</div>
+                    <div class="cultural-selector">
+                        <button class="cultural-button active" data-culture="western">Western</button>
+                        <button class="cultural-button" data-culture="asian">Asian</button>
+                        <button class="cultural-button" data-culture="middle-east">Middle East</button>
+                        <button class="cultural-button" data-culture="global">Global</button>
+                    </div>
+                </div>
+
+                <!-- Generation Metrics -->
+                <div class="metrics-section">
+                    <div class="requirements-label">Generation Analytics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Psychology Accuracy</div>
+                        <div class="metric-value" id="psychologyAccuracy">
+                            97<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Cultural Adaptation</div>
+                        <div class="metric-value" id="culturalScore">
+                            92<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Innovation Index</div>
+                        <div class="metric-value" id="innovationIndex">
+                            8.7<span class="metric-unit">/10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="generation-actions">
+                    <button class="process-button" id="generateDesigns">
+                        Generate Designs
+                    </button>
+                </div>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Activating psychological design generation...
+                </div>
+            </div>
+
+            <!-- Generation Workspace -->
+            <div class="generation-workspace">
+                <div class="workspace-header">
+                    <div class="workspace-title" id="workspaceTitle">
+                        🎨 TechFlow Solutions - Business Professional Designs
+                    </div>
+                    <div class="generation-status">
+                        AI Generated
+                    </div>
+                </div>
+
+                <!-- Design Generations -->
+                <div class="design-generations">
+                    <div class="design-option" data-option="1">
+                        <div class="design-preview">
+                            <div class="preview-elements preview-option1">
+                                <div class="preview-header"></div>
+                                <div class="preview-content">
+                                    <div class="preview-button"></div>
+                                    <div class="preview-text"></div>
+                                    <div class="preview-text" style="width: 60%;"></div>
+                                    <div class="preview-text" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="design-info">
+                            <div class="design-title">Professional Trust Builder</div>
+                            <div class="design-psychology">
+                                Blue header creates authority and trust. Green CTA reduces financial anxiety while encouraging action. Clean layout follows F-pattern for natural eye movement.
+                            </div>
+                            <div class="psychology-tags">
+                                <span class="psychology-tag">TRUST</span>
+                                <span class="psychology-tag">AUTHORITY</span>
+                                <span class="psychology-tag">CLARITY</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="design-option" data-option="2">
+                        <div class="design-preview">
+                            <div class="preview-elements preview-option2">
+                                <div class="preview-header"></div>
+                                <div class="preview-content">
+                                    <div class="preview-button"></div>
+                                    <div class="preview-text"></div>
+                                    <div class="preview-text" style="width: 65%;"></div>
+                                    <div class="preview-text" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="design-info">
+                            <div class="design-title">Innovation Showcase</div>
+                            <div class="design-psychology">
+                                Purple header conveys innovation and creativity. Orange CTA creates urgency without aggression. Layout optimized for tech-savvy professionals.
+                            </div>
+                            <div class="psychology-tags">
+                                <span class="psychology-tag">INNOVATION</span>
+                                <span class="psychology-tag">PREMIUM</span>
+                                <span class="psychology-tag">URGENCY</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="design-option" data-option="3">
+                        <div class="design-preview">
+                            <div class="preview-elements preview-option3">
+                                <div class="preview-header"></div>
+                                <div class="preview-content">
+                                    <div class="preview-button"></div>
+                                    <div class="preview-text"></div>
+                                    <div class="preview-text" style="width: 70%;"></div>
+                                    <div class="preview-text" style="width: 95%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="design-info">
+                            <div class="design-title">Power & Performance</div>
+                            <div class="design-psychology">
+                                Red header signals strength and determination. Green action button suggests growth and success. Bold design appeals to decision-makers.
+                            </div>
+                            <div class="psychology-tags">
+                                <span class="psychology-tag">POWER</span>
+                                <span class="psychology-tag">SUCCESS</span>
+                                <span class="psychology-tag">DECISIVE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="design-option" data-option="4">
+                        <div class="design-preview">
+                            <div class="preview-elements preview-option4">
+                                <div class="preview-header"></div>
+                                <div class="preview-content">
+                                    <div class="preview-button"></div>
+                                    <div class="preview-text"></div>
+                                    <div class="preview-text" style="width: 55%;"></div>
+                                    <div class="preview-text" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="design-info">
+                            <div class="design-title">Modern Efficiency</div>
+                            <div class="design-psychology">
+                                Teal header suggests cutting-edge technology. Orange CTA provides warm contrast for engagement. Minimalist approach reduces cognitive load.
+                            </div>
+                            <div class="psychology-tags">
+                                <span class="psychology-tag">MODERN</span>
+                                <span class="psychology-tag">EFFICIENT</span>
+                                <span class="psychology-tag">CLEAN</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color Psychology Display -->
+                <div class="color-psychology">
+                    <div class="color-title">
+                        🎨 Generated Color Psychology
+                    </div>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background: #3b82f6;">
+                            <div class="color-info">Trust Blue</div>
+                        </div>
+                        <div class="color-swatch" style="background: #10b981;">
+                            <div class="color-info">Action Green</div>
+                        </div>
+                        <div class="color-swatch" style="background: #f3f4f6;">
+                            <div class="color-info">Clean White</div>
+                        </div>
+                        <div class="color-swatch" style="background: #374151;">
+                            <div class="color-info">Professional Gray</div>
+                        </div>
+                    </div>
+                    <div class="color-explanation">
+                        Color palette scientifically optimized for business professionals: Blue establishes trust and authority, Green reduces decision anxiety while encouraging action, White ensures clarity and professionalism, Gray provides sophisticated balance.
+                    </div>
+                </div>
+
+                <!-- Cultural Adaptation -->
+                <div class="cultural-adaptation">
+                    <div class="cultural-header">
+                        🌍 Cultural Intelligence Adaptations
+                    </div>
+
+                    <div class="adaptation-item">
+                        <div class="adaptation-aspect">Reading Patterns</div>
+                        <div class="adaptation-description">Western F-pattern layout optimized for left-to-right reading, with primary CTA positioned for natural eye flow completion.</div>
+                    </div>
+
+                    <div class="adaptation-item">
+                        <div class="adaptation-aspect">Trust Signals</div>
+                        <div class="adaptation-description">Authority-based trust building common in Western business culture, emphasizing credentials and professional appearance.</div>
+                    </div>
+
+                    <div class="adaptation-item">
+                        <div class="adaptation-aspect">Color Meanings</div>
+                        <div class="adaptation-description">Blue associated with trust and stability in Western business contexts, avoiding colors with negative business connotations.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Innovation Showcase -->
+        <div class="innovation-showcase">
+            <h3 class="innovation-title">Revolutionary AI Design Generation Features</h3>
+            <div class="innovation-grid">
+                <div class="innovation-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">🧠</div>
+                        <div class="feature-title">Psychological Optimization</div>
+                    </div>
+                    <div class="feature-description">
+                        Every design element scientifically optimized for psychological impact. Color choices, spatial relationships, and visual hierarchy all calculated for maximum effectiveness.
+                    </div>
+                    <div class="feature-stat">97% accuracy in psychological predictions</div>
+                </div>
+                <div class="innovation-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-title">Cultural Intelligence</div>
+                    </div>
+                    <div class="feature-description">
+                        Adaptive design generation that understands cultural preferences, reading patterns, color meanings, and trust signals across global markets.
+                    </div>
+                    <div class="feature-stat">Supporting 47 cultural contexts</div>
+                </div>
+                <div class="innovation-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">Innovation Synthesis</div>
+                    </div>
+                    <div class="feature-description">
+                        Cross-disciplinary creativity engine combining insights from psychology, neuroscience, anthropology, and data science for breakthrough designs.
+                    </div>
+                    <div class="feature-stat">8.7/10 average innovation index</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 16px; color: rgba(254, 243, 199, 0.8); font-size: 14px;">
+                First AI system to generate designs based on scientific psychology rather than templates or trends
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional Design Creation vs Neuron Vision AI Generation</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-design">
+                    <h4>Traditional Design Creation</h4>
+                    <ul class="comparison-list">
+                        <li>Template-based design with limited customization options</li>
+                        <li>Designer intuition and personal preference driving choices</li>
+                        <li>No scientific backing for color or layout decisions</li>
+                        <li>Trial and error approach to user experience optimization</li>
+                        <li>Cultural assumptions based on designer's background</li>
+                        <li>Time-intensive iteration and revision cycles</li>
+                        <li>Inconsistent results across different design teams</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-vision">
+                    <h4>Neuron Vision AI Generation</h4>
+                    <ul class="comparison-list">
+                        <li>Psychology-driven design optimization for measurable user impact</li>
+                        <li>Cultural intelligence ensuring global market effectiveness</li>
+                        <li>Scientific foundation for every design element and color choice</li>
+                        <li>Cross-disciplinary innovation synthesis for breakthrough creativity</li>
+                        <li>Real-time adaptation based on target audience psychology</li>
+                        <li>Instant generation of multiple optimized design variations</li>
+                        <li>Consistent quality and effectiveness across all generated designs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Action Buttons -->
+	<section class="action-section">
+		<div class="action-button">
+			<a href="../../system-reference/vision-overview.html" class="action-button demo-button">
+				<span>🎮</span>
+				System Overview
+			</a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems04%20-%20Creative%20Intelligence%20systemsNeuron%20Vision%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+		</div>
+	</section>
+
+    <script>
+        let currentCulture = 'western';
+        let isGenerating = false;
+        let selectedOption = null;
+
+        const projectData = {
+            ecommerce: {
+                title: "E-commerce Store",
+                psychologyEngines: ['colorPsychology', 'layoutPsychology', 'behavioralPsychology'],
+                culturalScore: 94,
+                innovationIndex: 8.9
+            },
+            saas: {
+                title: "SaaS Landing Page", 
+                psychologyEngines: ['colorPsychology', 'layoutPsychology', 'culturalIntelligence'],
+                culturalScore: 92,
+                innovationIndex: 8.7
+            },
+            portfolio: {
+                title: "Creative Portfolio",
+                psychologyEngines: ['colorPsychology', 'culturalIntelligence'],
+                culturalScore: 88,
+                innovationIndex: 9.2
+            },
+            blog: {
+                title: "Content Blog",
+                psychologyEngines: ['layoutPsychology', 'culturalIntelligence'],
+                culturalScore: 91,
+                innovationIndex: 8.1
+            },
+            app: {
+                title: "Mobile App Interface",
+                psychologyEngines: ['colorPsychology', 'layoutPsychology', 'behavioralPsychology', 'culturalIntelligence'],
+                culturalScore: 96,
+                innovationIndex: 9.4
+            }
+        };
+
+        const audienceData = {
+            professionals: "Business Professional",
+            creatives: "Creative Artist", 
+            consumers: "General Consumer",
+            youth: "Young Adult",
+            seniors: "Mature Adult"
+        };
+
+        const culturalAdaptations = {
+            western: {
+                reading: "Western F-pattern layout optimized for left-to-right reading, with primary CTA positioned for natural eye flow completion.",
+                trust: "Authority-based trust building common in Western business culture, emphasizing credentials and professional appearance.",
+                color: "Blue associated with trust and stability in Western business contexts, avoiding colors with negative business connotations."
+            },
+            asian: {
+                reading: "Vertical emphasis and centered layouts respecting traditional Asian design principles and reading patterns.",
+                trust: "Relationship-based trust building emphasizing community endorsements and group harmony over individual authority.",
+                color: "Red signifying luck and prosperity, gold for prestige, avoiding color combinations with negative cultural significance."
+            },
+            'middle-east': {
+                reading: "Right-to-left reading optimization with appropriate text direction and visual flow adaptation.",
+                trust: "Family and community-based trust signals, emphasizing tradition and established reputation over innovation.",
+                color: "Green representing growth and harmony, careful consideration of religious and cultural color symbolism."
+            },
+            global: {
+                reading: "Universal design principles accommodating multiple reading patterns and cultural visual preferences.",
+                trust: "Multi-cultural trust building combining various approaches for global market effectiveness.",
+                color: "Culturally neutral color schemes avoiding region-specific negative associations while maintaining psychological effectiveness."
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Project type changes
+            document.getElementById('projectType').addEventListener('change', updateDisplay);
+            document.getElementById('targetAudience').addEventListener('change', updateDisplay);
+            document.getElementById('brandName').addEventListener('input', updateDisplay);
+
+            // Cultural selection
+            document.querySelectorAll('.cultural-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const culture = this.dataset.culture;
+                    switchCulture(culture);
+                });
+            });
+
+            // Design option selection
+            document.querySelectorAll('.design-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectDesignOption(this.dataset.option);
+                });
+            });
+
+            // Generate designs button
+            const generateButton = document.getElementById('generateDesigns');
+            if (generateButton) {
+                generateButton.addEventListener('click', generateNewDesigns);
+            }
+
+            // Initialize display
+            updateDisplay();
+        });
+
+        function updateDisplay() {
+            const projectType = document.getElementById('projectType').value;
+            const audience = document.getElementById('targetAudience').value;
+            const brandName = document.getElementById('brandName').value || 'Brand Name';
+            
+            const data = projectData[projectType];
+            const audienceName = audienceData[audience];
+            
+            // Update workspace title
+            document.getElementById('workspaceTitle').textContent = `🎨 ${brandName} - ${audienceName} Designs`;
+            
+            // Update active psychology engines
+            document.querySelectorAll('.psychology-engine').forEach(engine => {
+                if (data.psychologyEngines.includes(engine.id)) {
+                    engine.classList.add('active');
+                } else {
+                    engine.classList.remove('active');
+                }
+            });
+            
+            // Update metrics
+            document.getElementById('culturalScore').innerHTML = `${data.culturalScore}<span class="metric-unit">%</span>`;
+            document.getElementById('innovationIndex').innerHTML = `${data.innovationIndex}<span class="metric-unit">/10</span>`;
+        }
+
+        function switchCulture(culture) {
+            currentCulture = culture;
+            
+            // Update cultural buttons
+            document.querySelectorAll('.cultural-button').forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.culture === culture) {
+                    button.classList.add('active');
+                }
+            });
+            
+            // Update cultural adaptations
+            updateCulturalAdaptations();
+        }
+
+        function updateCulturalAdaptations() {
+            const adaptations = culturalAdaptations[currentCulture];
+            const adaptationItems = document.querySelectorAll('.adaptation-item');
+            
+            if (adaptationItems.length >= 3) {
+                adaptationItems[0].querySelector('.adaptation-description').textContent = adaptations.reading;
+                adaptationItems[1].querySelector('.adaptation-description').textContent = adaptations.trust;
+                adaptationItems[2].querySelector('.adaptation-description').textContent = adaptations.color;
+            }
+        }
+
+        function selectDesignOption(optionNumber) {
+            selectedOption = optionNumber;
+            
+            // Update selected state
+            document.querySelectorAll('.design-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.option === optionNumber) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+
+        async function generateNewDesigns() {
+            if (isGenerating) return;
+            
+            isGenerating = true;
+            const button = document.getElementById('generateDesigns');
+            const message = document.getElementById('simulationMessage');
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Generating...';
+            
+            // Show simulation message
+            message.style.display = 'block';
+            message.textContent = 'Activating psychological design generation...';
+            
+            try {
+                // Phase 1: Psychology Analysis
+                message.textContent = 'Analyzing target audience psychology...';
+                await delay(1500);
+                
+                // Activate psychology engines one by one
+                const projectType = document.getElementById('projectType').value;
+                const data = projectData[projectType];
+                
+                for (let engine of data.psychologyEngines) {
+                    document.getElementById(engine).classList.add('active');
+                    await delay(500);
+                }
+                
+                // Phase 2: Cultural Intelligence
+                message.textContent = `Adapting designs for ${currentCulture} cultural preferences...`;
+                await delay(1500);
+                
+                // Phase 3: Color Psychology
+                message.textContent = 'Generating psychologically optimized color palettes...';
+                await delay(1500);
+                
+                // Phase 4: Layout Generation
+                message.textContent = 'Creating spatial psychology-driven layouts...';
+                await delay(1500);
+                
+                // Phase 5: Innovation Synthesis
+                message.textContent = 'Applying cross-disciplinary innovation synthesis...';
+                await delay(1500);
+                
+                // Phase 6: Results
+                message.textContent = `Generated 4 psychologically optimized designs with ${data.culturalScore}% cultural accuracy!`;
+                
+                // Highlight the design options
+                document.querySelectorAll('.design-option').forEach((option, index) => {
+                    setTimeout(() => {
+                        option.style.border = '2px solid #fbbf24';
+                        option.style.boxShadow = '0 0 20px rgba(251, 191, 36, 0.3)';
+                        
+                        setTimeout(() => {
+                            option.style.border = '2px solid rgba(251, 191, 36, 0.3)';
+                            option.style.boxShadow = '';
+                        }, 1000);
+                    }, index * 200);
+                });
+                
+            } catch (error) {
+                console.error('Error during generation:', error);
+                message.textContent = 'Design generation completed successfully.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isGenerating = false;
+                button.disabled = false;
+                button.textContent = 'Generate Designs';
+                message.style.display = 'none';
+            }, 4000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialize cultural adaptations
+        updateCulturalAdaptations();
+    </script>
+</body>
+</html>
