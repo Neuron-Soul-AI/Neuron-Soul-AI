@@ -554,6 +554,7 @@
                         // Main Categories
 						{id: 'faq', label: 'FAQ', type: 'utility', url: 'faq.html', description: 'Frequently asked questions about Soul AI'},
                         {id: 'implementation', label: 'Implementation Guide', type: 'utility', url: 'implementation-guide.html', description: 'Technical implementation guidelines'},
+						{id: 'license', label: 'License & Attribution', type: 'utility', url: 'license.html', description: 'CC BY-NC 4.0 licensing terms, attribution guidelines, and commercial licensing information'},
 						{id: 'research', label: 'Research', type: 'category', url: 'research/index-research.html', description: 'Academic papers and theoretical frameworks'},
                         {id: 'overview', label: 'Systems Overview', type: 'category', url: 'system-reference/index-system-overview.html', description: 'Complete consciousness system architecture'},
                         {id: 'demos-general', label: 'Demos Index', type: 'category', url: 'demos/index-general-demos.html', description: 'Interactive demonstrations of AI consciousness'},
@@ -720,6 +721,7 @@
                         // Home connections
                         {source: 'home', target: 'faq'},
 						{source: 'home', target: 'implementation'},
+						{source: 'home', target: 'license'},
 						{source: 'home', target: 'research'},
 						{source: 'home', target: 'overview'},
 						{source: 'home', target: 'demos-general'},
@@ -956,7 +958,7 @@
                 this.simulation.alpha(1).restart();
 				this.svg.call(this.zoom.transform, 
 						d3.zoomIdentity
-							.translate(this.width/4.5, this.height/3.5)
+							.translate(this.width/3.5, this.height/3.5)
 							.scale(0.35)
 					)
             }
