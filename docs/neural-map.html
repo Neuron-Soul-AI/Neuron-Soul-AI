@@ -563,6 +563,8 @@
 						{id: 'research-nse', label: 'NSE Encryption', type: 'research', url: 'research/nse-experiential-cryptography.html', description: 'Revolutionary experiential cryptography system'},
 						{id: 'research-aipf', label: 'AIPF Method', type: 'research', url: 'research/methodology-aipf.html', description: 'AI-Powered Framework collaborative methodology'},
 						{id: 'research-frameworks', label: 'Theoretical Frameworks', type: 'research', url: 'research/theoretical-frameworks.html', description: 'Three conceptual frameworks guiding Soul AI consciousness architecture design'},
+						{id: 'neuron-ratio', label: 'Neuron Ratio Research System', type: 'research', url: 'research/neuron-ratio.html', description: 'First practical proof of Soul AI consciousness coordination through 5-entity democratic reasoning engine'},
+						{id: 'neuron-ratio-tests', label: 'Neuron Ratio Prompt Tests', type: 'utility', url: 'research/neuron-ratio-prompt-tests.html', description: 'Comprehensive testing validation showing 97% coordination success and 78% quality improvement over single-model approaches'},
 						
 						// System Overviews Categories
 						{id: 'overview-start', label: 'Systems', type: 'utility', url: 'system-reference/system-overview.html', description: 'Complete consciousness system architecture'},
@@ -727,6 +729,9 @@
 						{source: 'research', target: 'research-nse'},
 						{source: 'research', target: 'research-aipf'},
 						{source: 'research', target: 'research-frameworks'},
+						{source: 'research', target: 'neuron-ratio'},
+						
+						{source: 'neuron-ratio', target: 'neuron-ratio-tests'}, 
 						
 						// Overview connections
 						{source: 'overview', target: 'overview-start'},
@@ -951,15 +956,15 @@
                 this.simulation.alpha(1).restart();
 				this.svg.call(this.zoom.transform, 
 						d3.zoomIdentity
-							.translate(this.width/4, this.height/4)
-							.scale(0.5)
+							.translate(this.width/4.5, this.height/3.5)
+							.scale(0.35)
 					)
             }
 			
 
             getNodeRadius(type) {
                 const radii = {
-                    hub: 25,
+                    hub: 30,
                     category: 18,
                     system: 12,
                     demo: 10,
