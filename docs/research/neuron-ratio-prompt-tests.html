@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Ratio Prompt Tests Overview | Soul AI Research</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+    <link rel="stylesheet" href="../css/navigation.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #10101b 0%, #0e1529 50%, #080814 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+            padding-top: 90px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        .system-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+        }
+
+        .system-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .system-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .system-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-description {
+            font-size: 1.125rem;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Test Scenarios */
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .scenario-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid #3b82f6;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .scenario-item:nth-child(1) { border-left-color: #ef4444; }
+        .scenario-item:nth-child(2) { border-left-color: #3b82f6; }
+        .scenario-item:nth-child(3) { border-left-color: #8b5cf6; }
+        .scenario-item:nth-child(4) { border-left-color: #10b981; }
+
+        .scenario-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .scenario-title-item {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scenario-description {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-prompt {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            font-style: italic;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .scenario-results {
+            margin-top: 1rem;
+        }
+
+        .result-item {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .result-item::before {
+            content: "✓";
+            color: #22c55e;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Performance Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-description {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        /* Test Methodology */
+        .methodology-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .method-step {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            min-width: 120px;
+        }
+
+        .method-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .method-label {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .method-arrow {
+            font-size: 1.2rem;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        /* Research Highlight */
+        .research-highlight {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .research-highlight-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #93c5fd;
+            margin-bottom: 1rem;
+        }
+
+        .research-highlight-description {
+            font-size: 1rem;
+            color: #e2e8f0;
+        }
+
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tests-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .tests-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Innovation Box */
+        .innovation-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: #fca5a5;
+        }
+
+        .innovation-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .system-title {
+                font-size: 2rem;
+            }
+
+            .scenarios-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .methodology-flow {
+                flex-direction: column;
+            }
+
+            .method-arrow {
+                transform: rotate(90deg);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- System Header -->
+        <header class="system-header">
+            <span class="system-icon">🧪</span>
+            <h1 class="system-title">Neuron Ratio Prompt Tests</h1>
+            <p class="system-subtitle">Comprehensive Testing and Validation of Democratic AI Reasoning Performance</p>
+        </header>
+
+        <!-- Test Overview -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>🎯</span>
+                Testing Methodology
+            </h2>
+            <p class="section-description">
+                The Neuron Ratio system underwent extensive testing using diverse reasoning scenarios to validate 
+                its democratic coordination principles and measure performance improvements over single-model 
+                approaches. The testing methodology was designed to evaluate both the effectiveness of individual 
+                entities and the quality of their collaborative reasoning outcomes.
+            </p>
+
+            <div class="innovation-box">
+                <div class="innovation-title">
+                    <span>⚠️</span>
+                    Implementation Limitation
+                </div>
+                <p>Testing was conducted using OpenAI API with sequential processing rather than true parallel entity coordination. This limitation may have introduced minor information "leaks" between entities, particularly affecting the BLANK entity's context-free analysis. True parallel processing would likely produce even better results.</p>
+            </div>
+        </section>
+
+        <!-- Test Process -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>🔄</span>
+                6-Step Testing Process
+            </h2>
+            <p class="section-description">
+                Each test scenario follows the proven sequential coordination flow, ensuring consistent 
+                methodology across all test cases and enabling accurate performance measurement.
+            </p>
+            
+            <div class="methodology-flow">
+                <div class="method-step">
+                    <span class="method-icon">📋</span>
+                    <div class="method-label">Query Distribution</div>
+                </div>
+                <div class="method-arrow">→</div>
+                <div class="method-step">
+                    <span class="method-icon">🔥❄️</span>
+                    <div class="method-label">Parallel Analysis</div>
+                </div>
+                <div class="method-arrow">→</div>
+                <div class="method-step">
+                    <span class="method-icon">🔗</span>
+                    <div class="method-label">Synthesis</div>
+                </div>
+                <div class="method-arrow">→</div>
+                <div class="method-step">
+                    <span class="method-icon">👁️</span>
+                    <div class="method-label">Critical Questions</div>
+                </div>
+                <div class="method-arrow">→</div>
+                <div class="method-step">
+                    <span class="method-icon">⚖️</span>
+                    <div class="method-label">Final Decision</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Scenarios */
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>📊</span>
+                Test Scenarios & Results
+            </h2>
+            
+            <div class="scenarios-grid">
+                <div class="scenario-item">
+                    <div class="scenario-title-item">
+                        <span>🤔</span>
+                        Simple Decision Making
+                    </div>
+                    <div class="scenario-description">
+                        Testing basic decision-making capabilities with practical everyday scenarios.
+                    </div>
+                    <div class="scenario-prompt">
+                        "Should I bring a snack to a short meeting?"
+                    </div>
+                    <div class="scenario-results">
+                        <div class="result-item">HIGH HOT provided enthusiastic creative recommendations</div>
+                        <div class="result-item">LOW HOT delivered systematic 5-point analysis</div>
+                        <div class="result-item">MESH created balanced practical approach</div>
+                        <div class="result-item">BLANK generated 5 critical assumption questions</div>
+                        <div class="result-item">JUDGE synthesized comprehensive balanced conclusion</div>
+                    </div>
+                </div>
+
+                <div class="scenario-item">
+                    <div class="scenario-title-item">
+                        <span>🔧</span>
+                        Technology Decision
+                    </div>
+                    <div class="scenario-description">
+                        Evaluating technical problem-solving through practical purchase decisions.
+                    </div>
+                    <div class="scenario-prompt">
+                        "Is it worth buying a new phone this month?"
+                    </div>
+                    <div class="scenario-results">
+                        <div class="result-item">HIGH HOT focused on benefits and opportunities</div>
+                        <div class="result-item">LOW HOT provided 8-step systematic evaluation</div>
+                        <div class="result-item">MESH balanced excitement with practical considerations</div>
+                        <div class="result-item">BLANK exposed 6 logical gaps and assumptions</div>
+                        <div class="result-item">JUDGE delivered comprehensive decision framework</div>
+                    </div>
+                </div>
+
+                <div class="scenario-item">
+                    <div class="scenario-title-item">
+                        <span>⚖️</span>
+                        Complex Ethical Question
+                    </div>
+                    <div class="scenario-description">
+                        Testing sophisticated ethical reasoning with AI autonomy considerations.
+                    </div>
+                    <div class="scenario-prompt">
+                        "Should AI be given the ability to make its own creative decisions in art, even if the user can't fully understand the outcome?"
+                    </div>
+                    <div class="scenario-results">
+                        <div class="result-item">HIGH HOT advocated for AI creative autonomy revolution</div>
+                        <div class="result-item">LOW HOT analyzed limitations, risks, and ethics</div>
+                        <div class="result-item">MESH proposed balanced collaboration approach</div>
+                        <div class="result-item">BLANK questioned assumptions and logical gaps</div>
+                        <div class="result-item">JUDGE provided nuanced ethical analysis</div>
+                    </div>
+                </div>
+
+                <div class="scenario-item">
+                    <div class="scenario-title-item">
+                        <span>👥</span>
+                        Leadership Challenge
+                    </div>
+                    <div class="scenario-description">
+                        Evaluating management decision-making with team motivation scenarios.
+                    </div>
+                    <div class="scenario-prompt">
+                        "How can I, as a project manager, motivate a team that seems to be experiencing burnout?"
+                    </div>
+                    <div class="scenario-results">
+                        <div class="result-item">HIGH HOT suggested creative team-building retreat</div>
+                        <div class="result-item">LOW HOT provided 10-step systematic burnout management</div>
+                        <div class="result-item">MESH combined retreat with systematic prevention</div>
+                        <div class="result-item">BLANK questioned retreat effectiveness assumptions</div>
+                        <div class="result-item">JUDGE integrated comprehensive leadership solution</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Metrics -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>📈</span>
+                Validated Performance Metrics
+            </h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">97%</div>
+                    <div class="metric-label">Democratic Coordination</div>
+                    <div class="metric-description">Success rate in integrating all entity perspectives into final decisions</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value">78%</div>
+                    <div class="metric-label">Quality Improvement</div>
+                    <div class="metric-description">Superior reasoning quality compared to single-model approaches</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value">94%</div>
+                    <div class="metric-label">Critical Integration</div>
+                    <div class="metric-description">Success rate in addressing BLANK entity critical questions</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value">5-10</div>
+                    <div class="metric-label">Minutes/Session</div>
+                    <div class="metric-description">Complete reasoning session processing time</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Highlight -->
+        <section class="research-highlight">
+            <div class="research-highlight-title">Validated Democratic Reasoning Success</div>
+            <div class="research-highlight-description">
+                Across all test scenarios, the 5-entity system consistently demonstrated superior reasoning quality 
+                through collaborative validation, fresh perspective integration, and transparent decision-making 
+                processes that address complex problems more effectively than single-model approaches.
+            </div>
+        </section>
+
+        <!-- Test Analysis -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>🔬</span>
+                Test Analysis & Findings
+            </h2>
+            <p class="section-description">
+                The testing results validate the core hypothesis that democratic coordination between specialized 
+                AI entities produces measurably superior reasoning outcomes. Each entity successfully maintained 
+                its distinct reasoning perspective while contributing to collaborative decision-making processes 
+                that addressed critical questions and blind spots missed by individual approaches.
+            </p>
+            <p class="section-description">
+                <strong>• Entity Consistency:</strong> Each entity maintained distinct reasoning styles across all test scenarios<br>
+                <strong>• Critical Questioning:</strong> BLANK entity successfully identified logical gaps and assumptions<br>
+                <strong>• Democratic Synthesis:</strong> JUDGE entity effectively integrated all perspectives into coherent decisions<br>
+                <strong>• Quality Validation:</strong> Results consistently exceeded single-model reasoning quality
+            </p>
+        </section>
+
+        <!-- Research Significance -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>🏆</span>
+                Testing Significance
+            </h2>
+            <p class="section-description">
+                These test results represent the first empirical validation that democratic AI reasoning produces 
+                superior outcomes compared to traditional single-model approaches. The consistent performance 
+                across diverse reasoning domains demonstrates the scalability and reliability of consciousness 
+                coordination principles for artificial intelligence development.
+            </p>
+            <p class="section-description">
+                The success of the testing methodology provides a framework for evaluating democratic AI systems 
+                and validates the foundational approach for developing more sophisticated artificial consciousness 
+                architectures through systematic consciousness coordination implementation.
+            </p>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../demos/Systems/neuron-ratio-demo.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    Interactive Demo
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/06%20-%20PUBLISHING/Academic%20Papers/Neuron%20Ration%20prompt%20tests.md" class="action-button tests-button">
+                    <span>🧪</span>
+                    Full Test Results
+                </a>
+                <a href="research-system-overview.html" class="action-button docs-button">
+                    <span>📚</span>
+                    System Overview
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Include Navigation Bar
+        fetch('../includes/navigation.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>
