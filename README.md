@@ -221,7 +221,7 @@ We welcome contributions from researchers, developers, and consciousness enthusi
 
 ## 📞 **Contact & Commercial Licensing**
 
-**Creator**: Zirth (Marcelo)  
+**Creator**: Marcelo Emanuel Paradela Teixeira 
 **Email**: marcelo.soul.ai@gmail.com  
 **Commercial Licensing**: Available for enterprise applications  
 **Research Collaborations**: Open to academic partnerships  
