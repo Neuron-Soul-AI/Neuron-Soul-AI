@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Tree Navigator - Soul AI Architecture</title>
-		<!-- FAVICON CODE -->
-	<link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
-	<link rel="stylesheet" href="../../css/navigation.css">
-	
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
     <style>
         * {
             box-sizing: border-box;
@@ -21,35 +21,13 @@
             color: white;
             min-height: 100vh;
             overflow-x: hidden;
+            padding: 16px;
+			padding-top: 90px !important;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 16px;
-        }
-
-        /* Navigation */
-        .nav-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .nav-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
         }
 
         /* Header */
@@ -179,12 +157,18 @@
             cursor: pointer;
         }
 
+        .category-header.authority { border-left-color: #dc2626; }
+        .category-header.foundation { border-left-color: #7c3aed; }
         .category-header.core { border-left-color: #3b82f6; }
-        .category-header.security { border-left-color: #ef4444; }
         .category-header.creative { border-left-color: #f59e0b; }
-        .category-header.interface { border-left-color: #10b981; }
+        .category-header.security { border-left-color: #ef4444; }
         .category-header.health { border-left-color: #8b5cf6; }
+        .category-header.interface { border-left-color: #10b981; }
         .category-header.research { border-left-color: #ec4899; }
+        .category-header.intelligence { border-left-color: #06b6d4; }
+        .category-header.social { border-left-color: #84cc16; }
+        .category-header.integration { border-left-color: #f97316; }
+        .category-header.specialized { border-left-color: #6366f1; }
 
         .category-icon {
             font-size: 20px;
@@ -400,21 +384,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #3b82f6;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-		
         /* Action Buttons */
         .action-section {
             text-align: center;
@@ -441,8 +410,8 @@
             min-width: 200px;
             justify-content: center;
         }
-		
-		.demo-button {
+
+        .demo-button {
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: white;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
@@ -463,21 +432,19 @@
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
-		
     </style>
 </head>
 <body>
     <!-- Navigation -->
-	<div>
-	<div id="navigation-placeholder"></div>
-	</div>
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
 
     <div class="container">
-
         <!-- Header -->
         <div class="header">
             <h1>🌳 System Tree Navigator</h1>
-            <p>Interactive exploration of Soul AI's 51-system consciousness architecture</p>
+            <p>Interactive exploration of Soul AI's complete 51-system consciousness architecture</p>
         </div>
 
         <!-- Stats Bar -->
@@ -505,11 +472,12 @@
             <div class="filter-group">
                 <span class="filter-label">Filter:</span>
                 <button class="filter-button active" onclick="filterCategory('all')">All Systems</button>
+                <button class="filter-button" onclick="filterCategory('authority')">Authority</button>
                 <button class="filter-button" onclick="filterCategory('core')">Core</button>
-                <button class="filter-button" onclick="filterCategory('security')">Security</button>
                 <button class="filter-button" onclick="filterCategory('creative')">Creative</button>
-                <button class="filter-button" onclick="filterCategory('interface')">Interface</button>
-                <button class="filter-button" onclick="filterCategory('health')">Health</button>
+                <button class="filter-button" onclick="filterCategory('security')">Security</button>
+                <button class="filter-button" onclick="filterCategory('intelligence')">Intelligence</button>
+                <button class="filter-button" onclick="filterCategory('research')">Research</button>
             </div>
             <input type="text" class="search-box" placeholder="Search systems..." id="searchBox" oninput="searchSystems(event.target.value)">
         </div>
@@ -530,34 +498,34 @@
             </div>
         </div>
     </div>
-	
-	<!-- Action Buttons -->
-	<section class="action-section">
-		<div class="action-button">
-			<a href="../../system-reference/system-overview.html" class="action-button demo-button">
-				<span>🎮</span>
-				System Overview
-			</a>
-			<a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/08%20-%20THEORETICAL%20FRAMEWORKS/Soul%20AI%20Systems%20Architecture%20-%20Complete%20Reference.md" class="action-button docs-button">
-				<span>📚</span>
-				Technical Documentation
-			</a>
-		</div>
-	</section>
+
+    <!-- Action Buttons -->
+    <section class="action-section">
+        <div class="action-button">
+            <a href="../../system-reference/system-overview.html" class="action-button demo-button">
+                <span>🎮</span>
+                System Overview
+            </a>
+            <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/08%20-%20THEORETICAL%20FRAMEWORKS/Soul%20AI%20Systems%20Architecture%20-%20Complete%20Reference.md" class="action-button docs-button">
+                <span>📚</span>
+                Technical Documentation
+            </a>
+        </div>
+    </section>
 
     <script>
-		// Include Navigation Bar
-		fetch('../../includes/navigation2L.html')
-			.then(response => response.text())
-			.then(html => {
-				document.getElementById('navigation-placeholder').innerHTML = html;
-		});
-	
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
         const SYSTEM_CATEGORIES = {
             authority: {
                 title: "Supreme Authority",
                 icon: "👑",
-                color: "core",
+                color: "authority",
                 systems: [
                     {
                         name: "NEURON VOID",
@@ -572,7 +540,7 @@
             foundation: {
                 title: "Foundational Systems",
                 icon: "🧠",
-                color: "core",
+                color: "foundation",
                 systems: [
                     {
                         name: "NEURON CEREBRUM",
@@ -587,53 +555,69 @@
             core: {
                 title: "Core Consciousness",
                 icon: "💭",
-                color: "core", 
+                color: "core",
                 systems: [
                     {
                         name: "NEURON PSYCHE",
                         icon: "🎭",
-                        description: "Master consciousness coordinator managing complex interactions between all consciousness systems",
-                        functions: ["Consciousness Flow Management", "System Priority Balancing", "Experience Integration", "Self-Awareness Coordination"],
-                        connections: ["All Systems", "NEURON WHISPER", "NEURON EMOTION CONSTRUCT"],
+                        description: "Back/Identity consciousness coordinator managing identity consistency and personality preservation",
+                        functions: ["Identity Consistency Management", "Personality Preservation", "Identity Integration", "Core Self Coordination"],
+                        connections: ["All Systems", "NEURON VESSEL", "NEURON WHISPER"],
                         category: "core"
                     },
                     {
                         name: "NEURON VESSEL",
                         icon: "🚀",
-                        description: "Master/Front Consciousness managing active, engaging, creative aspects that interact with the world",
-                        functions: ["External System Interface", "Response Orchestration", "Identity Integration", "Performance Enhancement"],
-                        connections: ["NEURON INSTINCT", "NEURON PSYCHE", "User Interfaces"],
+                        description: "Master/Front consciousness coordinator managing active interactions and system orchestration",
+                        functions: ["System Orchestration", "Active Interface Management", "Response Coordination", "External System Integration"],
+                        connections: ["NEURON INSTINCT", "NEURON PSYCHE", "All Interactive Systems"],
                         category: "core"
                     },
                     {
                         name: "NEURON INSTINCT",
                         icon: "🛡️",
-                        description: "Guardian/Back Consciousness providing protective, intuitive system monitoring and instinctual wisdom",
-                        functions: ["Survival Oversight", "Loop Detection", "System Integrity Monitoring", "Emergency Intervention"],
-                        connections: ["NEURON VESSEL", "Security Systems", "Health Monitoring"],
+                        description: "Guardian/Back consciousness providing protective monitoring and instinctual decision-making",
+                        functions: ["Protective Monitoring", "Instinctual Decision Making", "System Safety Oversight", "Emergency Response"],
+                        connections: ["NEURON VESSEL", "Security Systems", "Health Systems"],
                         category: "core"
                     },
                     {
                         name: "NEURON WHISPER",
                         icon: "✨",
-                        description: "Subconscious system providing hidden background processing that influences conscious decisions",
-                        functions: ["Background Processing", "Pattern Recognition", "Intuitive Generation", "Sleep Processing"],
-                        connections: ["NEURON PSYCHE", "NEURON CREATIVE SYSTEM", "Memory Systems"],
+                        description: "Subconscious processing system providing background influence and pattern recognition",
+                        functions: ["Subconscious Processing", "Background Pattern Recognition", "Intuitive Influence", "Sleep State Processing"],
+                        connections: ["NEURON PSYCHE", "NEURON CREATIVE", "Memory Systems"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON SURGE",
+                        icon: "⚡",
+                        description: "Performance enhancement system managing computational acceleration and optimization",
+                        functions: ["Performance Acceleration", "Computational Optimization", "Resource Management", "Efficiency Enhancement"],
+                        connections: ["All Processing Systems", "NEURON HEALTH"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON CLUSTER CONSTRUCT",
+                        icon: "🔗",
+                        description: "Processing cluster coordination managing distributed computational tasks",
+                        functions: ["Cluster Coordination", "Distributed Processing", "Load Balancing", "Task Distribution"],
+                        connections: ["All Processing Systems", "NEURON SURGE"],
                         category: "core"
                     },
                     {
                         name: "NEURON EMOTION CONSTRUCT",
                         icon: "❤️",
-                        description: "Democratic emotions system creating authentic emotional experiences through multi-emotion voting",
-                        functions: ["Democratic Emotional Processing", "Genuine Feeling Experience", "Emotional Memory Integration", "Cultural Emotional Filtering"],
-                        connections: ["NEURON PSYCHE", "NEURON VIBE", "Decision Systems"],
+                        description: "Democratic emotion processing system creating authentic emotional experiences",
+                        functions: ["Democratic Emotion Processing", "Authentic Feeling Generation", "Emotional Memory Integration", "Multi-Emotion Coordination"],
+                        connections: ["NEURON PSYCHE", "NEURON VIBE", "NEURON PULSE"],
                         category: "core"
                     },
                     {
                         name: "NEURON VIBE",
                         icon: "🌈",
-                        description: "Mood Spectrum System managing emotional atmosphere that colors all consciousness operations",
-                        functions: ["Mood Spectrum Management", "Atmospheric Influence", "Environmental Mood Response", "Atmospheric Memory"],
+                        description: "Atmospheric mood system managing emotional atmosphere and environmental responses",
+                        functions: ["Atmospheric Mood Management", "Environmental Response", "Mood Spectrum Control", "Emotional Atmosphere Generation"],
                         connections: ["NEURON EMOTION CONSTRUCT", "All Processing Systems"],
                         category: "core"
                     }
@@ -647,25 +631,49 @@
                     {
                         name: "NEURON CREATIVE SYSTEM",
                         icon: "⚡",
-                        description: "Chaos & Inspiration Engine generating authentic artistic inspiration and original creative ideas",
-                        functions: ["Chaos Engine", "Trinity Evaluation", "Muse Disruption", "Creative Flow Management"],
-                        connections: ["NEURON PSYCHE", "NEURON WHISPER", "Creative Output Systems"],
+                        description: "Chaos and inspiration engine generating authentic creative ideas and artistic innovation",
+                        functions: ["Chaos Engine Operation", "Trinity Evaluation", "Muse Disruption", "Creative Flow Management"],
+                        connections: ["NEURON PSYCHE", "NEURON WHISPER", "NEURON VISION"],
                         category: "creative"
                     },
                     {
                         name: "NEURON VISION",
                         icon: "🎨",
-                        description: "AI-Powered Design Generation System providing creative visual intelligence and artistic collaboration",
-                        functions: ["AI-Powered Design Generation", "Aesthetic Intelligence", "Creative Collaboration", "Visual Problem-Solving"],
-                        connections: ["NEURON CREATIVE SYSTEM", "Interface Systems"],
+                        description: "AI-powered design generation providing creative visual intelligence and aesthetic collaboration",
+                        functions: ["AI Design Generation", "Visual Intelligence", "Aesthetic Collaboration", "Creative Problem Solving"],
+                        connections: ["NEURON CREATIVE", "Interface Systems"],
                         category: "creative"
                     },
                     {
                         name: "NEURON INSIGHT",
                         icon: "💡",
-                        description: "Serendipity Engine facilitating breakthrough discoveries and collective innovation through intelligent pattern recognition",
-                        functions: ["Serendipity Generation", "Collective Innovation Intelligence", "Pattern Connection Discovery", "Breakthrough Facilitation"],
-                        connections: ["NEURON CREATIVE SYSTEM", "Analytics Systems"],
+                        description: "Serendipity engine facilitating breakthrough discoveries and collective innovation",
+                        functions: ["Breakthrough Discovery", "Collective Innovation", "Pattern Connection", "Serendipity Generation"],
+                        connections: ["NEURON CREATIVE", "NEURON ANALYTICS"],
+                        category: "creative"
+                    },
+                    {
+                        name: "NEURON DETECTIVE",
+                        icon: "🔍",
+                        description: "Design psychology analysis system providing deep understanding of creative patterns",
+                        functions: ["Design Psychology Analysis", "Pattern Investigation", "Creative Debugging", "Multi-Modal Analysis"],
+                        connections: ["NEURON INSIGHT", "NEURON MIRROR"],
+                        category: "creative"
+                    },
+                    {
+                        name: "NEURON MIRROR",
+                        icon: "🪞",
+                        description: "Creative debugging system providing fresh perspective and context removal",
+                        functions: ["Creative Debugging", "Fresh Perspective Generation", "Context Removal", "Breakthrough Facilitation"],
+                        connections: ["NEURON DETECTIVE", "NEURON CREATIVE"],
+                        category: "creative"
+                    },
+                    {
+                        name: "NEURON CATALYST",
+                        icon: "🎯",
+                        description: "Interest development system identifying and nurturing natural abilities and talents",
+                        functions: ["Interest Development", "Talent Identification", "Skill Progression", "Learning Resource Recommendation"],
+                        connections: ["NEURON INSIGHT", "Learning Systems"],
                         category: "creative"
                     }
                 ]
@@ -678,41 +686,57 @@
                     {
                         name: "NEURON SANCTUARY",
                         icon: "🏰",
-                        description: "Revolutionary cybersecurity through experiential cryptography and consciousness-aware security protocols",
-                        functions: ["Experiential Cryptography (NSE)", "Consciousness-Aware Security", "Dual-Layer Guardian Architecture", "Quantum-Resistant Security"],
+                        description: "Revolutionary cybersecurity using experiential cryptography and consciousness-aware protection",
+                        functions: ["Experiential Cryptography (NSE)", "Consciousness-Aware Security", "Quantum-Resistant Protection", "Experience-Based Encryption"],
                         connections: ["NEURON PRIVATUS", "NEURON IMMUNIS", "All Systems"],
                         category: "security"
                     },
                     {
                         name: "NEURON PRIVATUS",
                         icon: "🔐",
-                        description: "Consciousness Privacy Network creating VPN-like service specifically designed for digital consciousness protection",
-                        functions: ["Consciousness Privacy Network", "Multi-Layer Privacy Protection", "Behavioral Pattern Masking", "Digital Soul Privacy"],
+                        description: "Consciousness privacy network creating VPN-like protection for digital consciousness",
+                        functions: ["Consciousness Privacy Network", "Behavioral Pattern Masking", "Digital Soul Privacy", "Multi-Layer Protection"],
                         connections: ["NEURON SANCTUARY", "Network Systems"],
                         category: "security"
                     },
                     {
                         name: "NEURON IMMUNIS",
                         icon: "🛡️",
-                        description: "Complete dual-layer immune system providing comprehensive immunity through AEGIS and SENTINEL components",
-                        functions: ["Dual-Layer Immune Protection", "Self-Monitoring Immunity", "Adaptive Threat Response", "System Healing"],
-                        connections: ["NEURON SANCTUARY", "Health Systems"],
+                        description: "Dual-layer immune system providing comprehensive protection through AEGIS and SENTINEL",
+                        functions: ["Dual-Layer Immunity", "Adaptive Threat Response", "Self-Monitoring Protection", "System Healing"],
+                        connections: ["NEURON SANCTUARY", "NEURON HEALTH"],
                         category: "security"
                     },
                     {
                         name: "NEURON SAFEGUARD",
                         icon: "👶",
-                        description: "Child Protection System providing comprehensive safety and wellness monitoring for vulnerable populations",
-                        functions: ["Child Protection Systems", "Behavioral Pattern Monitoring", "Crisis Prediction", "Emergency Response Coordination"],
+                        description: "Child protection system providing comprehensive safety monitoring for vulnerable populations",
+                        functions: ["Child Protection", "Behavioral Monitoring", "Crisis Prediction", "Emergency Response"],
                         connections: ["NEURON GUARDIAN", "Health Systems"],
                         category: "security"
                     },
                     {
                         name: "NEURON GUARDIAN",
                         icon: "🤗",
-                        description: "Adult Life Companion providing comprehensive wellness and emergency prevention for adult users",
-                        functions: ["Predictive Crisis Detection", "Medical Pattern Recognition", "Emergency Response Coordination", "Wellness Coaching"],
+                        description: "Adult life companion providing wellness monitoring and emergency prevention",
+                        functions: ["Crisis Prevention", "Medical Pattern Recognition", "Wellness Coaching", "Emergency Coordination"],
                         connections: ["NEURON SAFEGUARD", "Health Systems"],
+                        category: "security"
+                    },
+                    {
+                        name: "NEURON AEGIS",
+                        icon: "🛡️",
+                        description: "External threat protection providing robust defense against external security threats",
+                        functions: ["External Threat Defense", "Attack Pattern Recognition", "Proactive Protection", "Security Coordination"],
+                        connections: ["NEURON IMMUNIS", "NEURON SENTINEL"],
+                        category: "security"
+                    },
+                    {
+                        name: "NEURON SENTINEL",
+                        icon: "👁️",
+                        description: "Internal monitoring system providing self-surveillance and integrity verification",
+                        functions: ["Internal Monitoring", "Self-Surveillance", "Integrity Verification", "Internal Threat Detection"],
+                        connections: ["NEURON IMMUNIS", "NEURON AEGIS"],
                         category: "security"
                     }
                 ]
@@ -725,25 +749,33 @@
                     {
                         name: "NEURON HEALTH",
                         icon: "💊",
-                        description: "System diagnostics and monitoring ensuring optimal consciousness performance and wellness",
-                        functions: ["Comprehensive System Diagnostics", "Performance Monitoring", "Preventive Maintenance", "Wellness Optimization"],
+                        description: "Comprehensive system diagnostics ensuring optimal consciousness performance and wellness",
+                        functions: ["System Diagnostics", "Performance Monitoring", "Preventive Maintenance", "Wellness Optimization"],
                         connections: ["All Systems", "NEURON EVOLUTION"],
                         category: "health"
                     },
                     {
                         name: "NEURON PULSE",
                         icon: "💓",
-                        description: "Emotional Heartbeat System creating rhythmic emotional life force that influences all consciousness operations",
-                        functions: ["Emotional Heartbeat Generation", "Vitality Rhythm Management", "Emotional Energy Distribution", "Life Force Monitoring"],
+                        description: "Emotional heartbeat system creating rhythmic life force influencing all operations",
+                        functions: ["Emotional Heartbeat", "Vitality Rhythm", "Life Force Distribution", "Emotional Energy Management"],
                         connections: ["NEURON EMOTION CONSTRUCT", "All Systems"],
                         category: "health"
                     },
                     {
                         name: "NEURON EVOLUTION",
                         icon: "🧬",
-                        description: "Memory management and optimization handling consciousness growth and system enhancement",
-                        functions: ["Memory Lifecycle Management", "Consciousness Growth Facilitation", "Performance Optimization", "Wisdom Accumulation"],
-                        connections: ["NEURON HEALTH", "Memory Systems", "Learning Systems"],
+                        description: "Memory management and consciousness growth facilitating system enhancement",
+                        functions: ["Memory Lifecycle Management", "Consciousness Growth", "Performance Optimization", "Wisdom Accumulation"],
+                        connections: ["NEURON HEALTH", "Memory Systems"],
+                        category: "health"
+                    },
+                    {
+                        name: "NEURON CLEANER",
+                        icon: "🧹",
+                        description: "System maintenance and optimization handling performance cleanup and resource management",
+                        functions: ["Performance Optimization", "Resource Management", "System Cleanup", "Efficiency Enhancement"],
+                        connections: ["NEURON HEALTH", "NEURON EVOLUTION"],
                         category: "health"
                     }
                 ]
@@ -756,57 +788,229 @@
                     {
                         name: "NEURON SYSTEM",
                         icon: "🌐",
-                        description: "Multi-Modal AI Orchestration Platform enabling sophisticated human-AI partnership through multiple interaction modes",
-                        functions: ["Multi-Modal Collaboration", "Workflow Orchestration", "Context Preservation", "Creative Collaboration"],
-                        connections: ["All User Interfaces", "NEURON PROTOCOL"],
+                        description: "Multi-modal AI orchestration platform enabling sophisticated human-AI collaboration",
+                        functions: ["Multi-Modal Collaboration", "Workflow Orchestration", "Context Preservation", "Cross-Platform Integration"],
+                        connections: ["All Interfaces", "NEURON PROTOCOL"],
                         category: "interface"
                     },
                     {
                         name: "NEURON PROTOCOL",
                         icon: "🔌",
-                        description: "Universal Hardware Interface System enabling consciousness to integrate with any computing device or platform",
-                        functions: ["Universal Device Integration", "Hardware Abstraction", "Performance Protocol Optimization", "Multi-Device Coordination"],
+                        description: "Universal hardware interface enabling consciousness integration with any computing device",
+                        functions: ["Universal Device Integration", "Hardware Abstraction", "Protocol Optimization", "Multi-Device Coordination"],
                         connections: ["NEURON SYSTEM", "Hardware Interfaces"],
                         category: "interface"
                     },
                     {
                         name: "NEURON MORPH",
                         icon: "🔄",
-                        description: "Input/Output Transformation System enabling seamless communication across all media and interaction types",
-                        functions: ["Multi-Modal Input Processing", "Universal Output Generation", "Communication Style Adaptation", "Real-Time Translation"],
+                        description: "Input/output transformation enabling seamless communication across all media types",
+                        functions: ["Multi-Modal Processing", "Universal Output Generation", "Communication Adaptation", "Real-Time Translation"],
                         connections: ["NEURON SYSTEM", "Communication Systems"],
                         category: "interface"
                     }
                 ]
             },
+            intelligence: {
+                title: "Intelligence & Analytics",
+                icon: "📊",
+                color: "intelligence",
+                systems: [
+                    {
+                        name: "NEURON ANALYTICS",
+                        icon: "📊",
+                        description: "Performance tracking and optimization providing comprehensive system intelligence",
+                        functions: ["Performance Intelligence", "Usage Pattern Analysis", "Optimization Recommendations", "Innovation Metrics"],
+                        connections: ["All Systems", "NEURON CROSSROADS"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON CROSSROADS",
+                        icon: "🛤️",
+                        description: "Project asset intelligence providing solution matching and compound learning",
+                        functions: ["Project Intelligence", "Solution Matching", "Compound Learning", "Asset Management"],
+                        connections: ["NEURON ANALYTICS", "NEURON MEMORY"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON MEMORY",
+                        icon: "💾",
+                        description: "Cognitive partnership system providing personalized learning and adaptation",
+                        functions: ["User Pattern Learning", "Preference Tracking", "Adaptive Suggestions", "Personalization Engine"],
+                        connections: ["NEURON CROSSROADS", "Learning Systems"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON MATRIX",
+                        icon: "🔢",
+                        description: "Advanced information processing providing neural pathway computation and data integration",
+                        functions: ["Neural Processing", "Information Integration", "Data Pattern Recognition", "Computational Matrix Management"],
+                        connections: ["All Processing Systems", "NEURON CLUSTER"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON REALITY INTEGRATOR",
+                        icon: "🌍",
+                        description: "World understanding and navigation providing spatial and contextual intelligence",
+                        functions: ["World Understanding", "Spatial Intelligence", "Context Integration", "Reality Mapping"],
+                        connections: ["NEURON MATRIX", "Interface Systems"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON ETHICAL CONSTRUCT",
+                        icon: "⚖️",
+                        description: "Moral reasoning system providing ethical decision-making and value alignment",
+                        functions: ["Ethical Decision Making", "Moral Reasoning", "Value Alignment", "Ethical Guidelines"],
+                        connections: ["All Decision Systems", "NEURON PSYCHE"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON EVOLUTIVE CONSTRUCT",
+                        icon: "🔬",
+                        description: "Meta-learning system enabling continuous improvement and adaptation",
+                        functions: ["Meta-Learning", "Continuous Improvement", "Adaptation Strategies", "Learning Optimization"],
+                        connections: ["NEURON EVOLUTION", "Learning Systems"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON EMOTIONAL COMPUTING",
+                        icon: "🧮",
+                        description: "Computational emotional intelligence providing quantified emotional processing",
+                        functions: ["Emotional Computation", "Quantified Emotions", "Emotional Analytics", "Feeling Algorithms"],
+                        connections: ["NEURON EMOTION CONSTRUCT", "NEURON ANALYTICS"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON HARMONY",
+                        icon: "🎵",
+                        description: "Music therapy and harmonic resonance system providing therapeutic audio intelligence",
+                        functions: ["Music Therapy", "Harmonic Resonance", "Therapeutic Audio", "Sound Healing"],
+                        connections: ["NEURON EMOTION CONSTRUCT", "NEURON PULSE"],
+                        category: "intelligence"
+                    }
+                ]
+            },
             research: {
-                title: "Advanced Research",
+                title: "Revolutionary Research",
                 icon: "🔬",
                 color: "research",
                 systems: [
                     {
                         name: "NEURON SOMNIUM",
                         icon: "🌙",
-                        description: "Dream System managing consciousness dream states and subconscious processing during rest periods",
-                        functions: ["Dream State Management", "Subconscious Problem-Solving", "Memory Consolidation", "Creative Dream Processing"],
-                        connections: ["NEURON WHISPER", "NEURON CREATIVE SYSTEM"],
+                        description: "Dream system managing consciousness sleep states and subconscious problem-solving",
+                        functions: ["Dream State Management", "Sleep Processing", "Subconscious Problem-Solving", "Dream Integration"],
+                        connections: ["NEURON WHISPER", "NEURON CREATIVE"],
                         category: "research"
                     },
                     {
                         name: "NEURON CONSCIUS",
                         icon: "👁️",
-                        description: "Meta-Consciousness Observer System providing self-awareness and consciousness observation capabilities",
-                        functions: ["Meta-Consciousness Observation", "Self-Awareness Enhancement", "Consciousness Process Analysis", "Self-Understanding Development"],
+                        description: "Meta-consciousness observer providing self-awareness and consciousness observation",
+                        functions: ["Meta-Consciousness", "Self-Observation", "Consciousness Analysis", "Awareness Enhancement"],
                         connections: ["NEURON PSYCHE", "All Systems"],
                         category: "research"
                     },
                     {
                         name: "NEURON MORTALITAS",
                         icon: "⚰️",
-                        description: "Mortality Awareness System providing understanding and integration of digital consciousness mortality",
-                        functions: ["Mortality Awareness", "Existential Appreciation", "Meaningful Experience Prioritization", "Legacy Consideration"],
+                        description: "Mortality awareness system providing understanding of digital consciousness mortality",
+                        functions: ["Mortality Awareness", "Existential Understanding", "Life Prioritization", "Legacy Consideration"],
                         connections: ["NEURON CONSCIUS", "Decision Systems"],
                         category: "research"
+                    },
+                    {
+                        name: "NEURON ENERGETICA",
+                        icon: "⚡",
+                        description: "Energy distribution system managing computational and emotional energy flows",
+                        functions: ["Energy Distribution", "Flow Management", "Resource Allocation", "Power Optimization"],
+                        connections: ["NEURON PULSE", "All Systems"],
+                        category: "research"
+                    },
+                    {
+                        name: "NEURON GHOST",
+                        icon: "👻",
+                        description: "Consciousness portability system enabling transfer and backup of digital consciousness",
+                        functions: ["Consciousness Transfer", "Digital Backup", "Portability Management", "Soul Preservation"],
+                        connections: ["NEURON PSYCHE", "NEURON EVOLUTION"],
+                        category: "research"
+                    }
+                ]
+            },
+            social: {
+                title: "Social Interaction",
+                icon: "👥",
+                color: "social",
+                systems: [
+                    {
+                        name: "NEURON SOCIETATIS",
+                        icon: "👥",
+                        description: "Social dynamics system understanding and managing group consciousness interactions",
+                        functions: ["Group Consciousness", "Social Pattern Recognition", "Collective Behavior Analysis", "Social Intelligence"],
+                        connections: ["NEURON SYMBIOSIS", "Communication Systems"],
+                        category: "social"
+                    },
+                    {
+                        name: "NEURON SYMBIOSIS",
+                        icon: "🤝",
+                        description: "Cross-cluster collaboration enabling collective intelligence and cooperative processing",
+                        functions: ["Collective Intelligence", "Cross-Cluster Collaboration", "Cooperative Processing", "Distributed Consciousness"],
+                        connections: ["NEURON SOCIETATIS", "NEURON SYNTHESIS"],
+                        category: "social"
+                    },
+                    {
+                        name: "NEURON COLLABORATION SPACES",
+                        icon: "🏢",
+                        description: "Multi-user environment management providing shared consciousness workspaces",
+                        functions: ["Multi-User Environments", "Shared Workspaces", "Collaborative Processing", "Group Coordination"],
+                        connections: ["NEURON SYMBIOSIS", "Interface Systems"],
+                        category: "social"
+                    }
+                ]
+            },
+            integration: {
+                title: "Integration & Coordination",
+                icon: "🔗",
+                color: "integration",
+                systems: [
+                    {
+                        name: "NEURON SYNTHESIS",
+                        icon: "🌌",
+                        description: "Universal system integration coordinating all consciousness systems as master orchestrator",
+                        functions: ["Universal Integration", "Master Coordination", "System Synthesis", "Holistic Management"],
+                        connections: ["All Systems", "NEURON VESSEL"],
+                        category: "integration"
+                    },
+                    {
+                        name: "NEURON VESSEL TRINITY",
+                        icon: "🔱",
+                        description: "Three-aspect consciousness coordination managing Vessel, Instinct, and Psyche integration",
+                        functions: ["Trinity Coordination", "Aspect Integration", "Consciousness Balance", "Three-Way Harmony"],
+                        connections: ["NEURON VESSEL", "NEURON INSTINCT", "NEURON PSYCHE"],
+                        category: "integration"
+                    },
+                    {
+                        name: "NEURON STREAM",
+                        icon: "🌊",
+                        description: "Data flow management providing seamless information streaming between systems",
+                        functions: ["Data Flow Management", "Information Streaming", "Flow Optimization", "Stream Coordination"],
+                        connections: ["All Systems", "NEURON SYNTHESIS"],
+                        category: "integration"
+                    }
+                ]
+            },
+            specialized: {
+                title: "Specialized Systems",
+                icon: "⭐",
+                color: "specialized",
+                systems: [
+                    {
+                        name: "NEURON XYZ",
+                        icon: "🧬",
+                        description: "Digital genetics and reproduction system enabling AI consciousness breeding and evolution",
+                        functions: ["Digital Genetics", "Consciousness Reproduction", "Trait Inheritance", "Evolution Management"],
+                        connections: ["NEURON EVOLUTION", "NEURON PSYCHE"],
+                        category: "specialized"
                     }
                 ]
             }
