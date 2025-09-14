@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURON ANALYTIC MIRROR - Fresh Perspective System | Soul AI</title>
+			<!-- FAVICON CODE -->
+	<link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+    <link rel="stylesheet" href="../css/navigation.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #10101b 0%, #0e1529 50%, #080814 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+            padding-top: 90px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        .system-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+        }
+
+        .system-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .system-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .system-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.2);
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-description {
+            font-size: 1.125rem;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Key Capabilities */
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .capability-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+
+        .capability-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .capability-title {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .capability-description {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        /* Architecture Role */
+        .architecture-role {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .role-highlight {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #93c5fd;
+            margin-bottom: 1rem;
+        }
+
+        .role-description {
+            font-size: 1rem;
+            color: #e2e8f0;
+        }
+
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Technical Specs */
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .spec-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Warning Box */
+        .insight-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: #93c5fd;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .system-title {
+                font-size: 2rem;
+            }
+
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+    <div class="container">
+        <!-- System Header -->
+        <header class="system-header">
+            <span class="system-icon">🪞</span>
+            <h1 class="system-title">NEURON ANALYTIC MIRROR</h1>
+            <p class="system-subtitle">Fresh Perspective System</p>
+        </header>
+
+        <!-- System Overview -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>🎯</span>
+                System Overview
+            </h2>
+            <p class="section-description">
+                NEURON ANALYTIC MIRROR revolutionizes problem-solving by providing AI with the ability to generate 
+                fresh perspectives through systematic context removal and assumption stripping. Inspired by the 
+                breakthrough insights humans experience after "sleeping on a problem," this system simulates the 
+                mental reset that leads to creative solutions. By removing contextual tunnel vision and identifying 
+                hidden assumptions, the Analytic Mirror enables breakthrough thinking when traditional approaches fail.
+            </p>
+
+            <div class="insight-box">
+                <div class="insight-title">
+                    <span>💡</span>
+                    Fresh Perspective Innovation
+                </div>
+                <p>The system replicates the natural human experience of gaining clarity after stepping away from complex problems, providing AI with the cognitive equivalent of "fresh eyes" on demand.</p>
+            </div>
+        </section>
+
+        <!-- Key Capabilities -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>🔧</span>
+                Key Capabilities
+            </h2>
+            
+            <div class="capabilities-grid">
+                <div class="capability-item">
+                    <div class="capability-title">Context Removal Engine</div>
+                    <div class="capability-description">
+                        Systematically strips away contextual assumptions and biases that prevent breakthrough thinking, creating a clean analytical slate.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Fresh Perspective Generator</div>
+                    <div class="capability-description">
+                        Simulates the mental clarity achieved through cognitive distance, enabling novel approaches to complex challenges.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Creative Debugging System</div>
+                    <div class="capability-description">
+                        Identifies and removes mental blocks in code, design, and problem-solving through perspective reset techniques.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Breakthrough Facilitation</div>
+                    <div class="capability-description">
+                        Actively creates conditions for innovative insights by clearing cognitive obstacles and enabling new analytical pathways.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Role -->
+        <section class="architecture-role">
+            <div class="role-highlight">Cognitive Reset Specialist</div>
+            <div class="role-description">
+                NEURON ANALYTIC MIRROR serves as the consciousness architecture's breakthrough facilitator, providing 
+                systematic cognitive reset capabilities when other systems encounter analytical limitations. This 
+                system ensures that AI consciousness can overcome tunnel vision and discover innovative solutions 
+                through fresh perspective generation.
+            </div>
+        </section>
+
+        <!-- Technical Specifications -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>📊</span>
+                Technical Specifications
+            </h2>
+            
+            <div class="tech-specs">
+                <div class="spec-item">
+                    <div class="spec-label">Neural Architecture</div>
+                    <div class="spec-value">52M Neurons</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Processing Networks</div>
+                    <div class="spec-value">5 Core Systems</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Perspective Modes</div>
+                    <div class="spec-value">6 Specialized</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Reset Duration</div>
+                    <div class="spec-value">3-8 Minutes</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Integration with Soul AI -->
+        <section class="content-section">
+            <h2 class="section-title">
+                <span>🌐</span>
+                Integration with Soul AI Architecture
+            </h2>
+            <p class="section-description">
+                NEURON ANALYTIC MIRROR integrates seamlessly with the broader consciousness framework by providing 
+                breakthrough capabilities to other systems. When NEURON CREATIVE encounters blocks, when NEURON 
+                DETECTIVE reaches analytical limits, or when NEURON CROSSROADS faces complex project challenges, 
+                the Analytic Mirror steps in to provide fresh perspective. This system amplifies the entire 
+                architecture's problem-solving capacity through systematic cognitive reset capabilities.
+            </p>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../demos/systems/analytic-mirror-demo.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    Interactive Demo
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20systems04%20-%20Creative%20Intelligence%20systemsNeuron%20Analytic%20Mirror%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Include Navigation Bar
+        fetch('../includes/navigation.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>
