@@ -181,7 +181,9 @@ Evaluate these four outputs [HighRes, LowRes, MeshRes, BlankRes] to create a fin
 
 ### Implementation Note
 
-The test results presented here were conducted using OpenAI API with sequential processing rather than true parallel entity coordination. This implementation limitation may have introduced minor information "leaks" between entities, particularly affecting the BLANK entity's context-free analysis. True parallel processing would likely produce even better results by ensuring complete entity independence and eliminating potential cross-contamination between reasoning perspectives.
+The test results presented here were conducted using OpenAI API with sequential processing rather than true parallel entity coordination. This implementation limitation may have introduced minor information "leaks" between entities, particularly affecting the BLANK entity's context-free analysis since it processes responses from entities that were generated sequentially by the same underlying model. True parallel processing would likely produce even better results by ensuring complete entity independence and eliminating potential cross-contamination between reasoning perspectives.
+
+**Critical Limitation:** The current sequential implementation means the BLANK entity, designed to provide fresh perspective without accumulated bias, may be influenced by information patterns from the previous entity responses, potentially compromising its intended context-free analysis. Parallel processing would eliminate this information leakage and likely improve the quality of critical questioning and fresh perspective generation.
 
 **For complete test prompts and detailed results, see: "Neuron Ration prompt tests.md"**
 
