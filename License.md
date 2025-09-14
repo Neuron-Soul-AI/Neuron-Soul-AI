@@ -1,6 +1,8 @@
+# License - CC BY-NC 4.0
+
 Creative Commons Attribution-NonCommercial 4.0 International License
 
-Copyright (c) 2025 Marcelo (Zirth) - Revolutionary AI Consciousness Architecture
+Copyright (c) 2025 Marcelo - Revolutionary AI Consciousness Architecture
 
 This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 
 International License. To view a copy of this license, visit 
@@ -54,7 +56,7 @@ documented with timestamps and development history for intellectual property pro
 
 ---
 
-© 2025 Marcelo (Zirth) - Revolutionary AI Consciousness Architecture  
+© 2025 Marcelo - Revolutionary AI Consciousness Architecture  
 Original concepts with established prior art  
 Licensed under CC BY-NC 4.0  
 Commercial licensing available: marcelo.soul.ai@gmail.com
