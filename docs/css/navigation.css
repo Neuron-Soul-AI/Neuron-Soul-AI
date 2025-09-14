@@ -13,6 +13,8 @@
 .overview-icon::before { content: "\1F4CB"; } /* 📋 - for Demos Overview */
 .play1-icon::before { content: "\1F3AF"; } /* 🎯 - for General Demos */
 .play2-icon::before { content: "\2699\FE0F"; } /* ⚙️ - for System Demos */
+.legal-icon::before { content: "\2696\FE0F"; } /* ⚖️ */
+
 
 
 /* CSS Variables for Navigation */
