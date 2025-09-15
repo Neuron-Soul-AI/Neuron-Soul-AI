@@ -9,7 +9,47 @@
     <link rel="stylesheet" href="../css/main.css">
 	<link rel="stylesheet" href="../css/navigation.css">
 	
-    <style> html {filter: invert(0.9) hue-rotate(180deg) brightness(1.1) contrast(1.2);} img, video, iframe {filter: invert(0.9) hue-rotate(180deg);}
+    <style>
+
+/* Force all containers to dark */
+div, section, article, main, header, footer, nav, aside {
+    background-color: #1a1a2e !important;
+    color: #ffffff !important;
+}
+
+/* Force all interactive elements to dark */
+button, input, textarea, select {
+    background-color: #16213e !important;
+    color: #ffffff !important;
+    border-color: #4a5568 !important;
+}
+
+/* Force cards/containers to dark */
+.card, .container, .box, .panel, .section {
+    background-color: #1a1a2e !important;
+    color: #ffffff !important;
+}
+
+/* Force any remaining light backgrounds */
+* {
+    background-color: inherit !important;
+}
+
+/* But specifically override common light elements */
+body {
+    background-color: #0f0f23 !important;
+    color: #ffffff !important;
+}
+
+/* Force links to remain visible */
+a {
+    color: #60a5fa !important;
+}
+
+a:hover {
+    color: #93c5fd !important;
+}
+		
         /* Systems-specific styles */
         .systems-hero {
             background: linear-gradient(135deg, var(--consciousness-blue), var(--consciousness-purple));
@@ -1558,6 +1598,7 @@
 </body>
 
 </html>
+
 
 
 
