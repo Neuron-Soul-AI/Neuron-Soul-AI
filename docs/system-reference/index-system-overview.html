@@ -1527,7 +1527,7 @@
         </div>
     </footer>
 
-    <script>
+    <script> document.documentElement.setAttribute('data-theme', 'dark'); document.documentElement.style.colorScheme = 'dark'; if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {document.documentElement.style.setProperty('color-scheme', 'dark', 'important');}
 			// Include Navigation Bar
 			fetch('../includes/navigation.html')
 				.then(response => response.text())
@@ -1559,6 +1559,7 @@
 </body>
 
 </html>
+
 
 
 
