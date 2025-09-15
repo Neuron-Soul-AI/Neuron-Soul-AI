@@ -9,7 +9,14 @@
     <link rel="stylesheet" href="../css/main.css">
 	<link rel="stylesheet" href="../css/navigation.css">
 	
-    <style>html[data-theme="light"] {color-scheme: light !important;}
+    <style>htmlhtml[data-theme="dark"] body {background: #0f0f23 !important;color: #ffffff !important;
+}
+This approach will override system preferences and should force the dark appearance across different browsers and devices. It runs before the page renders, so visitors shouldn't see any light-mode flashing.
+
+Testing it when you get home will show if it solves the GitHub Pages issue. If successful, it will indeed give you breathing room to perfect the CSS without worrying about light-mode rendering problems affecting user experience.
+
+
+
         /* Systems-specific styles */
         .systems-hero {
             background: linear-gradient(135deg, var(--consciousness-blue), var(--consciousness-purple));
@@ -1558,6 +1565,7 @@
 </body>
 
 </html>
+
 
 
 
