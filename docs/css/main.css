@@ -10,8 +10,8 @@
     --neural-accent: #f093fb;
     
     /* Background Colors */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
+    --bg-primary: #031430;
+    --bg-secondary: #030947;
     --bg-dark: #1e293b;
     --bg-gradient: linear-gradient(135deg, var(--neural-primary) 0%, var(--neural-secondary) 100%);
     
@@ -477,4 +477,5 @@ p {
         color: black !important;
         box-shadow: none !important;
     }
+
 }
