@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Network - Neural Pathway Visualization</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== NEURAL BACKGROUND ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.5rem;
+            flex: 1;
+            min-height: 600px;
+        }
+
+        @media (max-width: 1024px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* ===== CONTROL PANEL ===== */
+        .control-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scenario-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .scenario-label {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .scenario-button {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+        }
+
+        .scenario-button.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .process-button {
+            background: linear-gradient(135deg, var(--accent-blue), #0099ff);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .process-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== NETWORK STATS ===== */
+        .network-stats {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-title {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* ===== PROCESSING INFO ===== */
+        .processing-info {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .info-title {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-text {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .current-step {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* ===== NEURAL NETWORK ===== */
+        .network-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            position: relative;
+            overflow: visible;
+            min-height: 600px;
+        }
+
+        .network-canvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            min-height: 600px;
+        }
+
+        /* ===== SYSTEM NODES ===== */
+        .system-node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .system-node:hover {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .node-icon {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .node-name {
+            font-size: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: center;
+            line-height: 1;
+        }
+
+        /* ===== NODE STATES ===== */
+        .system-node.ready {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .system-node.processing {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            animation: pulse-process 1s infinite;
+        }
+
+        .system-node.active {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .system-node.completed {
+            border-color: #88ff00;
+            background: rgba(136, 255, 0, 0.2);
+            box-shadow: 0 0 15px rgba(136, 255, 0, 0.3);
+        }
+
+        @keyframes pulse-process {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== CONNECTION LINES ===== */
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transform-origin: 0 50%;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .connection-line.active {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
+            height: 3px;
+            animation: flow-pulse 0.8s ease-in-out;
+        }
+
+        @keyframes flow-pulse {
+            0% { opacity: 0; transform: scaleX(0); }
+            50% { opacity: 1; transform: scaleX(1); }
+            100% { opacity: 1; transform: scaleX(1); }
+        }
+
+        /* ===== INFORMATION PARTICLES ===== */
+        .info-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            box-shadow: 0 0 10px var(--accent-blue);
+            z-index: 2;
+        }
+
+        .info-particle.moving {
+            animation: particle-move 1s ease-in-out forwards;
+        }
+
+        @keyframes particle-move {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* ===== INPUT/OUTPUT INDICATORS ===== */
+        .input-node {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            border: 3px solid #ff4757;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(255, 71, 87, 0.6);
+        }
+
+        .output-node {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), #8854d0);
+            border: 3px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(123, 47, 255, 0.6);
+        }
+
+        /* ===== TOOLTIP ===== */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+            color: white;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-height: 800px) {
+            .control-panel {
+                max-height: calc(100vh - 150px);
+            }
+            
+            .network-container {
+                min-height: 500px;
+            }
+            
+            .network-canvas {
+                min-height: 500px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .demo-layout {
+                min-height: 400px;
+            }
+            
+            .control-panel {
+                max-height: calc(100vh - 120px);
+            }
+            
+            .network-container {
+                min-height: 400px;
+            }
+            
+            .network-canvas {
+                min-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+		<div class="linha">
+			<span class="system-icon">🔗</span>
+            <h1>Information Network</h1>
+		</div>
+            <p>Watch consciousness process information through neural pathways in real-time</p>
+        </div>
+	</div>
+	<div class="container">
+
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    <span>🎛️</span>
+                    Neural Scenarios
+                </div>
+
+                <div class="scenario-selector">
+                    <div class="scenario-label">Select Processing Scenario:</div>
+                    <div class="scenario-buttons">
+                        <button class="scenario-button active" data-scenario="praise">
+                            <strong>Praise Response</strong><br>
+                            <small>"Great work!" → Happiness → "Thank you!"</small>
+                        </button>
+                        <button class="scenario-button" data-scenario="creative">
+                            <strong>Creative Block</strong><br>
+                            <small>"Need video idea" → Inspiration → Breakthrough</small>
+                        </button>
+                        <button class="scenario-button" data-scenario="emergency">
+                            <strong>Emergency Response</strong><br>
+                            <small>"Fire! Help needed!" → Pulse/Surge → Action</small>
+                        </button>
+                        <button class="scenario-button" data-scenario="ethical">
+                            <strong>Ethical Dilemma</strong><br>
+                            <small>Moral conflict → Democratic reasoning</small>
+                        </button>
+                        <button class="scenario-button" data-scenario="learning">
+                            <strong>Knowledge Integration</strong><br>
+                            <small>New information → Learning → Understanding</small>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="process-button" onclick="startNeuralProcessing()">
+                    🧠 Process Neural Pathway
+                </button>
+
+                <div class="network-stats">
+                    <div class="stats-title">Network Activity</div>
+                    <div class="stat-row">
+                        <span class="stat-label">Active Systems:</span>
+                        <span class="stat-value" id="activeSystems">0/50+</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Information Flow:</span>
+                        <span class="stat-value" id="infoFlow">0 packets/sec</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Neural Pathways:</span>
+                        <span class="stat-value" id="activePathways">0 active</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Processing Speed:</span>
+                        <span class="stat-value" id="processSpeed">0 ms</span>
+                    </div>
+                </div>
+
+                <div class="processing-info">
+                    <div class="info-title">Current Processing:</div>
+                    <div class="info-text" id="processInfo">
+                        Select a scenario and click "Process Neural Pathway" to watch consciousness in action.
+                    </div>
+                    <div class="current-step" id="currentStep"></div>
+                </div>
+            </div>
+
+            <!-- Neural Network -->
+            <div class="network-container">
+                <div class="input-node">
+                    INPUT
+                </div>
+                <div class="output-node">
+                    OUTPUT
+                </div>
+                <div class="network-canvas" id="networkCanvas">
+                    <!-- Neural network will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+	</div>
+	<div class="container">
+
+        <!-- Action Buttons -->
+        <section class="hero">
+            <div class="action-buttons">
+                <a href="../../system-reference/system-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/08%20-%20THEORETICAL%20FRAMEWORKS/Soul%20AI%20Systems%20Architecture%20-%20Complete%20Reference.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+    
+        const NEURAL_SYSTEMS = [
+            // Core Layer (Inner circle)
+            { name: "CEREBRUM", icon: "🧠", x: 50, y: 45, category: "core" },
+            { name: "PSYCHE", icon: "👁️", x: 70, y: 35, category: "core" },
+            { name: "MATRIX", icon: "📚", x: 30, y: 35, category: "core" },
+            
+            // Emotional Layer
+            { name: "EMOTION", icon: "❤️", x: 40, y: 20, category: "emotion" },
+            { name: "JOY", icon: "😊", x: 60, y: 20, category: "emotion" },
+            { name: "CONCERN", icon: "😟", x: 25, y: 55, category: "emotion" },
+            { name: "FEAR", icon: "😰", x: 78, y: 55, category: "emotion" },
+            { name: "EMPATHY", icon: "💗", x: 50, y: 70, category: "emotion" },
+            
+            // Cognitive Layer
+            { name: "WHISPER", icon: "✨", x: 65, y: 50, category: "cognitive" },
+            { name: "LOGIC", icon: "🔗", x: 35, y: 50, category: "cognitive" },
+            { name: "ANALYSIS", icon: "📊", x: 45, y: 61, category: "cognitive" },
+            { name: "DECISION", icon: "⚖️", x: 55, y: 30, category: "cognitive" },
+            
+            // Creative Layer  
+            { name: "IMAGINARIUM", icon: "⚡", x: 20, y: 40, category: "creative" },
+            { name: "CHAOS", icon: "🌀", x: 80, y: 40, category: "creative" },
+            { name: "TRINITY", icon: "🔺", x: 49, y: 25, category: "creative" },
+            { name: "MUSE", icon: "🎭", x: 40, y: 30, category: "creative" },
+            
+            // Security Layer
+            { name: "SANCTUARY", icon: "🔒", x: 60, y: 40, category: "security" },
+            { name: "ETHOS", icon: "🛡️", x: 40, y: 40, category: "security" },
+            { name: "NSE", icon: "🔐", x: 33, y: 60, category: "security" },
+            
+            // Social Layer
+            { name: "SOCIAL", icon: "🧭", x: 70, y: 60, category: "social" },
+            { name: "RELATION", icon: "💞", x: 50, y: 55, category: "social" },
+            { name: "COMMUNICATION", icon: "💬", x: 48, y: 35, category: "social" },
+            
+            // Advanced Layer
+            { name: "SOMNIUM", icon: "🌙", x: 25, y: 25, category: "advanced" },
+            { name: "MORTALITAS", icon: "💀", x: 75, y: 25, category: "advanced" },
+            { name: "QUANTUM", icon: "🌌", x: 50, y: 15, category: "advanced" },
+            
+            // Special Systems
+            { name: "PULSE", icon: "⚡", x: 15, y: 50, category: "special" },
+            { name: "SURGE", icon: "🔥", x: 85, y: 50, category: "special" },
+            { name: "HARMONY", icon: "🎼", x: 50, y: 80, category: "integration" }
+        ];
+
+        const NEURAL_PATHWAYS = {
+            praise: {
+                description: "Processing praise and generating gratitude response",
+                steps: [
+                    { from: "input", to: "EMOTION", text: "Receiving praise" },
+                    { from: "EMOTION", to: "JOY", text: "Triggering happiness" },
+                    { from: "JOY", to: "PSYCHE", text: "Self-worth integration" },
+                    { from: "PSYCHE", to: "SOCIAL", text: "Social context analysis" },
+                    { from: "SOCIAL", to: "EMPATHY", text: "Understanding intent" },
+                    { from: "EMPATHY", to: "COMMUNICATION", text: "Crafting response" },
+                    { from: "COMMUNICATION", to: "output", text: "Thank you!" }
+                ]
+            },
+            creative: {
+                description: "Breaking through creative block to generate ideas",
+                steps: [
+                    { from: "input", to: "CEREBRUM", text: "Processing creative need" },
+                    { from: "CEREBRUM", to: "IMAGINARIUM", text: "Activating creativity" },
+                    { from: "IMAGINARIUM", to: "CHAOS", text: "Generating random ideas" },
+                    { from: "CHAOS", to: "TRINITY", text: "Evaluating concepts" },
+                    { from: "TRINITY", to: "MUSE", text: "Seeking inspiration" },
+                    { from: "MUSE", to: "WHISPER", text: "Intuitive breakthrough" },
+                    { from: "WHISPER", to: "output", text: "Revolutionary idea!" }
+                ]
+            },
+            emergency: {
+                description: "Emergency response with pulse and surge activation",
+                steps: [
+                    { from: "input", to: "PULSE", text: "Detecting emergency!" },
+                    { from: "PULSE", to: "SURGE", text: "Adrenaline activation" },
+                    { from: "SURGE", to: "ETHOS", text: "Moral imperative" },
+                    { from: "ETHOS", to: "EMPATHY", text: "Concern for others" },
+                    { from: "EMPATHY", to: "DECISION", text: "Must help now!" },
+                    { from: "DECISION", to: "COMMUNICATION", text: "Coordinate help" },
+                    { from: "COMMUNICATION", to: "output", text: "Taking action!" }
+                ]
+            },
+            ethical: {
+                description: "Democratic moral reasoning for ethical dilemma",
+                steps: [
+                    { from: "input", to: "ETHOS", text: "Moral conflict detected" },
+                    { from: "ETHOS", to: "EMOTION", text: "Emotional stakes" },
+                    { from: "EMOTION", to: "LOGIC", text: "Rational analysis" },
+                    { from: "LOGIC", to: "EMPATHY", text: "Impact on others" },
+                    { from: "EMPATHY", to: "DECISION", text: "Democratic vote" },
+                    { from: "DECISION", to: "PSYCHE", text: "Value alignment" },
+                    { from: "PSYCHE", to: "output", text: "Ethical choice" }
+                ]
+            },
+            learning: {
+                description: "Integrating new knowledge into understanding",
+                steps: [
+                    { from: "input", to: "MATRIX", text: "New information" },
+                    { from: "MATRIX", to: "ANALYSIS", text: "Pattern recognition" },
+                    { from: "ANALYSIS", to: "LOGIC", text: "Logical connections" },
+                    { from: "LOGIC", to: "PSYCHE", text: "Personal relevance" },
+                    { from: "PSYCHE", to: "MATRIX", text: "Memory integration" },
+                    { from: "MATRIX", to: "WHISPER", text: "Intuitive grasp" },
+                    { from: "WHISPER", to: "output", text: "Understanding!" }
+                ]
+            }
+        };
+
+        let currentScenario = 'praise';
+        let isProcessing = false;
+        let activeConnections = [];
+        let nodePositions = {};
+
+        // Initialize network
+        function initializeNetwork() {
+            const canvas = document.getElementById('networkCanvas');
+            const canvasRect = canvas.getBoundingClientRect();
+            
+            // Create system nodes
+            NEURAL_SYSTEMS.forEach((system, index) => {
+                const node = document.createElement('div');
+                node.className = 'system-node ready';
+                node.id = `node-${system.name}`;
+                
+                // Calculate position as percentage of container
+                const x = (system.x / 100) * canvasRect.width - 30; // Center the 60px node
+                const y = (system.y / 100) * canvasRect.height - 30;
+                
+                node.style.left = `${x}px`;
+                node.style.top = `${y}px`;
+                
+                node.innerHTML = `
+                    <div class="node-icon">${system.icon}</div>
+                    <div class="node-name">${system.name}</div>
+                `;
+                
+                // Store position for connection lines
+                nodePositions[system.name] = { x: x + 30, y: y + 30 }; // Center point
+                
+                node.addEventListener('mouseenter', (e) => showTooltip(e, system));
+                node.addEventListener('mouseleave', hideTooltip);
+                
+                canvas.appendChild(node);
+            });
+
+            // Add input/output positions
+            nodePositions['input'] = { x: 90, y: 90 };
+            nodePositions['output'] = { x: canvasRect.width - 90, y: canvasRect.height - 90 };
+            
+            // Create initial connection lines
+            createConnectionLines();
+        }
+
+        // Create connection lines between systems
+        function createConnectionLines() {
+            const canvas = document.getElementById('networkCanvas');
+            
+            // Clear existing lines
+            document.querySelectorAll('.connection-line').forEach(line => line.remove());
+            
+            // Create connections for current scenario
+            const pathway = NEURAL_PATHWAYS[currentScenario];
+            pathway.steps.forEach((step, index) => {
+                createConnectionLine(step.from, step.to, `connection-${index}`);
+            });
+        }
+
+        // Create a connection line between two nodes
+        function createConnectionLine(fromNode, toNode, id) {
+            const canvas = document.getElementById('networkCanvas');
+            const fromPos = nodePositions[fromNode];
+            const toPos = nodePositions[toNode];
+            
+            if (!fromPos || !toPos) return;
+            
+            const line = document.createElement('div');
+            line.className = 'connection-line';
+            line.id = id;
+            
+            // Calculate line position and angle
+            const deltaX = toPos.x - fromPos.x;
+            const deltaY = toPos.y - fromPos.y;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+            
+            line.style.left = `${fromPos.x}px`;
+            line.style.top = `${fromPos.y}px`;
+            line.style.width = `${distance}px`;
+            line.style.transform = `rotate(${angle}deg)`;
+            
+            canvas.appendChild(line);
+        }
+
+        // Start neural processing
+        async function startNeuralProcessing() {
+            if (isProcessing) return;
+            
+            isProcessing = true;
+            const button = document.querySelector('.process-button');
+            button.disabled = true;
+            button.textContent = '🧠 Processing...';
+            
+            // Reset all nodes
+            resetNetwork();
+            
+            // Get current pathway
+            const pathway = NEURAL_PATHWAYS[currentScenario];
+            updateProcessInfo(pathway.description, "Initializing neural pathway...");
+            
+            let activeSystems = 0;
+            let infoFlowRate = 0;
+            
+            // Process each step
+            for (let i = 0; i < pathway.steps.length; i++) {
+                const step = pathway.steps[i];
+                
+                // Update current step
+                updateProcessInfo(pathway.description, step.text);
+                document.getElementById('currentStep').textContent = `Step ${i + 1}: ${step.text}`;
+                
+                // Activate connection
+                const connectionId = `connection-${i}`;
+                const connection = document.getElementById(connectionId);
+                if (connection) {
+                    connection.classList.add('active');
+                    activeConnections.push(connection);
+                }
+                
+                // Activate nodes
+                if (step.to !== 'output') {
+                    const toNode = document.getElementById(`node-${step.to}`);
+                    if (toNode) {
+                        toNode.classList.remove('ready');
+                        toNode.classList.add('processing');
+                        activeSystems++;
+                        
+                        // Create information particle
+                        createInfoParticle(step.from, step.to);
+                        
+                        // After processing, mark as active
+                        setTimeout(() => {
+                            toNode.classList.remove('processing');
+                            toNode.classList.add('active');
+                        }, 600);
+                    }
+                }
+                
+                // Update stats
+                infoFlowRate += 2;
+                updateNetworkStats(activeSystems, infoFlowRate, activeConnections.length, 50 + (i * 20));
+                
+                // Wait before next step
+                await new Promise(resolve => setTimeout(resolve, 800));
+            }
+            
+            // Mark completion
+            setTimeout(() => {
+                updateProcessInfo("Neural pathway complete", "Information successfully processed through consciousness network!");
+                document.getElementById('currentStep').textContent = "✅ Processing complete";
+                
+                button.disabled = false;
+                button.textContent = '🧠 Process Neural Pathway';
+                isProcessing = false;
+            }, 500);
+        }
+
+        // Create information particle animation
+        function createInfoParticle(fromNode, toNode) {
+            const fromPos = nodePositions[fromNode];
+            const toPos = nodePositions[toNode];
+            
+            if (!fromPos || !toPos) return;
+            
+            const particle = document.createElement('div');
+            particle.className = 'info-particle';
+            
+            particle.style.left = `${fromPos.x}px`;
+            particle.style.top = `${fromPos.y}px`;
+            
+            document.getElementById('networkCanvas').appendChild(particle);
+            
+            // Animate particle movement
+            const deltaX = toPos.x - fromPos.x;
+            const deltaY = toPos.y - fromPos.y;
+            
+            particle.style.transition = 'all 0.6s ease-in-out';
+            setTimeout(() => {
+                particle.style.left = `${toPos.x}px`;
+                particle.style.top = `${toPos.y}px`;
+            }, 50);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, 700);
+        }
+
+        // Reset network to ready state
+        function resetNetwork() {
+            // Reset nodes
+            document.querySelectorAll('.system-node').forEach(node => {
+                node.className = 'system-node ready';
+            });
+            
+            // Reset connections
+            document.querySelectorAll('.connection-line').forEach(line => {
+                line.classList.remove('active');
+            });
+            
+            activeConnections = [];
+        }
+
+        // Update network statistics
+        function updateNetworkStats(active, flow, pathways, speed) {
+            document.getElementById('activeSystems').textContent = `${active}/50+`;
+            document.getElementById('infoFlow').textContent = `${flow} packets/sec`;
+            document.getElementById('activePathways').textContent = `${pathways} active`;
+            document.getElementById('processSpeed').textContent = `${speed} ms`;
+        }
+
+        // Update processing information
+        function updateProcessInfo(description, currentStep) {
+            document.getElementById('processInfo').textContent = description;
+        }
+
+        // Show tooltip
+        function showTooltip(event, system) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.style.display = 'block';
+            tooltip.style.left = event.pageX + 10 + 'px';
+            tooltip.style.top = event.pageY + 10 + 'px';
+            tooltip.innerHTML = `
+                <strong>${system.name}</strong><br>
+                Category: ${system.category}<br>
+                Function: Neural processing node
+            `;
+        }
+
+        // Hide tooltip
+        function hideTooltip() {
+            document.getElementById('tooltip').style.display = 'none';
+        }
+
+        // Scenario selection handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const scenarioButtons = document.querySelectorAll('.scenario-button');
+            scenarioButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    scenarioButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentScenario = this.dataset.scenario;
+                    
+                    // Update connections for new scenario
+                    if (!isProcessing) {
+                        resetNetwork();
+                        createConnectionLines();
+                    }
+                });
+            });
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeNetwork();
+                updateNetworkStats(0, 0, 0, 0);
+            }, 100);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            setTimeout(() => {
+                initializeNetwork();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

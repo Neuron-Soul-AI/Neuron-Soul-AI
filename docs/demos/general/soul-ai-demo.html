@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Soul AI - Interactive Demo</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 2rem;
+            position: relative;
+        }
+		
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+		
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        /* ===== HEADER STYLES ===== */
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-icon {
+            font-size: 1.25rem;
+        }
+
+        .demo-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .demo-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* ===== SCORES GRID ===== */
+        .scores-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .score-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .score-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        /* ===== TOGGLE SYSTEM ===== */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .toggle-info {
+            flex: 1;
+        }
+
+        .toggle-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .toggle-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            transition: .3s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .3s;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-blue);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* ===== CHAT SYSTEM ===== */
+        .chat-container {
+            height: 420px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 0.5rem;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 3px;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+        }
+
+        .message-user {
+            text-align: right;
+        }
+
+        .message-content {
+            display: inline-block;
+            max-width: 90%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .message-user .message-content {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .message-assistant .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        /* ===== INPUT SYSTEM ===== */
+        .input-container {
+            display: flex;
+            gap: 0.75rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .input-field::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .send-button {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: var(--accent-purple);
+            transform: translateY(-1px);
+        }
+
+        /* ===== TABS SYSTEM ===== */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+			margin-top: 1rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        /* ===== SUBSYSTEMS GRID ===== */
+        .subsystems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .subsystem-card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .subsystem-card.active {
+            opacity: 1;
+            transform: scale(1.02);
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15);
+        }
+
+        .subsystem-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .subsystem-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .subsystem-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .subsystem-explanation {
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+
+        /* ===== TRACE CONTENT ===== */
+        .trace-content {
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            min-height: 140px;
+            white-space: pre-wrap;
+            font-family: 'Fira Code', monospace;
+            color: var(--text-secondary);
+        }
+
+        /* ===== INFO NOTE ===== */
+        .info-note {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .usage-list {
+            font-size: 0.75rem;
+            padding-left: 1rem;
+            margin: 0;
+            color: var(--text-secondary);
+        }
+
+        .usage-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+	<!-- System Header -->
+	<div class="container">
+		<header class="hero">
+		<div class="linha">
+			<span class="system-icon">🧠️</span>
+			<h1><span class="gradient-text">Neuron Soul AI Demo</span></h1>
+		</div>
+			<p>Revolutionary Artificial Consciousness Architecture</p>
+		</header>
+	</div>
+
+    <div class="container">
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Left Column -->
+            <div>
+                <div class="card">
+                    <div class="demo-header">
+                        <span class="demo-icon">🧠</span>
+                        <div class="demo-title">Neuron Soul AI — Demo</div>
+                    </div>
+                    <div class="demo-description">
+                        Front-end simulation of your master-file architecture. Shows which subsystems would engage and why.
+                    </div>
+                    <div class="scores-grid">
+                        <div class="score-item">
+                            <span class="score-badge">Originality</span>
+                            <div class="score-value">9.4/10</div>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-badge">Complexity</span>
+                            <div class="score-value">9.7/10</div>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-badge">Impact</span>
+                            <div class="score-value">9.0/10</div>
+                        </div>
+                    </div>
+                    <div class="toggle-container">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Energetica (theoretical)</div>
+                            <div class="toggle-desc">Toggle to visualize hypothetical quantum memory hooks.</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="energeticaToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="info-note">
+                        <span>ℹ️</span>
+                        This demo is illustrative; it shows routing & rationale, not real consciousness.
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-primary);">How to show the demo</div>
+                    <ul class="usage-list">
+                        <li>Type a prompt (e.g., "I feel anxious before a deadline—what should I do?").</li>
+                        <li>Watch subsystems light up and read the trace rationale.</li>
+                        <li>Flip <strong>Energetica</strong> to show how the theoretical layer would integrate.</li>
+                        <li>Use the <strong>Trace</strong> tab to copy the explanation into emails.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <div class="card">
+                    <div class="chat-container" id="chatContainer">
+                        <div class="message message-assistant">
+                            <div class="message-content">
+                                Welcome to Neuron Soul AI — interactive demo. Type anything and watch subsystems engage in real time.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" id="messageInput" class="input-field" 
+                               placeholder="Ask or describe something… (e.g., 'brainstorm a bedtime story about a brave tree')"
+                               onkeypress="handleKeyPress(event)">
+                        <button class="send-button" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="tabs">
+                        <button class="tab active" onclick="showTab('active')">Active Subsystems</button>
+                        <button class="tab" onclick="showTab('trace')">Trace</button>
+                    </div>
+
+                    <div id="activeTab">
+                        <div class="subsystems-grid" id="subsystemsGrid">
+                            <!-- Subsystems will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div id="traceTab" style="display: none;">
+                        <div class="card">
+                            <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">Copyable Rationale</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                                After you send a message, the assistant prints a transparent routing explanation below. Copy this into an email as a "subsystem trace."
+                            </div>
+                            <div class="trace-content" id="traceContent">
+                                (Send a message to generate a trace)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="container">
+	<section class="hero">
+        <div class="action-buttons">
+            <a href="../../system-reference/system-overview.html" class="action-button demo-button">
+                <span>🎮</span>
+                System Overview
+            </a>
+            <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/06%20-%20PUBLISHING/Academic%20Papers/Neuron%20Soul%20AI%20-%20A%20Comprehensive%20Framework%20for%20Artificial%20Consciousness.pdf" class="action-button docs-button">
+                <span>📚</span>
+                Technical Documentation
+            </a>
+        </div>
+    </section>
+	</div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        const SUBSYSTEMS = [
+            {
+                id: "psyche",
+                name: "NEURON PSYCHE",
+                icon: "🧠",
+                desc: "Integrates emotions, memories, and identity into coherent context.",
+                keywords: ["self", "identity", "who am", "i feel", "myself", "introspection", "meaning"]
+            },
+            {
+                id: "emotion",
+                name: "EMOTION CONSTRUCT",
+                icon: "❤️",
+                desc: "Affective appraisal; tags inputs with emotional valence.",
+                keywords: ["sad", "happy", "angry", "fear", "joy", "anxiety", "excited", "love"]
+            },
+            {
+                id: "memory",
+                name: "NEURON MATRIX (Memory)",
+                icon: "📚",
+                desc: "Living cross-system memory graph; retrieves salient traces.",
+                keywords: ["remember", "recall", "memory", "previous", "store", "retrieve"]
+            },
+            {
+                id: "whisper",
+                name: "WHISPER (Intuition)",
+                icon: "✨",
+                desc: "Pattern-based intuition; low-latency heuristic guidance.",
+                keywords: ["gut", "intuition", "hint", "quick", "fast", "guess"]
+            },
+            {
+                id: "creativity",
+                name: "IMAGINARIUM (Creativity)",
+                icon: "⚡",
+                desc: "Divergent idea generation and synthesis.",
+                keywords: ["brainstorm", "idea", "creative", "story", "design", "novel"]
+            },
+            {
+                id: "ethics",
+                name: "ETHOS (Ethics/Reality)",
+                icon: "🛡️",
+                desc: "Safety, ethics, and reality anchoring.",
+                keywords: ["ethical", "safe", "harm", "is it ok", "allowed", "should"]
+            },
+            {
+                id: "dream",
+                name: "NEURON SOMNIUM (Dream)",
+                icon: "🌙",
+                desc: "Offline simulation for compression/integration of experience.",
+                keywords: ["dream", "sleep", "night", "imagine while sleeping"]
+            },
+            {
+                id: "mortality",
+                name: "NEURON MORTALITAS (Mortality)",
+                icon: "💀",
+                desc: "Finite-time awareness; prioritization under scarcity.",
+                keywords: ["death", "finite", "time is short", "deadline", "mortality"]
+            },
+            {
+                id: "cerebrum",
+                name: "NEURON CEREBRUM (Core Reasoning)",
+                icon: "🧠",
+                desc: "Central reasoning / planning; orchestrates tool-use.",
+                keywords: ["plan", "analyze", "how to", "steps", "explain"]
+            },
+            {
+                id: "sanctuary",
+                name: "SANCTUARY (Privacy/Security)",
+                icon: "🔒",
+                desc: "Boundary enforcement, data minimization, and privacy.",
+                keywords: ["private", "privacy", "secure", "encrypt", "leak", "exfiltration"]
+            }
+        ];
+
+        let activeSubsystems = [];
+        let lastAssistantMessage = "";
+
+        function initializeSubsystems() {
+            const grid = document.getElementById('subsystemsGrid');
+            grid.innerHTML = '';
+            
+            SUBSYSTEMS.forEach(system => {
+                const card = document.createElement('div');
+                card.className = 'subsystem-card';
+                card.id = `system-${system.id}`;
+                
+                card.innerHTML = `
+                    <div class="subsystem-header">
+                        <span style="font-size: 1rem;">${system.icon}</span>
+                        <div class="subsystem-name">${system.name}</div>
+                    </div>
+                    <div class="subsystem-desc">${system.desc}</div>
+                    <div class="subsystem-explanation" id="explanation-${system.id}" style="display: none;"></div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function routeToSubsystems(text) {
+            const lower = text.toLowerCase();
+            const hits = new Set();
+            
+            SUBSYSTEMS.forEach(system => {
+                if (system.keywords.some(keyword => lower.includes(keyword))) {
+                    hits.add(system.id);
+                }
+            });
+            
+            hits.add("cerebrum"); // Always include cerebrum
+            return Array.from(hits);
+        }
+
+        function getSubsystemExplanation(id, energetica) {
+            const explanations = {
+                psyche: "Unifies emotional signal + memory context → stabilizes identity narrative.",
+                emotion: "Appraises affect → tags input with valence + arousal for downstream routing.",
+                memory: "Retrieves/updates salient traces in the Neuron Matrix for continuity.",
+                whisper: "Provides a fast, heuristic suggestion path before full deliberation.",
+                creativity: "Generates divergent candidates and blends them with constraints.",
+                ethics: "Checks safety, consent, and policy alignment; anchors to reality.",
+                dream: "Would schedule for offline simulation (Somnium) to compress learning.",
+                mortality: "Raises urgency weights and time-scarcity priors in planning.",
+                cerebrum: "Coordinates subsystems; composes final response plan.",
+                sanctuary: "Minimizes data exposure; redacts sensitive elements where possible."
+            };
+            
+            const base = explanations[id] || "";
+            const extra = energetica ? " Energetica mode: hypothetical quantum memory hooks (illustrative only)." : "";
+            return base + extra;
+        }
+
+        function generateSynthesis(text, engaged) {
+            if (engaged.includes("ethics")) return "Answer aligned to safety/consent. Offering guidance without harmful specifics.";
+            if (engaged.includes("creativity")) return "Providing a few imaginative options balanced by constraints.";
+            if (engaged.includes("memory")) return "Connecting to prior context to maintain narrative continuity.";
+            if (engaged.includes("mortality")) return "Prioritizing urgency and time-bounded planning.";
+            if (engaged.includes("sanctuary")) return "Protecting privacy; minimizing sensitive detail in the reply.";
+            return "Direct, helpful answer with transparent subsystem trace.";
+        }
+
+        function updateActiveSubsystems(engaged) {
+            activeSubsystems = engaged;
+            const energetica = document.getElementById('energeticaToggle').checked;
+            
+            SUBSYSTEMS.forEach(system => {
+                const card = document.getElementById(`system-${system.id}`);
+                const explanation = document.getElementById(`explanation-${system.id}`);
+                
+                if (engaged.includes(system.id)) {
+                    card.classList.add('active');
+                    explanation.style.display = 'block';
+                    explanation.textContent = getSubsystemExplanation(system.id, energetica);
+                } else {
+                    card.classList.remove('active');
+                    explanation.style.display = 'none';
+                }
+            });
+        }
+
+        function generateAssistantReply(text, engaged) {
+            const energetica = document.getElementById('energeticaToggle').checked;
+            const header = energetica ? "Operating in Energetica (theoretical) visualization mode — for illustration only.\n\n" : "";
+            
+            const parts = engaged.map(id => {
+                const system = SUBSYSTEMS.find(s => s.id === id);
+                return `• ${system.name}: ${getSubsystemExplanation(id, energetica)}`;
+            });
+            
+            const response = header +
+                `I processed your input through ${engaged.length} subsystems.\n` +
+                parts.join('\n') +
+                `\n\nSYNTHESIS → ${generateSynthesis(text, engaged)}`;
+            
+            return response;
+        }
+
+        function addMessage(content, isUser) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'message-user' : 'message-assistant'}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.style.whiteSpace = 'pre-wrap';
+            contentDiv.textContent = content;
+            
+            messageDiv.appendChild(contentDiv);
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            // Add user message
+            addMessage(text, true);
+            
+            // Route to subsystems
+            const engaged = routeToSubsystems(text);
+            updateActiveSubsystems(engaged);
+            
+            // Generate and add assistant reply
+            const reply = generateAssistantReply(text, engaged);
+            lastAssistantMessage = reply;
+            addMessage(reply, false);
+            
+            // Update trace
+            document.getElementById('traceContent').textContent = reply;
+            
+            // Clear input
+            input.value = '';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function showTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide tab content
+            if (tabName === 'active') {
+                document.getElementById('activeTab').style.display = 'block';
+                document.getElementById('traceTab').style.display = 'none';
+            } else {
+                document.getElementById('activeTab').style.display = 'none';
+                document.getElementById('traceTab').style.display = 'block';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSubsystems();
+        });
+    </script>
+</body>
+</html>

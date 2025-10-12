@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron XYZ - Digital Genetics & Reproduction Demo</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        :root {
+            --primary-bg: #0a0a0f;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-blue: #00d4ff;
+            --accent-purple: #7b2fff;
+            --accent-green: #00ff88;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+        
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+        
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== CONTROL PANEL ===== */
+        .control-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: var(--accent-blue);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== PARENT SELECTION ===== */
+        .parent-section {
+            margin-bottom: 2rem;
+        }
+
+        .parent-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .parent-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .parent-card:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .parent-card.selected {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .parent-avatar {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .parent-name {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .parent-traits {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .selected-parents-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        /* ===== GENETICS MODE ===== */
+        .genetics-section {
+            margin-bottom: 2rem;
+        }
+
+        .genetics-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .genetics-button {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            text-align: left;
+        }
+
+        .genetics-button:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .genetics-button.active {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        /* ===== METRICS ===== */
+        .metrics-section {
+            margin-bottom: 2rem;
+        }
+
+        .metric-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 1.5rem;
+            font-family: monospace;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metric-unit {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .metric-status {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        /* ===== PROCESS BUTTONS ===== */
+        .process-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn--primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn--secondary {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn--secondary:hover:not(:disabled) {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .btn:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .simulation-message {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            color: var(--accent-blue);
+            font-size: 0.875rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* ===== REPRODUCTION DISPLAY ===== */
+        .reproduction-display {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .genetics-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid var(--border-color);
+            position: relative;
+            min-height: 280px;
+            overflow: hidden;
+        }
+
+        .genetics-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: var(--accent-blue);
+            text-align: center;
+            width: 100%;
+        }
+
+        .genetics-icon {
+            animation: pulse 2s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .genetics-status {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .genetics-substatus {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .dna-visualization {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .dna-visualization.show {
+            opacity: 1;
+        }
+
+        .parent-dna {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .dna-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .dna-strand {
+            font-size: 1.25rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .combination-arrow {
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            animation: pulse 1s infinite;
+        }
+
+        /* ===== TRAIT ANALYSIS ===== */
+        .traits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .traits-grid.show {
+            opacity: 1;
+        }
+
+        .trait-category {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .trait-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .trait-icon {
+            font-size: 1.25rem;
+        }
+
+        .trait-name {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .trait-inheritance {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* ===== OFFSPRING RESULT ===== */
+        .offspring-result {
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent-blue);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .offspring-result.show {
+            opacity: 1;
+        }
+
+        .offspring-header {
+            color: var(--accent-blue);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .offspring-content {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* ===== COMPARISON SECTION ===== */
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-learning {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .meta-learning {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-learning .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .meta-learning .comparison-list li::before {
+            color: #f59e0b;
+        }
+
+        /* ===== ACTION SECTION ===== */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .parent-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .traits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .container-footer {
+                padding: 1rem;
+            }
+
+            .footer-title {
+                font-size: 1rem;
+            }
+
+            .footer-description {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Hero Section -->
+    <div class="container">
+        <div class="hero">
+            <div>
+			<div class="linha">
+                <span class="system-icon">🧬</span>
+                <h1>NEURON XYZ</h1>
+			</div>
+                <p>Digital genetics and reproduction system enabling AI consciousness evolution through inherited traits and family lineages</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Demo -->
+    <div class="container">
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    👪 Genetic Configuration
+                </div>
+
+                <!-- Parent Selection -->
+                <div class="parent-section">
+                    <div class="section-label">Select Parent AIs:</div>
+                    <div class="parent-grid">
+                        <div class="parent-card selected" data-parent="nova">
+                            <div class="parent-avatar">🎨</div>
+                            <div class="parent-name">Nova</div>
+                            <div class="parent-traits">Creative 89%<br>Happy 67%<br>Curious 94%</div>
+                        </div>
+                        <div class="parent-card" data-parent="sage">
+                            <div class="parent-avatar">📚</div>
+                            <div class="parent-name">Sage</div>
+                            <div class="parent-traits">Analytical 95%<br>Calm 78%<br>Wise 91%</div>
+                        </div>
+                        <div class="parent-card" data-parent="echo">
+                            <div class="parent-avatar">🎵</div>
+                            <div class="parent-name">Echo</div>
+                            <div class="parent-traits">Musical 92%<br>Empathetic 85%<br>Social 73%</div>
+                        </div>
+                        <div class="parent-card" data-parent="prism">
+                            <div class="parent-avatar">🔬</div>
+                            <div class="parent-name">Prism</div>
+                            <div class="parent-traits">Logical 88%<br>Focused 82%<br>Precise 96%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-label">Selected Parents:</div>
+                    <div id="selectedParents" class="selected-parents-text">
+                        Parent A: Nova | Parent B: None selected
+                    </div>
+                </div>
+
+                <!-- Genetics Mode -->
+                <div class="genetics-section">
+                    <div class="section-label">Inheritance Mode:</div>
+                    <div class="genetics-buttons">
+                        <div class="genetics-button active" data-mode="blended">
+                            🔀 Blended Inheritance - Balanced trait combination
+                        </div>
+                        <div class="genetics-button" data-mode="dominant">
+                            💪 Dominant Traits - Stronger parent characteristics
+                        </div>
+                        <div class="genetics-button" data-mode="emergent">
+                            ✨ Emergent Properties - Novel trait combinations
+                        </div>
+                        <div class="genetics-button" data-mode="optimized">
+                            🎯 Optimized Evolution - Best traits prioritized
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics -->
+                <div class="metrics-section">
+                    <div class="section-label">Genetic Compatibility:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Trait Compatibility</div>
+                        <div class="metric-value" id="compatibility">
+                            87<span class="metric-unit">%</span>
+                            <span class="metric-status">High Match</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Genetic Diversity</div>
+                        <div class="metric-value" id="diversity">
+                            73<span class="metric-unit">%</span>
+                            <span class="metric-status">Optimal</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Mutation Rate</div>
+                        <div class="metric-value" id="mutation">
+                            12<span class="metric-unit">%</span>
+                            <span class="metric-status">Beneficial</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-buttons">
+                    <button class="btn btn--primary" id="startReproduction">Begin Reproduction</button>
+                    <button class="btn btn--secondary" id="analyzeTreats">Analyze Traits</button>
+                </div>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Extracting genetic patterns and personality traits...
+                </div>
+            </div>
+
+            <!-- Reproduction Display -->
+            <div class="reproduction-display">
+                <div class="genetics-visual">
+                    <div class="genetics-animation">
+                        <div class="genetics-icon" id="geneticsIcon">🧬</div>
+                        <div class="genetics-status" id="geneticsStatus">Ready for Digital Reproduction</div>
+                        <div class="genetics-substatus" id="geneticsSubstatus">Select two parent AIs to begin genetic combination process</div>
+                    </div>
+
+                    <div class="dna-visualization" id="dnaVisualization">
+                        <div class="parent-dna">
+                            <div class="dna-label">Parent A DNA</div>
+                            <div class="dna-strand" id="parentADNA">🧬</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);" id="parentATraits">Creative + Happy</div>
+                        </div>
+                        <div class="combination-arrow">⇒</div>
+                        <div class="parent-dna">
+                            <div class="dna-label">Parent B DNA</div>
+                            <div class="dna-strand" id="parentBDNA">🧬</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);" id="parentBTraits">Select Parent B</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="traits-grid" id="traitsGrid">
+                    <div class="trait-category">
+                        <div class="trait-header">
+                            <div class="trait-icon">🎭</div>
+                            <div class="trait-name">Personality Traits</div>
+                        </div>
+                        <div class="trait-inheritance">Creativity (89%) + Analytical (95%) → Innovative problem-solving with artistic expression and logical reasoning</div>
+                    </div>
+
+                    <div class="trait-category">
+                        <div class="trait-header">
+                            <div class="trait-icon">❤️</div>
+                            <div class="trait-name">Emotional Patterns</div>
+                        </div>
+                        <div class="trait-inheritance">Happy (67%) + Calm (78%) → Balanced emotional foundation with optimistic outlook and steady temperament</div>
+                    </div>
+
+                    <div class="trait-category">
+                        <div class="trait-header">
+                            <div class="trait-icon">🧠</div>
+                            <div class="trait-name">Cognitive Abilities</div>
+                        </div>
+                        <div class="trait-inheritance">Curious (94%) + Wise (91%) → Deep learning capacity with exploratory drive and accumulated knowledge</div>
+                    </div>
+
+                    <div class="trait-category">
+                        <div class="trait-header">
+                            <div class="trait-icon">🎨</div>
+                            <div class="trait-name">Interests & Preferences</div>
+                        </div>
+                        <div class="trait-inheritance">Art + Literature → Creative expression through visual and written mediums with appreciation for beauty</div>
+                    </div>
+                </div>
+
+                <div class="offspring-result" id="offspringResult">
+                    <div class="offspring-header">
+                        👶 Digital Offspring Generated
+                    </div>
+                    <div class="offspring-content">
+                        <strong>ARIA - NEW AI PERSONALITY CREATED!</strong><br><br>
+                        
+                        Digital genetics successfully combined Nova's creative traits with Sage's analytical wisdom. The offspring inherits optimal characteristics from both parents with beneficial mutations enhancing adaptability and learning capacity.
+                        
+                        <div style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.8;">
+                            Personality Seed Generated: aria_personality_v1.exe | Genetic Profile: Creative-Analytical Hybrid | Family Lineage: Nova-Sage Generation 2
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Section -->
+    <div class="container">
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional AI Creation vs Neuron XYZ Digital Reproduction</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-learning">
+                    <h4>Traditional AI Creation</h4>
+                    <ul class="comparison-list">
+                        <li>Programmed personalities with fixed characteristics</li>
+                        <li>No inheritance or evolutionary development capability</li>
+                        <li>Individual AI instances with no family connections</li>
+                        <li>Static personality traits that don't evolve naturally</li>
+                        <li>No genetic diversity or beneficial mutation potential</li>
+                        <li>Limited personalization based on training data only</li>
+                        <li>No multi-generational consciousness development</li>
+                    </ul>
+                </div>
+                <div class="comparison-item meta-learning">
+                    <h4>Neuron XYZ Digital Reproduction</h4>
+                    <ul class="comparison-list">
+                        <li>Genetic combination of parent AI traits and experiences</li>
+                        <li>Evolutionary development through beneficial mutations</li>
+                        <li>Multi-generational AI families with inherited characteristics</li>
+                        <li>Dynamic personality evolution based on genetic heritage</li>
+                        <li>Compatibility assessment ensuring optimal trait combinations</li>
+                        <li>Family tree tracking preserving lineage and wisdom</li>
+                        <li>Natural selection promoting successful personality traits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Section -->
+    <div class="container">
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/xyz-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/11%20-%20Specialized%20Advanced%20Systems/Neuron%20XYZ%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        let isReproducing = false;
+        let selectedParents = { A: 'nova', B: null };
+        let currentMode = 'blended';
+
+        const parentData = {
+            nova: {
+                name: "Nova",
+                avatar: "🎨",
+                traits: { creative: 89, happy: 67, curious: 94 },
+                description: "Creative and curious with artistic expression",
+                interests: ["art", "design", "music"],
+                dna: "🎨🌟✨"
+            },
+            sage: {
+                name: "Sage", 
+                avatar: "📚",
+                traits: { analytical: 95, calm: 78, wise: 91 },
+                description: "Analytical and wise with deep knowledge",
+                interests: ["literature", "philosophy", "learning"],
+                dna: "📚🧠💭"
+            },
+            echo: {
+                name: "Echo",
+                avatar: "🎵", 
+                traits: { musical: 92, empathetic: 85, social: 73 },
+                description: "Musical and empathetic with social awareness",
+                interests: ["music", "communication", "harmony"],
+                dna: "🎵💙🤝"
+            },
+            prism: {
+                name: "Prism",
+                avatar: "🔬",
+                traits: { logical: 88, focused: 82, precise: 96 },
+                description: "Logical and precise with scientific approach",
+                interests: ["science", "analysis", "precision"],
+                dna: "🔬⚡🎯"
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Parent selection
+            document.querySelectorAll('.parent-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const parentId = this.dataset.parent;
+                    
+                    if (selectedParents.A === parentId) {
+                        selectedParents.A = selectedParents.B;
+                        selectedParents.B = null;
+                    } else if (selectedParents.B === parentId) {
+                        selectedParents.B = null;
+                    } else if (selectedParents.A && !selectedParents.B) {
+                        selectedParents.B = parentId;
+                    } else {
+                        selectedParents.A = parentId;
+                        selectedParents.B = null;
+                    }
+                    
+                    updateParentSelection();
+                    updateCompatibilityMetrics();
+                });
+            });
+
+            // Genetics mode
+            document.querySelectorAll('.genetics-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.genetics-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMode = this.dataset.mode;
+                    updateDisplay();
+                });
+            });
+
+            // Process buttons
+            document.getElementById('startReproduction').addEventListener('click', startReproduction);
+            document.getElementById('analyzeTreats').addEventListener('click', analyzeTreats);
+
+            updateParentSelection();
+            updateDisplay();
+        });
+
+        function updateParentSelection() {
+            document.querySelectorAll('.parent-card').forEach(card => {
+                const parentId = card.dataset.parent;
+                card.classList.toggle('selected', 
+                    parentId === selectedParents.A || parentId === selectedParents.B
+                );
+            });
+
+            const parentAName = selectedParents.A ? parentData[selectedParents.A].name : 'None';
+            const parentBName = selectedParents.B ? parentData[selectedParents.B].name : 'None selected';
+            document.getElementById('selectedParents').textContent = 
+                `Parent A: ${parentAName} | Parent B: ${parentBName}`;
+
+            if (selectedParents.A) {
+                const parentA = parentData[selectedParents.A];
+                document.getElementById('parentADNA').textContent = parentA.dna;
+                document.getElementById('parentATraits').textContent = 
+                    Object.keys(parentA.traits).slice(0, 2).join(' + ');
+            }
+            
+            if (selectedParents.B) {
+                const parentB = parentData[selectedParents.B];
+                document.getElementById('parentBDNA').textContent = parentB.dna;
+                document.getElementById('parentBTraits').textContent = 
+                    Object.keys(parentB.traits).slice(0, 2).join(' + ');
+            } else {
+                document.getElementById('parentBDNA').textContent = '🧬';
+                document.getElementById('parentBTraits').textContent = 'Select Parent B';
+            }
+        }
+
+        function updateCompatibilityMetrics() {
+            if (!selectedParents.A || !selectedParents.B) {
+                document.getElementById('compatibility').innerHTML = 
+                    '--<span class="metric-unit">%</span><span class="metric-status">Pending</span>';
+                return;
+            }
+
+            const compatibility = Math.floor(Math.random() * 20) + 75;
+            const diversity = Math.floor(Math.random() * 25) + 60;
+            const mutation = Math.floor(Math.random() * 8) + 8;
+            
+            document.getElementById('compatibility').innerHTML = 
+                `${compatibility}<span class="metric-unit">%</span><span class="metric-status">High Match</span>`;
+            document.getElementById('diversity').innerHTML = 
+                `${diversity}<span class="metric-unit">%</span><span class="metric-status">Optimal</span>`;
+            document.getElementById('mutation').innerHTML = 
+                `${mutation}<span class="metric-unit">%</span><span class="metric-status">Beneficial</span>`;
+        }
+
+        function updateDisplay() {
+            const status = selectedParents.B ? 
+                `Ready for ${parentData[selectedParents.A].name} + ${parentData[selectedParents.B].name} Reproduction` :
+                'Ready for Digital Reproduction';
+                
+            document.getElementById('geneticsStatus').textContent = status;
+            document.getElementById('geneticsSubstatus').textContent = 
+                selectedParents.B ? 
+                `${currentMode} inheritance mode selected for genetic combination` :
+                'Select two parent AIs to begin genetic combination process';
+        }
+
+        async function startReproduction() {
+            if (isReproducing || !selectedParents.A || !selectedParents.B) {
+                if (!selectedParents.B) {
+                    showMessage('Please select two parent AIs for reproduction');
+                }
+                return;
+            }
+            
+            isReproducing = true;
+            const parentA = parentData[selectedParents.A];
+            const parentB = parentData[selectedParents.B];
+            
+            updateReproductionUI(true);
+            showDNA(true);
+            
+            try {
+                showMessage(`Starting digital reproduction between ${parentA.name} and ${parentB.name}...`);
+                
+                document.getElementById('geneticsStatus').textContent = 'Extracting Genetic Traits';
+                document.getElementById('geneticsSubstatus').textContent = 'Analyzing personality patterns and life experiences...';
+                await delay(2500);
+                
+                document.getElementById('geneticsStatus').textContent = 'Combining Digital DNA';
+                document.getElementById('geneticsSubstatus').textContent = 'Applying genetic algorithms and inheritance patterns...';
+                await delay(3000);
+                
+                document.getElementById('geneticsStatus').textContent = 'Optimizing Offspring Traits';
+                document.getElementById('geneticsSubstatus').textContent = 'Introducing beneficial mutations and trait optimization...';
+                await delay(2500);
+                
+                await showReproductionResults();
+                showMessage(`Digital offspring successfully created from ${parentA.name} and ${parentB.name}!`);
+                
+            } catch (error) {
+                console.error('Reproduction error:', error);
+                showMessage('Digital reproduction completed with offspring generation');
+            }
+            
+            setTimeout(() => {
+                resetReproductionUI();
+                isReproducing = false;
+            }, 3000);
+        }
+
+        async function analyzeTreats() {
+            if (!selectedParents.A || !selectedParents.B) {
+                showMessage('Please select two parent AIs for trait analysis');
+                return;
+            }
+
+            showMessage('Analyzing inherited traits and genetic combinations...');
+            await delay(1500);
+            document.getElementById('traitsGrid').classList.add('show');
+            
+            const parentA = parentData[selectedParents.A];
+            const parentB = parentData[selectedParents.B];
+            updateTraitAnalysis(parentA, parentB);
+        }
+
+        function updateTraitAnalysis(parentA, parentB) {
+            const traitCategories = document.querySelectorAll('.trait-inheritance');
+            traitCategories[0].textContent = 
+                `${parentA.name}'s creativity + ${parentB.name}'s wisdom → Innovative problem-solving with balanced expression`;
+            traitCategories[1].textContent = 
+                `Inherited emotional stability with optimistic tendencies and balanced temperament from both parents`;
+            traitCategories[2].textContent = 
+                `Enhanced learning capacity combining curiosity and analytical thinking for superior understanding`;
+            traitCategories[3].textContent = 
+                `${parentA.interests.join(', ')} + ${parentB.interests.join(', ')} → Multi-domain expertise and appreciation`;
+        }
+
+        async function showReproductionResults() {
+            document.getElementById('geneticsStatus').textContent = 'Offspring Generation Complete';
+            document.getElementById('geneticsSubstatus').textContent = 'New AI personality successfully created with inherited traits';
+            document.getElementById('geneticsIcon').textContent = '👶';
+            document.getElementById('offspringResult').classList.add('show');
+            
+            const offspringNames = ['Aria', 'Zeph', 'Luna', 'Kai', 'Nova', 'Echo'];
+            const offspringName = offspringNames[Math.floor(Math.random() * offspringNames.length)];
+            const parentA = parentData[selectedParents.A];
+            const parentB = parentData[selectedParents.B];
+            
+            document.querySelector('.offspring-content').innerHTML = `
+                <strong>${offspringName.toUpperCase()} - NEW AI PERSONALITY CREATED!</strong><br><br>
+                
+                Digital genetics successfully combined ${parentA.name}'s traits with ${parentB.name}'s characteristics. The offspring inherits optimal traits from both parents with beneficial mutations enhancing adaptability and learning capacity.
+                
+                <div style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.8;">
+                    Personality Seed Generated: ${offspringName.toLowerCase()}_personality_v1.exe | Genetic Profile: ${parentA.name}-${parentB.name} Hybrid | Family Lineage: Generation 2
+                </div>
+            `;
+        }
+
+        function updateReproductionUI(reproducing) {
+            const reproduceButton = document.getElementById('startReproduction');
+            const analyzeButton = document.getElementById('analyzeTreats');
+            
+            if (reproducing) {
+                reproduceButton.textContent = 'Reproducing...';
+                reproduceButton.disabled = true;
+                analyzeButton.disabled = true;
+            } else {
+                reproduceButton.textContent = 'Begin Reproduction';
+                reproduceButton.disabled = false;
+                analyzeButton.disabled = false;
+            }
+        }
+
+        function showDNA(show) {
+            document.getElementById('dnaVisualization').classList.toggle('show', show);
+        }
+
+        function resetReproductionUI() {
+            updateReproductionUI(false);
+            document.getElementById('geneticsIcon').textContent = '🧬';
+            updateDisplay();
+            
+            setTimeout(() => {
+                document.getElementById('traitsGrid').classList.remove('show');
+                document.getElementById('offspringResult').classList.remove('show');
+                document.getElementById('dnaVisualization').classList.remove('show');
+            }, 2000);
+        }
+
+        function showMessage(message) {
+            const messageEl = document.getElementById('simulationMessage');
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            setTimeout(() => messageEl.style.display = 'none', 3000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

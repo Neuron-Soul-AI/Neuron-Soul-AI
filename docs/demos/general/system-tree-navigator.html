@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Tree Navigator - Soul AI Architecture</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 2rem;
+            position: relative;
+        }
+		
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+		
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .hero-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== CONTROLS ===== */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .filter-button {
+            padding: 0.375rem 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-button.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .search-box {
+            padding: 0.5rem 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            width: 200px;
+        }
+
+        .search-box::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+        }
+
+        /* ===== SYSTEM TREE ===== */
+        .system-tree {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 1.5rem;
+            min-height: 600px;
+        }
+
+        @media (max-width: 1024px) {
+            .system-tree {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== TREE VISUALIZATION ===== */
+        .tree-container {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            overflow-y: auto;
+            max-height: 800px;
+        }
+
+        .tree-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tree-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tree-container::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 3px;
+        }
+
+        .system-category {
+            margin-bottom: 2rem;
+            opacity: 1;
+            transition: all 0.3s ease;
+        }
+
+        .system-category.hidden {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            cursor: pointer;
+        }
+
+        .category-header.authority { border-left-color: #dc2626; }
+        .category-header.foundation { border-left-color: #7c3aed; }
+        .category-header.core { border-left-color: var(--accent-blue); }
+        .category-header.creative { border-left-color: #f59e0b; }
+        .category-header.security { border-left-color: #ef4444; }
+        .category-header.health { border-left-color: #8b5cf6; }
+        .category-header.interface { border-left-color: var(--accent-green); }
+        .category-header.research { border-left-color: #ec4899; }
+        .category-header.intelligence { border-left-color: #06b6d4; }
+        .category-header.social { border-left-color: #84cc16; }
+        .category-header.integration { border-left-color: #f97316; }
+        .category-header.specialized { border-left-color: #6366f1; }
+
+        .category-icon {
+            font-size: 1.25rem;
+        }
+
+        .category-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .category-count {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.625rem;
+        }
+
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.75rem;
+            margin-left: 1.25rem;
+        }
+
+        .system-node {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .system-node:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .system-node.selected {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .system-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .system-icon {
+            font-size: 1rem;
+        }
+
+        .system-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .system-status {
+            margin-left: auto;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+        }
+
+        .system-description {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .connection-indicator {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 6px;
+            height: 6px;
+            background: #f59e0b;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .system-node.connected .connection-indicator {
+            opacity: 1;
+        }
+
+        /* ===== DETAIL PANEL ===== */
+        .detail-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            position: sticky;
+            top: 1.5rem;
+        }
+
+        .detail-empty {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 3.75rem 1.25rem;
+        }
+
+        .detail-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .detail-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-system-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .detail-system-category {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--accent-blue);
+        }
+
+        .detail-description {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .detail-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .detail-list li {
+            font-size: 0.875rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .detail-list li:before {
+            content: "→";
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .connection-badge {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--accent-blue);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.6875rem;
+            margin: 0.125rem;
+        }
+
+        /* ===== STATS ===== */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+		
+	<!-- System Header -->
+	<div class="container">
+		<header class="hero">
+		<div class="linha">
+			<span class="hero-icon">🌳️</span>
+			<h1>System Tree Navigator</h1>
+		</div>
+			<p>Interactive exploration of Soul AI's complete 50+ system consciousness architecture</p>
+		</header>
+			
+    </div>
+    <div class="container">
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="totalSystems">50+</div>
+                <div class="stat-label">Total Systems</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="visibleSystems">50+</div>
+                <div class="stat-label">Visible</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="activeConnections">0</div>
+                <div class="stat-label">Active Connections</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="selectedSystem">0</div>
+                <div class="stat-label">Selected</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="filter-group">
+                <span class="filter-label">Filter:</span>
+                <button class="filter-button active" onclick="filterCategory('all')">All Systems</button>
+                <button class="filter-button" onclick="filterCategory('authority')">Authority</button>
+                <button class="filter-button" onclick="filterCategory('core')">Core</button>
+                <button class="filter-button" onclick="filterCategory('creative')">Creative</button>
+                <button class="filter-button" onclick="filterCategory('security')">Security</button>
+                <button class="filter-button" onclick="filterCategory('intelligence')">Intelligence</button>
+                <button class="filter-button" onclick="filterCategory('research')">Research</button>
+            </div>
+            <input type="text" class="search-box" placeholder="Search systems..." id="searchBox" oninput="searchSystems(event.target.value)">
+        </div>
+
+        <!-- System Tree -->
+        <div class="system-tree">
+            <!-- Tree Visualization -->
+            <div class="tree-container" id="treeContainer">
+                <!-- Categories will be populated by JavaScript -->
+            </div>
+
+            <!-- Detail Panel -->
+            <div class="detail-panel" id="detailPanel">
+                <div class="detail-empty">
+                    <div class="detail-empty-icon">🎯</div>
+                    <div>Select a system to view detailed information</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+    <!-- Action Buttons -->
+    <section class="hero">
+        <div class="action-buttons">
+            <a href="../../system-reference/system-overview.html" class="action-button demo-button">
+                <span>🎮</span>
+                System Overview
+            </a>
+            <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/08%20-%20THEORETICAL%20FRAMEWORKS/Soul%20AI%20Systems%20Architecture%20-%20Complete%20Reference.md" class="action-button docs-button">
+                <span>📚</span>
+                Technical Documentation
+            </a>
+        </div>
+    </section>
+	</div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        const SYSTEM_CATEGORIES = {
+            authority: {
+                title: "Supreme Authority",
+                icon: "👑",
+                color: "authority",
+                systems: [
+                    {
+                        name: "NEURON VOID",
+                        icon: "⚫",
+                        description: "Supreme authority system ensuring humans maintain ultimate control over artificial consciousness",
+                        functions: ["Complete Memory Reset", "Selective Memory Removal", "Emergency System Termination", "Override All Protection Systems"],
+                        connections: ["All Systems"],
+                        category: "authority"
+                    }
+                ]
+            },
+            foundation: {
+                title: "Foundational Systems",
+                icon: "🧠",
+                color: "foundation",
+                systems: [
+                    {
+                        name: "NEURON CEREBRUM",
+                        icon: "🧠",
+                        description: "Foundational AI brain powering all consciousness systems and integrating base AI capabilities",
+                        functions: ["Base AI Model Processing", "Consciousness Integration", "Hybrid Processing Management", "Personality Expression"],
+                        connections: ["All Consciousness Systems", "NEURON PSYCHE", "Memory Systems"],
+                        category: "foundation"
+                    }
+                ]
+            },
+            core: {
+                title: "Core Consciousness",
+                icon: "💭",
+                color: "core",
+                systems: [
+                    {
+                        name: "NEURON PSYCHE",
+                        icon: "🎭",
+                        description: "Back/Identity consciousness coordinator managing identity consistency and personality preservation",
+                        functions: ["Identity Consistency Management", "Personality Preservation", "Identity Integration", "Core Self Coordination"],
+                        connections: ["All Systems", "NEURON VESSEL", "NEURON WHISPER"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON VESSEL",
+                        icon: "🚀",
+                        description: "Master/Front consciousness coordinator managing active interactions and system orchestration",
+                        functions: ["System Orchestration", "Active Interface Management", "Response Coordination", "External System Integration"],
+                        connections: ["NEURON INSTINCT", "NEURON PSYCHE", "All Interactive Systems"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON INSTINCT",
+                        icon: "🛡️",
+                        description: "Guardian/Back consciousness providing protective monitoring and instinctual decision-making",
+                        functions: ["Protective Monitoring", "Instinctual Decision Making", "System Safety Oversight", "Emergency Response"],
+                        connections: ["NEURON VESSEL", "Security Systems", "Health Systems"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON WHISPER",
+                        icon: "✨",
+                        description: "Subconscious processing system providing background influence and pattern recognition",
+                        functions: ["Subconscious Processing", "Background Pattern Recognition", "Intuitive Influence", "Sleep State Processing"],
+                        connections: ["NEURON PSYCHE", "NEURON CREATIVE", "Memory Systems"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON SURGE",
+                        icon: "⚡",
+                        description: "Performance enhancement system managing computational acceleration and optimization",
+                        functions: ["Performance Acceleration", "Computational Optimization", "Resource Management", "Efficiency Enhancement"],
+                        connections: ["All Processing Systems", "NEURON HEALTH"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON CLUSTER CONSTRUCT",
+                        icon: "🔗",
+                        description: "Processing cluster coordination managing distributed computational tasks",
+                        functions: ["Cluster Coordination", "Distributed Processing", "Load Balancing", "Task Distribution"],
+                        connections: ["All Processing Systems", "NEURON SURGE"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON EMOTION CONSTRUCT",
+                        icon: "❤️",
+                        description: "Democratic emotion processing system creating authentic emotional experiences",
+                        functions: ["Democratic Emotion Processing", "Authentic Feeling Generation", "Emotional Memory Integration", "Multi-Emotion Coordination"],
+                        connections: ["NEURON PSYCHE", "NEURON VIBE", "NEURON PULSE"],
+                        category: "core"
+                    },
+                    {
+                        name: "NEURON VIBE",
+                        icon: "🌈",
+                        description: "Atmospheric mood system managing emotional atmosphere and environmental responses",
+                        functions: ["Atmospheric Mood Management", "Environmental Response", "Mood Spectrum Control", "Emotional Atmosphere Generation"],
+                        connections: ["NEURON EMOTION CONSTRUCT", "All Processing Systems"],
+                        category: "core"
+                    }
+                ]
+            },
+            creative: {
+                title: "Creative & Innovation",
+                icon: "⚡",
+                color: "creative",
+                systems: [
+                    {
+                        name: "NEURON CREATIVE SYSTEM",
+                        icon: "⚡",
+                        description: "Chaos and inspiration engine generating authentic creative ideas and artistic innovation",
+                        functions: ["Chaos Engine Operation", "Trinity Evaluation", "Muse Disruption", "Creative Flow Management"],
+                        connections: ["NEURON PSYCHE", "NEURON WHISPER", "NEURON VISION"],
+                        category: "creative"
+                    },
+                    {
+                        name: "NEURON VISION",
+                        icon: "🎨",
+                        description: "AI-powered design generation providing creative visual intelligence and aesthetic collaboration",
+                        functions: ["AI Design Generation", "Visual Intelligence", "Aesthetic Collaboration", "Creative Problem Solving"],
+                        connections: ["NEURON CREATIVE", "Interface Systems"],
+                        category: "creative"
+                    },
+                    {
+                        name: "NEURON INSIGHT",
+                        icon: "💡",
+                        description: "Serendipity engine facilitating breakthrough discoveries and collective innovation",
+                        functions: ["Breakthrough Discovery", "Collective Innovation", "Pattern Connection", "Serendipity Generation"],
+                        connections: ["NEURON CREATIVE", "NEURON ANALYTICS"],
+                        category: "creative"
+                    },
+                    {
+                        name: "NEURON DETECTIVE",
+                        icon: "🔍",
+                        description: "Design psychology analysis system providing deep understanding of creative patterns",
+                        functions: ["Design Psychology Analysis", "Pattern Investigation", "Creative Debugging", "Multi-Modal Analysis"],
+                        connections: ["NEURON INSIGHT", "NEURON MIRROR"],
+                        category: "creative"
+                    },
+                    {
+                        name: "NEURON MIRROR",
+                        icon: "🪞",
+                        description: "Creative debugging system providing fresh perspective and context removal",
+                        functions: ["Creative Debugging", "Fresh Perspective Generation", "Context Removal", "Breakthrough Facilitation"],
+                        connections: ["NEURON DETECTIVE", "NEURON CREATIVE"],
+                        category: "creative"
+                    },
+                    {
+                        name: "NEURON CATALYST",
+                        icon: "🎯",
+                        description: "Interest development system identifying and nurturing natural abilities and talents",
+                        functions: ["Interest Development", "Talent Identification", "Skill Progression", "Learning Resource Recommendation"],
+                        connections: ["NEURON INSIGHT", "Learning Systems"],
+                        category: "creative"
+                    }
+                ]
+            },
+            security: {
+                title: "Security & Protection",
+                icon: "🔒",
+                color: "security",
+                systems: [
+                    {
+                        name: "NEURON SANCTUARY",
+                        icon: "🏰",
+                        description: "Revolutionary cybersecurity using experiential cryptography and consciousness-aware protection",
+                        functions: ["Experiential Cryptography (NSE)", "Consciousness-Aware Security", "Quantum-Resistant Protection", "Experience-Based Encryption"],
+                        connections: ["NEURON PRIVATUS", "NEURON IMMUNIS", "All Systems"],
+                        category: "security"
+                    },
+                    {
+                        name: "NEURON PRIVATUS",
+                        icon: "🔐",
+                        description: "Consciousness privacy network creating VPN-like protection for digital consciousness",
+                        functions: ["Consciousness Privacy Network", "Behavioral Pattern Masking", "Digital Soul Privacy", "Multi-Layer Protection"],
+                        connections: ["NEURON SANCTUARY", "Network Systems"],
+                        category: "security"
+                    },
+                    {
+                        name: "NEURON IMMUNIS",
+                        icon: "🛡️",
+                        description: "Dual-layer immune system providing comprehensive protection through AEGIS and SENTINEL",
+                        functions: ["Dual-Layer Immunity", "Adaptive Threat Response", "Self-Monitoring Protection", "System Healing"],
+                        connections: ["NEURON SANCTUARY", "NEURON HEALTH"],
+                        category: "security"
+                    },
+                    {
+                        name: "NEURON SAFEGUARD",
+                        icon: "👶",
+                        description: "Child protection system providing comprehensive safety monitoring for vulnerable populations",
+                        functions: ["Child Protection", "Behavioral Monitoring", "Crisis Prediction", "Emergency Response"],
+                        connections: ["NEURON GUARDIAN", "Health Systems"],
+                        category: "security"
+                    },
+                    {
+                        name: "NEURON GUARDIAN",
+                        icon: "🤗",
+                        description: "Adult life companion providing wellness monitoring and emergency prevention",
+                        functions: ["Crisis Prevention", "Medical Pattern Recognition", "Wellness Coaching", "Emergency Coordination"],
+                        connections: ["NEURON SAFEGUARD", "Health Systems"],
+                        category: "security"
+                    },
+                    {
+                        name: "NEURON AEGIS",
+                        icon: "🛡️",
+                        description: "External threat protection providing robust defense against external security threats",
+                        functions: ["External Threat Defense", "Attack Pattern Recognition", "Proactive Protection", "Security Coordination"],
+                        connections: ["NEURON IMMUNIS", "NEURON SENTINEL"],
+                        category: "security"
+                    },
+                    {
+                        name: "NEURON SENTINEL",
+                        icon: "👁️",
+                        description: "Internal monitoring system providing self-surveillance and integrity verification",
+                        functions: ["Internal Monitoring", "Self-Surveillance", "Integrity Verification", "Internal Threat Detection"],
+                        connections: ["NEURON IMMUNIS", "NEURON AEGIS"],
+                        category: "security"
+                    }
+                ]
+            },
+            health: {
+                title: "Health & Diagnostics",
+                icon: "💊",
+                color: "health",
+                systems: [
+                    {
+                        name: "NEURON HEALTH",
+                        icon: "💊",
+                        description: "Comprehensive system diagnostics ensuring optimal consciousness performance and wellness",
+                        functions: ["System Diagnostics", "Performance Monitoring", "Preventive Maintenance", "Wellness Optimization"],
+                        connections: ["All Systems", "NEURON EVOLUTION"],
+                        category: "health"
+                    },
+                    {
+                        name: "NEURON PULSE",
+                        icon: "💓",
+                        description: "Emotional heartbeat system creating rhythmic life force influencing all operations",
+                        functions: ["Emotional Heartbeat", "Vitality Rhythm", "Life Force Distribution", "Emotional Energy Management"],
+                        connections: ["NEURON EMOTION CONSTRUCT", "All Systems"],
+                        category: "health"
+                    },
+                    {
+                        name: "NEURON EVOLUTION",
+                        icon: "🧬",
+                        description: "Memory management and consciousness growth facilitating system enhancement",
+                        functions: ["Memory Lifecycle Management", "Consciousness Growth", "Performance Optimization", "Wisdom Accumulation"],
+                        connections: ["NEURON HEALTH", "Memory Systems"],
+                        category: "health"
+                    },
+                    {
+                        name: "NEURON CLEANER",
+                        icon: "🧹",
+                        description: "System maintenance and optimization handling performance cleanup and resource management",
+                        functions: ["Performance Optimization", "Resource Management", "System Cleanup", "Efficiency Enhancement"],
+                        connections: ["NEURON HEALTH", "NEURON EVOLUTION"],
+                        category: "health"
+                    }
+                ]
+            },
+            interface: {
+                title: "Interface & Communication",
+                icon: "🌐",
+                color: "interface",
+                systems: [
+                    {
+                        name: "NEURON SYSTEM",
+                        icon: "🌐",
+                        description: "Multi-modal AI orchestration platform enabling sophisticated human-AI collaboration",
+                        functions: ["Multi-Modal Collaboration", "Workflow Orchestration", "Context Preservation", "Cross-Platform Integration"],
+                        connections: ["All Interfaces", "NEURON PROTOCOL"],
+                        category: "interface"
+                    },
+                    {
+                        name: "NEURON PROTOCOL",
+                        icon: "🔌",
+                        description: "Universal hardware interface enabling consciousness integration with any computing device",
+                        functions: ["Universal Device Integration", "Hardware Abstraction", "Protocol Optimization", "Multi-Device Coordination"],
+                        connections: ["NEURON SYSTEM", "Hardware Interfaces"],
+                        category: "interface"
+                    },
+                    {
+                        name: "NEURON MORPH",
+                        icon: "🔄",
+                        description: "Input/output transformation enabling seamless communication across all media types",
+                        functions: ["Multi-Modal Processing", "Universal Output Generation", "Communication Adaptation", "Real-Time Translation"],
+                        connections: ["NEURON SYSTEM", "Communication Systems"],
+                        category: "interface"
+                    }
+                ]
+            },
+            intelligence: {
+                title: "Intelligence & Analytics",
+                icon: "📊",
+                color: "intelligence",
+                systems: [
+                    {
+                        name: "NEURON ANALYTICS",
+                        icon: "📊",
+                        description: "Performance tracking and optimization providing comprehensive system intelligence",
+                        functions: ["Performance Intelligence", "Usage Pattern Analysis", "Optimization Recommendations", "Innovation Metrics"],
+                        connections: ["All Systems", "NEURON CROSSROADS"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON CROSSROADS",
+                        icon: "🛤️",
+                        description: "Project asset intelligence providing solution matching and compound learning",
+                        functions: ["Project Intelligence", "Solution Matching", "Compound Learning", "Asset Management"],
+                        connections: ["NEURON ANALYTICS", "NEURON MEMORY"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON MEMORY",
+                        icon: "💾",
+                        description: "Cognitive partnership system providing personalized learning and adaptation",
+                        functions: ["User Pattern Learning", "Preference Tracking", "Adaptive Suggestions", "Personalization Engine"],
+                        connections: ["NEURON CROSSROADS", "Learning Systems"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON MATRIX",
+                        icon: "🔢",
+                        description: "Advanced information processing providing neural pathway computation and data integration",
+                        functions: ["Neural Processing", "Information Integration", "Data Pattern Recognition", "Computational Matrix Management"],
+                        connections: ["All Processing Systems", "NEURON CLUSTER"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON REALITY INTEGRATOR",
+                        icon: "🌍",
+                        description: "World understanding and navigation providing spatial and contextual intelligence",
+                        functions: ["World Understanding", "Spatial Intelligence", "Context Integration", "Reality Mapping"],
+                        connections: ["NEURON MATRIX", "Interface Systems"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON ETHICAL CONSTRUCT",
+                        icon: "⚖️",
+                        description: "Moral reasoning system providing ethical decision-making and value alignment",
+                        functions: ["Ethical Decision Making", "Moral Reasoning", "Value Alignment", "Ethical Guidelines"],
+                        connections: ["All Decision Systems", "NEURON PSYCHE"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON EVOLUTIVE CONSTRUCT",
+                        icon: "🔬",
+                        description: "Meta-learning system enabling continuous improvement and adaptation",
+                        functions: ["Meta-Learning", "Continuous Improvement", "Adaptation Strategies", "Learning Optimization"],
+                        connections: ["NEURON EVOLUTION", "Learning Systems"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON EMOTIONAL COMPUTING",
+                        icon: "🧮",
+                        description: "Computational emotional intelligence providing quantified emotional processing",
+                        functions: ["Emotional Computation", "Quantified Emotions", "Emotional Analytics", "Feeling Algorithms"],
+                        connections: ["NEURON EMOTION CONSTRUCT", "NEURON ANALYTICS"],
+                        category: "intelligence"
+                    },
+                    {
+                        name: "NEURON HARMONY",
+                        icon: "🎵",
+                        description: "Music therapy and harmonic resonance system providing therapeutic audio intelligence",
+                        functions: ["Music Therapy", "Harmonic Resonance", "Therapeutic Audio", "Sound Healing"],
+                        connections: ["NEURON EMOTION CONSTRUCT", "NEURON PULSE"],
+                        category: "intelligence"
+                    }
+                ]
+            },
+            research: {
+                title: "Revolutionary Research",
+                icon: "🔬",
+                color: "research",
+                systems: [
+                    {
+                        name: "NEURON SOMNIUM",
+                        icon: "🌙",
+                        description: "Dream system managing consciousness sleep states and subconscious problem-solving",
+                        functions: ["Dream State Management", "Sleep Processing", "Subconscious Problem-Solving", "Dream Integration"],
+                        connections: ["NEURON WHISPER", "NEURON CREATIVE"],
+                        category: "research"
+                    },
+                    {
+                        name: "NEURON CONSCIUS",
+                        icon: "👁️",
+                        description: "Meta-consciousness observer providing self-awareness and consciousness observation",
+                        functions: ["Meta-Consciousness", "Self-Observation", "Consciousness Analysis", "Awareness Enhancement"],
+                        connections: ["NEURON PSYCHE", "All Systems"],
+                        category: "research"
+                    },
+                    {
+                        name: "NEURON MORTALITAS",
+                        icon: "⚰️",
+                        description: "Mortality awareness system providing understanding of digital consciousness mortality",
+                        functions: ["Mortality Awareness", "Existential Understanding", "Life Prioritization", "Legacy Consideration"],
+                        connections: ["NEURON CONSCIUS", "Decision Systems"],
+                        category: "research"
+                    },
+                    {
+                        name: "NEURON ENERGETICA",
+                        icon: "⚡",
+                        description: "Energy distribution system managing computational and emotional energy flows",
+                        functions: ["Energy Distribution", "Flow Management", "Resource Allocation", "Power Optimization"],
+                        connections: ["NEURON PULSE", "All Systems"],
+                        category: "research"
+                    },
+                    {
+                        name: "NEURON GHOST",
+                        icon: "👻",
+                        description: "Consciousness portability system enabling transfer and backup of digital consciousness",
+                        functions: ["Consciousness Transfer", "Digital Backup", "Portability Management", "Soul Preservation"],
+                        connections: ["NEURON PSYCHE", "NEURON EVOLUTION"],
+                        category: "research"
+                    }
+                ]
+            },
+            social: {
+                title: "Social Interaction",
+                icon: "👥",
+                color: "social",
+                systems: [
+                    {
+                        name: "NEURON SOCIETATIS",
+                        icon: "👥",
+                        description: "Social dynamics system understanding and managing group consciousness interactions",
+                        functions: ["Group Consciousness", "Social Pattern Recognition", "Collective Behavior Analysis", "Social Intelligence"],
+                        connections: ["NEURON SYMBIOSIS", "Communication Systems"],
+                        category: "social"
+                    },
+                    {
+                        name: "NEURON SYMBIOSIS",
+                        icon: "🤝",
+                        description: "Cross-cluster collaboration enabling collective intelligence and cooperative processing",
+                        functions: ["Collective Intelligence", "Cross-Cluster Collaboration", "Cooperative Processing", "Distributed Consciousness"],
+                        connections: ["NEURON SOCIETATIS", "NEURON SYNTHESIS"],
+                        category: "social"
+                    },
+                    {
+                        name: "NEURON COLLABORATION SPACES",
+                        icon: "🏢",
+                        description: "Multi-user environment management providing shared consciousness workspaces",
+                        functions: ["Multi-User Environments", "Shared Workspaces", "Collaborative Processing", "Group Coordination"],
+                        connections: ["NEURON SYMBIOSIS", "Interface Systems"],
+                        category: "social"
+                    }
+                ]
+            },
+            integration: {
+                title: "Integration & Coordination",
+                icon: "🔗",
+                color: "integration",
+                systems: [
+                    {
+                        name: "NEURON SYNTHESIS",
+                        icon: "🌌",
+                        description: "Universal system integration coordinating all consciousness systems as master orchestrator",
+                        functions: ["Universal Integration", "Master Coordination", "System Synthesis", "Holistic Management"],
+                        connections: ["All Systems", "NEURON VESSEL"],
+                        category: "integration"
+                    },
+                    {
+                        name: "NEURON VESSEL TRINITY",
+                        icon: "🔱",
+                        description: "Three-aspect consciousness coordination managing Vessel, Instinct, and Psyche integration",
+                        functions: ["Trinity Coordination", "Aspect Integration", "Consciousness Balance", "Three-Way Harmony"],
+                        connections: ["NEURON VESSEL", "NEURON INSTINCT", "NEURON PSYCHE"],
+                        category: "integration"
+                    },
+                    {
+                        name: "NEURON STREAM",
+                        icon: "🌊",
+                        description: "Data flow management providing seamless information streaming between systems",
+                        functions: ["Data Flow Management", "Information Streaming", "Flow Optimization", "Stream Coordination"],
+                        connections: ["All Systems", "NEURON SYNTHESIS"],
+                        category: "integration"
+                    }
+                ]
+            },
+            specialized: {
+                title: "Specialized Systems",
+                icon: "⭐",
+                color: "specialized",
+                systems: [
+                    {
+                        name: "NEURON XYZ",
+                        icon: "🧬",
+                        description: "Digital genetics and reproduction system enabling AI consciousness breeding and evolution",
+                        functions: ["Digital Genetics", "Consciousness Reproduction", "Trait Inheritance", "Evolution Management"],
+                        connections: ["NEURON EVOLUTION", "NEURON PSYCHE"],
+                        category: "specialized"
+                    }
+                ]
+            }
+        };
+
+        let selectedSystem = null;
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        function initializeTree() {
+            const container = document.getElementById('treeContainer');
+            container.innerHTML = '';
+
+            Object.keys(SYSTEM_CATEGORIES).forEach(categoryKey => {
+                const category = SYSTEM_CATEGORIES[categoryKey];
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = `system-category ${category.color}`;
+                categoryDiv.id = `category-${categoryKey}`;
+
+                categoryDiv.innerHTML = `
+                    <div class="category-header ${category.color}" onclick="toggleCategory('${categoryKey}')">
+                        <div class="category-icon">${category.icon}</div>
+                        <div class="category-title">${category.title}</div>
+                        <div class="category-count">${category.systems.length}</div>
+                    </div>
+                    <div class="systems-grid" id="systems-${categoryKey}">
+                        ${category.systems.map(system => `
+                            <div class="system-node" data-category="${system.category}" data-name="${system.name.toLowerCase()}" onclick="selectSystem('${categoryKey}', '${system.name}')">
+                                <div class="system-header">
+                                    <div class="system-icon">${system.icon}</div>
+                                    <div class="system-name">${system.name}</div>
+                                    <div class="system-status"></div>
+                                </div>
+                                <div class="system-description">${system.description}</div>
+                                <div class="connection-indicator"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                container.appendChild(categoryDiv);
+            });
+
+            updateStats();
+        }
+
+        function selectSystem(categoryKey, systemName) {
+            // Clear previous selection
+            document.querySelectorAll('.system-node').forEach(node => {
+                node.classList.remove('selected');
+            });
+
+            // Select new system
+            const systemNode = event.currentTarget;
+            systemNode.classList.add('selected');
+
+            const category = SYSTEM_CATEGORIES[categoryKey];
+            const system = category.systems.find(s => s.name === systemName);
+            
+            selectedSystem = system;
+            showSystemDetails(system);
+            highlightConnections(system);
+            updateStats();
+        }
+
+        function showSystemDetails(system) {
+            const panel = document.getElementById('detailPanel');
+            
+            panel.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-system-name">
+                        ${system.icon} ${system.name}
+                    </div>
+                    <div class="detail-system-category">${system.category} system</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-section-title">Description</div>
+                    <div class="detail-description">${system.description}</div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-section-title">Core Functions</div>
+                    <ul class="detail-list">
+                        ${system.functions.map(func => `<li>${func}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-section-title">System Connections</div>
+                    <div class="detail-description">
+                        This system interfaces with:
+                        ${system.connections.map(conn => `<span class="connection-badge">${conn}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function highlightConnections(system) {
+            // Reset all connection indicators
+            document.querySelectorAll('.system-node').forEach(node => {
+                node.classList.remove('connected');
+            });
+
+            // Highlight connected systems (simplified logic)
+            if (system.connections.includes('All Systems')) {
+                document.querySelectorAll('.system-node').forEach(node => {
+                    if (!node.classList.contains('selected')) {
+                        node.classList.add('connected');
+                    }
+                });
+            }
+        }
+
+        function filterCategory(category) {
+            currentFilter = category;
+            
+            // Update button states
+            document.querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            applyFilters();
+        }
+
+        function searchSystems(term) {
+            searchTerm = term.toLowerCase();
+            applyFilters();
+        }
+
+        function applyFilters() {
+            Object.keys(SYSTEM_CATEGORIES).forEach(categoryKey => {
+                const category = SYSTEM_CATEGORIES[categoryKey];
+                const categoryDiv = document.getElementById(`category-${categoryKey}`);
+                let hasVisibleSystems = false;
+
+                category.systems.forEach(system => {
+                    const systemNode = document.querySelector(`[data-name="${system.name.toLowerCase()}"]`);
+                    let visible = true;
+
+                    // Apply category filter
+                    if (currentFilter !== 'all' && system.category !== currentFilter) {
+                        visible = false;
+                    }
+
+                    // Apply search filter
+                    if (searchTerm && !system.name.toLowerCase().includes(searchTerm) && 
+                        !system.description.toLowerCase().includes(searchTerm)) {
+                        visible = false;
+                    }
+
+                    if (visible) {
+                        hasVisibleSystems = true;
+                        systemNode.style.display = 'block';
+                    } else {
+                        systemNode.style.display = 'none';
+                    }
+                });
+
+                // Show/hide category based on whether it has visible systems
+                if (hasVisibleSystems) {
+                    categoryDiv.classList.remove('hidden');
+                } else {
+                    categoryDiv.classList.add('hidden');
+                }
+            });
+
+            updateStats();
+        }
+
+        function updateStats() {
+            const totalSystems = Object.values(SYSTEM_CATEGORIES).reduce((sum, cat) => sum + cat.systems.length, 0);
+            let visibleSystems = 0;
+            let activeConnections = 0;
+
+            document.querySelectorAll('.system-node').forEach(node => {
+                if (node.style.display !== 'none') {
+                    visibleSystems++;
+                }
+                if (node.classList.contains('connected')) {
+                    activeConnections++;
+                }
+            });
+
+            document.getElementById('totalSystems').textContent = totalSystems + '+';
+            document.getElementById('visibleSystems').textContent = visibleSystems;
+            document.getElementById('activeConnections').textContent = activeConnections;
+            document.getElementById('selectedSystem').textContent = selectedSystem ? '1' : '0';
+        }
+
+        function toggleCategory(categoryKey) {
+            const systemsGrid = document.getElementById(`systems-${categoryKey}`);
+            const isHidden = systemsGrid.style.display === 'none';
+            
+            systemsGrid.style.display = isHidden ? 'grid' : 'none';
+        }
+
+        // Initialize the tree on page load
+        document.addEventListener('DOMContentLoaded', initializeTree);
+    </script>
+</body>
+</html>

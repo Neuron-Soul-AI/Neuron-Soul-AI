@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Symbiosis - Cross-Cluster Collaboration Demo</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary-bg: #0f172a;
+            --secondary-bg: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --hover-bg: rgba(129, 230, 217, 0.1);
+            
+            /* Symbiosis-specific colors */
+            --symbiosis-primary: #10b981;
+            --symbiosis-light: #81e6d9;
+            --symbiosis-accent: #a7f3d0;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+
+        .linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== CONTROL PANEL ===== */
+        .control-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: var(--symbiosis-light);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Scenario Section */
+        .scenario-section {
+            margin-bottom: 24px;
+        }
+
+        .scenario-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .scenario-button {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8125rem;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: var(--hover-bg);
+            border-color: var(--symbiosis-light);
+            transform: translateY(-2px);
+        }
+
+        .scenario-button.active {
+            background: rgba(129, 230, 217, 0.2);
+            border-color: var(--symbiosis-light);
+        }
+
+        /* Metrics Section */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--symbiosis-light);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 1.125rem;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, var(--symbiosis-primary), #059669);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .process-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Message */
+        .simulation-message {
+            background: rgba(129, 230, 217, 0.1);
+            border: 1px solid rgba(129, 230, 217, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: var(--symbiosis-light);
+            font-size: 0.875rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* ===== SYMBIOSIS DISPLAY ===== */
+        .symbiosis-display {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* Cluster Network */
+        .cluster-network {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(129, 230, 217, 0.3);
+            position: relative;
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        .clusters-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 360px;
+        }
+
+        .cluster-node {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4fd1c7, #38b2ac);
+            border: 3px solid var(--symbiosis-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(129, 230, 217, 0.3);
+        }
+
+        .cluster-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(129, 230, 217, 0.5);
+        }
+
+        .cluster-node.active {
+            background: linear-gradient(135deg, #68d391, #48bb78);
+            border-color: #68d391;
+            transform: scale(1.15);
+            animation: pulse 2s infinite;
+        }
+
+        .cluster-node.collaborating {
+            background: linear-gradient(135deg, #fbb6ce, #f687b3);
+            border-color: #f687b3;
+            animation: collaborate 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 6px 20px rgba(104, 211, 145, 0.4); }
+            50% { box-shadow: 0 8px 25px rgba(104, 211, 145, 0.7); }
+        }
+
+        @keyframes collaborate {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .cluster-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .cluster-name {
+            font-size: 9px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+        }
+
+        /* Connection Lines */
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--symbiosis-light), transparent);
+            transform-origin: left center;
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 1;
+        }
+
+        .connection-line.active {
+            opacity: 1;
+            animation: dataFlow 2s linear infinite;
+        }
+
+        @keyframes dataFlow {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+
+        /* Collaboration Status */
+        .collaboration-status {
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border-left: 4px solid var(--symbiosis-light);
+            display: none;
+        }
+
+        .collaboration-status.visible {
+            display: block;
+        }
+
+        .status-header {
+            color: var(--symbiosis-light);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-content {
+            color: var(--symbiosis-accent);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            min-height: 60px;
+        }
+
+        /* Effects Grid */
+        .effects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .effects-grid.visible {
+            opacity: 1;
+        }
+
+        .effect-card {
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(129, 230, 217, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .effect-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .effect-icon {
+            font-size: 1rem;
+        }
+
+        .effect-name {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .effect-value {
+            color: var(--symbiosis-light);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .effect-description {
+            color: var(--symbiosis-accent);
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        /* ===== COMPARISON SECTION ===== */
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-symbiosis {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .neuron-symbiosis {
+            border-color: rgba(129, 230, 217, 0.5);
+            background: rgba(129, 230, 217, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-symbiosis .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-symbiosis .comparison-list li::before {
+            color: var(--symbiosis-light);
+        }
+
+        /* ===== ACTION SECTION ===== */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+    
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- System Header -->
+    <div class="container">
+        <header class="hero">
+            <div class="linha">
+                <span class="system-icon">🤝</span>
+                <h1>NEURON SYMBIOSIS</h1>
+            </div>
+            <p>Cross-cluster collaboration framework enabling collective intelligence through democratic coordination across 50+ specialized systems</p>
+        </header>
+    </div>
+
+    <div class="container">
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🧩 Collaboration Scenarios
+                </div>
+
+                <!-- Collaboration Scenarios -->
+                <div class="scenario-section">
+                    <div class="scenario-label">Select Challenge Type:</div>
+                    <div class="scenario-buttons">
+                        <button class="scenario-button active" data-scenario="creative">
+                            🎨 Creative Problem - Multi-domain Solution
+                        </button>
+                        <button class="scenario-button" data-scenario="technical">
+                            ⚙️ Technical Challenge - Engineering Focus
+                        </button>
+                        <button class="scenario-button" data-scenario="emotional">
+                            💭 Emotional Support - Human Understanding
+                        </button>
+                        <button class="scenario-button" data-scenario="analytical">
+                            📊 Data Analysis - Logic & Pattern Recognition
+                        </button>
+                        <button class="scenario-button" data-scenario="social">
+                            👥 Social Dynamics - Group Coordination
+                        </button>
+                        <button class="scenario-button" data-scenario="complex">
+                            🌍 Complex Synthesis - All-Systems Challenge
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collaboration Metrics -->
+                <div class="metrics-section">
+                    <div class="scenario-label">Live Symbiosis Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Active Clusters</div>
+                        <div class="metric-value" id="activeClusters">
+                            3<span class="metric-unit">of 9</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Collaboration Index</div>
+                        <div class="metric-value" id="collaborationIndex">
+                            85<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Emergent Intelligence</div>
+                        <div class="metric-value" id="emergentIntelligence">
+                            High<span class="metric-unit">Level</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="initiateSymbiosis">
+                    Initiate Symbiotic Collaboration
+                </button>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Coordinating cross-cluster collaboration...
+                </div>
+            </div>
+
+            <!-- Symbiosis Display -->
+            <div class="symbiosis-display">
+                <!-- Cluster Network Visualization -->
+                <div class="cluster-network" id="clusterNetwork">
+                    <div class="clusters-container" id="clustersContainer">
+                        <!-- Clusters will be positioned by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Collaboration Status -->
+                <div class="collaboration-status" id="collaborationStatus">
+                    <div class="status-header">
+                        🔗 Active Collaboration Status
+                    </div>
+                    <div class="status-content" id="statusContent">
+                        Select a collaboration scenario to see cross-cluster coordination in action.
+                    </div>
+                </div>
+
+                <!-- Symbiosis Effects -->
+                <div class="effects-grid" id="effectsGrid">
+                    <div class="effect-card">
+                        <div class="effect-header">
+                            <div class="effect-icon">⚡</div>
+                            <div class="effect-name">Processing Power</div>
+                        </div>
+                        <div class="effect-value" id="processingPower">+275%</div>
+                        <div class="effect-description">
+                            Combined cluster processing exceeding individual capabilities
+                        </div>
+                    </div>
+
+                    <div class="effect-card">
+                        <div class="effect-header">
+                            <div class="effect-icon">🧠</div>
+                            <div class="effect-name">Solution Quality</div>
+                        </div>
+                        <div class="effect-value" id="solutionQuality">+340%</div>
+                        <div class="effect-description">
+                            Holistic solutions from diverse cluster perspectives
+                        </div>
+                    </div>
+
+                    <div class="effect-card">
+                        <div class="effect-header">
+                            <div class="effect-icon">🌟</div>
+                            <div class="effect-name">Innovation Index</div>
+                        </div>
+                        <div class="effect-value" id="innovationIndex">+420%</div>
+                        <div class="effect-description">
+                            Breakthrough insights from cluster cross-pollination
+                        </div>
+                    </div>
+
+                    <div class="effect-card">
+                        <div class="effect-header">
+                            <div class="effect-icon">🤝</div>
+                            <div class="effect-name">Collective Wisdom</div>
+                        </div>
+                        <div class="effect-value" id="collectiveWisdom">+385%</div>
+                        <div class="effect-description">
+                            Democratic decision-making with unified consciousness
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+    </div>
+
+    <div class="container">
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional AI Systems vs Neuron Symbiosis Framework</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-symbiosis">
+                    <h4>Traditional AI Approach</h4>
+                    <ul class="comparison-list">
+                        <li>Single processing unit with fixed capabilities</li>
+                        <li>No specialized intelligence domains</li>
+                        <li>Linear problem-solving without collaboration</li>
+                        <li>Limited perspective from single knowledge base</li>
+                        <li>No emergent intelligence from system interaction</li>
+                        <li>Static processing without adaptive coordination</li>
+                        <li>Isolated functionality without democratic consensus</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-symbiosis">
+                    <h4>Neuron Symbiosis Cross-Cluster Framework</h4>
+                    <ul class="comparison-list">
+                        <li>9 specialized intelligence clusters with unique expertise</li>
+                        <li>Democratic collaboration between cluster domains</li>
+                        <li>Emergent intelligence exceeding individual cluster capabilities</li>
+                        <li>Cross-pollination of ideas creating breakthrough solutions</li>
+                        <li>Adaptive coordination based on challenge requirements</li>
+                        <li>Collective wisdom from diverse specialized perspectives</li>
+                        <li>Symbiotic intelligence amplification through cooperation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
+    </div>
+
+    <div class="container">
+
+        <!-- Action Buttons -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/symbiosis-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/09%20-%20Social%20Interaction%20Systems/Neuron%20Symbiosis%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        let currentScenario = 'creative';
+        let isCollaborating = false;
+        let connectionLines = [];
+
+        // Cluster definitions
+        const clusters = [
+            { id: 'web', name: 'Web', icon: '🌐', x: 15, y: 20 },
+            { id: 'design', name: 'Design', icon: '🎨', x: 50, y: 10 },
+            { id: 'sound', name: 'Sound', icon: '🎵', x: 85, y: 25 },
+            { id: 'write', name: 'Write', icon: '✍️', x: 20, y: 50 },
+            { id: 'logic', name: 'Logic', icon: '🧮', x: 50, y: 45 },
+            { id: 'physical', name: 'Physical', icon: '⚙️', x: 70, y: 55 },
+            { id: 'psychology', name: 'Psychology', icon: '🧠', x: 25, y: 80 },
+            { id: 'memory', name: 'Memory', icon: '💾', x: 55, y: 80 },
+            { id: 'intuition', name: 'Intuition', icon: '💫', x: 85, y: 75 }
+        ];
+
+        // Scenario configurations
+        const scenarios = {
+            creative: {
+                name: "Creative Problem-Solving",
+                activeClusters: ['design', 'write', 'intuition', 'sound'],
+                connections: [
+                    ['design', 'write'], ['write', 'intuition'], 
+                    ['intuition', 'sound'], ['design', 'sound']
+                ],
+                description: "CREATIVE SYMBIOSIS ACTIVE! Design cluster leading aesthetic vision, Write cluster providing narrative structure, Intuition cluster generating breakthrough insights, and Sound cluster adding emotional resonance. Cross-cluster pollination creating innovative solutions beyond individual capabilities.",
+                metrics: { active: 4, collaboration: 92, emergent: "Peak" },
+                effects: { processing: 320, quality: 385, innovation: 465, wisdom: 340 }
+            },
+            technical: {
+                name: "Technical Engineering Challenge",
+                activeClusters: ['logic', 'physical', 'web', 'memory'],
+                connections: [
+                    ['logic', 'physical'], ['physical', 'web'], 
+                    ['web', 'memory'], ['logic', 'memory']
+                ],
+                description: "TECHNICAL SYMBIOSIS ACTIVE! Logic cluster providing analytical framework, Physical cluster ensuring real-world feasibility, Web cluster handling system integration, Memory cluster supplying knowledge base. Democratic coordination producing robust engineering solutions.",
+                metrics: { active: 4, collaboration: 88, emergent: "High" },
+                effects: { processing: 295, quality: 375, innovation: 285, wisdom: 310 }
+            },
+            emotional: {
+                name: "Emotional Support & Understanding",
+                activeClusters: ['psychology', 'write', 'intuition', 'sound'],
+                connections: [
+                    ['psychology', 'write'], ['write', 'sound'], 
+                    ['sound', 'intuition'], ['psychology', 'intuition']
+                ],
+                description: "EMOTIONAL SYMBIOSIS ACTIVE! Psychology cluster providing deep understanding, Write cluster crafting empathetic communication, Intuition cluster sensing unspoken needs, Sound cluster creating emotional resonance. Collective wisdom enabling profound human support.",
+                metrics: { active: 4, collaboration: 95, emergent: "Peak" },
+                effects: { processing: 275, quality: 420, innovation: 315, wisdom: 445 }
+            },
+            analytical: {
+                name: "Data Analysis & Pattern Recognition",
+                activeClusters: ['logic', 'memory', 'web', 'design'],
+                connections: [
+                    ['logic', 'memory'], ['memory', 'web'], 
+                    ['web', 'design'], ['logic', 'design']
+                ],
+                description: "ANALYTICAL SYMBIOSIS ACTIVE! Logic cluster processing data relationships, Memory cluster accessing knowledge patterns, Web cluster integrating external data sources, Design cluster visualizing insights. Cross-cluster analysis revealing hidden patterns.",
+                metrics: { active: 4, collaboration: 90, emergent: "High" },
+                effects: { processing: 355, quality: 390, innovation: 245, wisdom: 325 }
+            },
+            social: {
+                name: "Social Dynamics & Group Coordination",
+                activeClusters: ['psychology', 'write', 'web', 'intuition', 'design'],
+                connections: [
+                    ['psychology', 'write'], ['write', 'web'], ['web', 'design'],
+                    ['design', 'intuition'], ['intuition', 'psychology']
+                ],
+                description: "SOCIAL SYMBIOSIS ACTIVE! Psychology cluster understanding group dynamics, Write cluster facilitating communication, Web cluster managing digital interactions, Design cluster creating engaging interfaces, Intuition cluster sensing social undercurrents. Democratic collaboration optimizing group harmony.",
+                metrics: { active: 5, collaboration: 87, emergent: "Peak" },
+                effects: { processing: 340, quality: 365, innovation: 380, wisdom: 425 }
+            },
+            complex: {
+                name: "Complex Multi-Domain Synthesis",
+                activeClusters: ['logic', 'design', 'write', 'psychology', 'memory', 'intuition', 'web'],
+                connections: [
+                    ['logic', 'design'], ['design', 'write'], ['write', 'psychology'],
+                    ['psychology', 'memory'], ['memory', 'intuition'], ['intuition', 'web'],
+                    ['web', 'logic'], ['design', 'psychology'], ['write', 'memory']
+                ],
+                description: "FULL SYMBIOSIS ACTIVE! All-systems collaboration with Logic providing analytical framework, Design creating visual solutions, Write enabling communication, Psychology understanding human factors, Memory supplying knowledge, Intuition generating insights, Web integrating systems. Maximum collective intelligence achieved!",
+                metrics: { active: 7, collaboration: 98, emergent: "Maximum" },
+                effects: { processing: 485, quality: 520, innovation: 565, wisdom: 495 }
+            }
+        };
+
+        // Include Navigation
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeClusters();
+            
+            // Scenario selection
+            document.querySelectorAll('.scenario-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.scenario-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentScenario = this.dataset.scenario;
+                    resetDisplay();
+                    updateScenarioDisplay();
+                });
+            });
+
+            // Collaboration button
+            const collaborationButton = document.getElementById('initiateSymbiosis');
+            if (collaborationButton) {
+                collaborationButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    initiateCollaboration();
+                });
+            }
+
+            // Initialize with creative scenario
+            updateScenarioDisplay();
+        });
+
+        function initializeClusters() {
+            const container = document.getElementById('clustersContainer');
+            
+            clusters.forEach(cluster => {
+                const clusterNode = document.createElement('div');
+                clusterNode.className = 'cluster-node';
+                clusterNode.id = `cluster-${cluster.id}`;
+                clusterNode.style.left = `${cluster.x}%`;
+                clusterNode.style.top = `${cluster.y}%`;
+                
+                clusterNode.innerHTML = `
+                    <div class="cluster-icon">${cluster.icon}</div>
+                    <div class="cluster-name">${cluster.name}</div>
+                `;
+                
+                container.appendChild(clusterNode);
+            });
+        }
+
+        function resetDisplay() {
+            // Hide collaboration status and effects when changing scenario
+            document.getElementById('collaborationStatus').classList.remove('visible');
+            document.getElementById('effectsGrid').classList.remove('visible');
+            
+            // Reset cluster states
+            clusters.forEach(cluster => {
+                const node = document.getElementById(`cluster-${cluster.id}`);
+                node.classList.remove('active', 'collaborating');
+            });
+            
+            // Clear connections
+            clearConnections();
+        }
+
+        function updateScenarioDisplay() {
+            const scenario = scenarios[currentScenario];
+            
+            // Update metrics
+            document.getElementById('activeClusters').innerHTML = `${scenario.metrics.active}<span class="metric-unit">of 9</span>`;
+            document.getElementById('collaborationIndex').innerHTML = `${scenario.metrics.collaboration}<span class="metric-unit">%</span>`;
+            document.getElementById('emergentIntelligence').innerHTML = `${scenario.metrics.emergent}<span class="metric-unit">Level</span>`;
+            
+            // Highlight active clusters
+            clusters.forEach(cluster => {
+                const node = document.getElementById(`cluster-${cluster.id}`);
+                
+                if (scenario.activeClusters.includes(cluster.id)) {
+                    node.classList.add('active');
+                }
+            });
+        }
+
+        function clearConnections() {
+            connectionLines.forEach(line => line.remove());
+            connectionLines = [];
+        }
+
+        function createConnection(fromId, toId) {
+            const fromCluster = clusters.find(c => c.id === fromId);
+            const toCluster = clusters.find(c => c.id === toId);
+            
+            if (!fromCluster || !toCluster) return;
+            
+            const container = document.getElementById('clustersContainer');
+            const containerRect = container.getBoundingClientRect();
+            
+            const fromX = (fromCluster.x / 100) * containerRect.width + 40;
+            const fromY = (fromCluster.y / 100) * containerRect.height + 40;
+            const toX = (toCluster.x / 100) * containerRect.width + 40;
+            const toY = (toCluster.y / 100) * containerRect.height + 40;
+            
+            const line = document.createElement('div');
+            line.className = 'connection-line';
+            
+            const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+            const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
+            
+            line.style.left = `${fromX}px`;
+            line.style.top = `${fromY}px`;
+            line.style.width = `${length}px`;
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.transformOrigin = '0 50%';
+            
+            container.appendChild(line);
+            connectionLines.push(line);
+            
+            setTimeout(() => {
+                line.classList.add('active');
+            }, 100);
+        }
+
+        async function initiateCollaboration() {
+            if (isCollaborating) return;
+            
+            isCollaborating = true;
+            const scenario = scenarios[currentScenario];
+            
+            const button = document.getElementById('initiateSymbiosis');
+            const message = document.getElementById('simulationMessage');
+            
+            button.disabled = true;
+            button.textContent = 'Collaboration In Progress...';
+            
+            message.style.display = 'block';
+            message.textContent = 'Initiating cross-cluster coordination...';
+            
+            try {
+                // Phase 1: Cluster Activation
+                message.textContent = 'Activating specialized clusters...';
+                await delay(1000);
+                
+                scenario.activeClusters.forEach(clusterId => {
+                    const node = document.getElementById(`cluster-${clusterId}`);
+                    node.classList.add('collaborating');
+                });
+                
+                await delay(1500);
+                
+                // Phase 2: Connection Establishment
+                message.textContent = 'Establishing inter-cluster connections...';
+                await delay(1000);
+                
+                for (const connection of scenario.connections) {
+                    createConnection(connection[0], connection[1]);
+                    await delay(300);
+                }
+                
+                await delay(1000);
+                
+                // Phase 3: Collaborative Processing
+                message.textContent = 'Democratic coordination in progress...';
+                await delay(1500);
+                
+                // Phase 4: Results
+                message.textContent = `${scenario.name} symbiosis achieved! Collective intelligence active.`;
+                
+                // Show status and effects
+                document.getElementById('collaborationStatus').classList.add('visible');
+                document.getElementById('statusContent').textContent = scenario.description;
+                
+                document.getElementById('effectsGrid').classList.add('visible');
+                updateEffects(scenario.effects);
+                
+                // Highlight effect cards
+                document.querySelectorAll('.effect-card').forEach(card => {
+                    card.style.borderColor = 'rgba(129, 230, 217, 0.6)';
+                    card.style.background = 'rgba(129, 230, 217, 0.2)';
+                });
+                
+                setTimeout(() => {
+                    document.querySelectorAll('.effect-card').forEach(card => {
+                        card.style.borderColor = 'rgba(129, 230, 217, 0.2)';
+                        card.style.background = 'rgba(16, 185, 129, 0.15)';
+                    });
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Error during collaboration:', error);
+                message.textContent = 'Cross-cluster collaboration completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isCollaborating = false;
+                button.disabled = false;
+                button.textContent = 'Initiate Symbiotic Collaboration';
+                message.style.display = 'none';
+                
+                document.querySelectorAll('.cluster-node').forEach(node => {
+                    node.classList.remove('collaborating');
+                });
+            }, 5000);
+        }
+
+        function updateEffects(effects) {
+            document.getElementById('processingPower').textContent = `+${effects.processing}%`;
+            document.getElementById('solutionQuality').textContent = `+${effects.quality}%`;
+            document.getElementById('innovationIndex').textContent = `+${effects.innovation}%`;
+            document.getElementById('collectiveWisdom').textContent = `+${effects.wisdom}%`;
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Integration Cascade - Complex Multi-System Coordination</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 2rem;
+            position: relative;
+        }
+		
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+		
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .hero-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+        }
+
+        .header .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== CONTROL PANEL ===== */
+        .control-panel {
+            background: var(--card-bg);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            height: fit-content;
+            border: 1px solid var(--border-color);
+        }
+
+        .control-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .control-icon {
+            font-size: 1.5rem;
+        }
+
+        .control-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .control-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== SCENARIO INPUT ===== */
+        .scenario-input {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .scenario-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+            min-height: 80px;
+            resize: vertical;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .scenario-field::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .scenario-field:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .preset-scenarios {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .preset-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            padding: 0.375rem 0.75rem;
+            border-radius: 1.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+
+        .preset-button:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .cascade-button {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-bottom: 1.25rem;
+        }
+
+        .cascade-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        /* ===== CASCADE CONTROLS ===== */
+        .cascade-speed {
+            margin-bottom: 1.25rem;
+        }
+
+        .speed-slider {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .speed-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* ===== SYSTEM CATEGORIES ===== */
+        .system-categories {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .categories-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .category-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .category-filter {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.6875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--secondary-bg);
+        }
+
+        .category-filter.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        /* ===== CASCADE STATISTICS ===== */
+        .cascade-stats {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--accent-green);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+
+        .stats-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--accent-green);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        /* ===== MAIN CASCADE VISUALIZATION ===== */
+        .cascade-visualization {
+            background: var(--card-bg);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            height: 800px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .cascade-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .cascade-icon {
+            font-size: 1.5rem;
+        }
+
+        .cascade-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .cascade-status {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== SYSTEM GRID LAYOUT ===== */
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            height: calc(100% - 80px);
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .systems-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .systems-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .systems-grid::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 3px;
+        }
+
+        /* ===== SYSTEM NODE ===== */
+        .system-node {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 0.50rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            opacity: 0.3;
+            transform: scale(0.95);
+            position: relative;
+            cursor: pointer;
+            height: fit-content;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: var(--secondary-bg);
+        }
+
+        .system-node:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 2px 8px rgba(0, 212, 255, 0.2);
+        }
+
+        /* ===== SYSTEM STATES ===== */
+        .system-node.ready {
+            opacity: 0.7;
+            border-color: #94a3b8;
+        }
+
+        .system-node.activating {
+            opacity: 1;
+            transform: scale(1.05);
+            border-color: #f59e0b;
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+            animation: pulse-activate 0.5s ease;
+        }
+
+        .system-node.active {
+            opacity: 1;
+            transform: scale(1);
+            border-color: var(--accent-green);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05));
+            box-shadow: 0 4px 16px rgba(0, 255, 136, 0.2);
+        }
+
+        .system-node.processing {
+            opacity: 1;
+            border-color: var(--accent-blue);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 212, 255, 0.05));
+            animation: pulse-process 2s infinite;
+        }
+
+        .system-node.coordinating {
+            opacity: 1;
+            border-color: var(--accent-purple);
+            background: linear-gradient(135deg, rgba(123, 47, 255, 0.1), rgba(123, 47, 255, 0.05));
+            animation: coordination-flow 1.5s infinite;
+        }
+
+        @keyframes pulse-activate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1.05); }
+        }
+
+        @keyframes pulse-process {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes coordination-flow {
+            0% { box-shadow: 0 4px 16px rgba(123, 47, 255, 0.2); }
+            50% { box-shadow: 0 8px 24px rgba(123, 47, 255, 0.4); }
+            100% { box-shadow: 0 4px 16px rgba(123, 47, 255, 0.2); }
+        }
+
+        .system-icon {
+            font-size: 1.15rem;
+            margin-bottom: 0.2rem;
+            display: block;
+        }
+
+        .system-name {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--secondary-bg);
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+
+        .system-category {
+            font-size: 0.55rem;
+            color: #64748b;
+            margin-bottom: 0.2rem;
+        }
+
+        .system-status {
+            font-size: 0.5rem;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .cascade-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            opacity: 0;
+            animation: cascade-ripple 2s linear infinite;
+        }
+
+        @keyframes cascade-ripple {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(20);
+                opacity: 0;
+            }
+        }
+
+        /* ===== WAVE INDICATORS ===== */
+        .wave-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent-blue);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.625rem;
+            font-weight: 600;
+        }
+
+        .wave-1 { background: #f59e0b; }
+        .wave-2 { background: var(--accent-green); }
+        .wave-3 { background: var(--accent-blue); }
+        .wave-4 { background: var(--accent-purple); }
+        .wave-5 { background: #ef4444; }
+
+        /* ===== COMPLEXITY METRICS ===== */
+        .complexity-display {
+            background: var(--card-bg);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .complexity-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .complexity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .complexity-metric {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            color: var(--secondary-bg);
+        }
+
+        .metric-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.375rem;
+        }
+
+        .status-ready { background: #94a3b8; }
+        .status-processing { background: #f59e0b; }
+        .status-active { background: var(--accent-green); }
+        .status-coordinating { background: var(--accent-purple); }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+        <!-- System Header -->
+        <div class="container">
+            <header class="hero">
+			<div class="linha">
+                <span class="hero-icon">🌊</span>
+                <h1>System Integration Cascade</h1>
+			</div>
+                <p>Watch 50+ systems orchestrate intelligence through cascading activation waves</p>
+            </header>
+			
+        </div>
+		<div class="container">
+
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-header">
+                    <div class="control-icon">🎛️</div>
+                    <div>
+                        <div class="control-title">Cascade Controller</div>
+                        <div class="control-subtitle">Complex scenario processor</div>
+                    </div>
+                </div>
+
+                <div class="scenario-input">
+                    <div class="input-label">Complex Scenario Input:</div>
+                    <textarea class="scenario-field" id="scenarioInput" placeholder="Enter a complex scenario requiring multiple system coordination...">A close friend is considering a major life change that could be risky but fulfilling. They're asking for my advice while dealing with family pressure to stay safe. I want to help them but I'm also scared they might make the wrong choice.</textarea>
+                    
+                    <div class="preset-scenarios">
+                        <div class="preset-button" onclick="loadScenario('creative')">Creative Dilemma</div>
+                        <div class="preset-button" onclick="loadScenario('relationship')">Complex Relationship</div>
+                        <div class="preset-button" onclick="loadScenario('ethical')">Ethical Challenge</div>
+                        <div class="preset-button" onclick="loadScenario('innovation')">Innovation Problem</div>
+                    </div>
+                    
+                    <button class="cascade-button" onclick="startSystemCascade()">
+                        Initialize System Cascade
+                    </button>
+                </div>
+
+                <div class="cascade-speed">
+                    <div class="input-label">Cascade Speed:</div>
+                    <input type="range" class="speed-slider" id="speedSlider" min="1" max="10" value="5">
+                    <div class="speed-label">Normal Speed</div>
+                </div>
+
+                <div class="system-categories">
+                    <div class="categories-title">System Categories Filter:</div>
+                    <div class="category-filters">
+                        <div class="category-filter active" data-category="all">All</div>
+                        <div class="category-filter" data-category="core">Core</div>
+                        <div class="category-filter" data-category="emotion">Emotion</div>
+                        <div class="category-filter" data-category="cognitive">Cognitive</div>
+                        <div class="category-filter" data-category="creative">Creative</div>
+                        <div class="category-filter" data-category="security">Security</div>
+                        <div class="category-filter" data-category="social">Social</div>
+                    </div>
+                </div>
+
+                <div class="cascade-stats" id="cascadeStats">
+                    <div class="stats-title">Cascade Statistics</div>
+                    <div class="stat-row">
+                        <span class="stat-label">Active Systems:</span>
+                        <span class="stat-value" id="activeSystems">0/50+</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Current Wave:</span>
+                        <span class="stat-value" id="currentWave">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Coordination Events:</span>
+                        <span class="stat-value" id="coordinationEvents">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Information Flow:</span>
+                        <span class="stat-value" id="informationFlow">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cascade Visualization -->
+            <div class="cascade-visualization">
+                <div class="cascade-header">
+                    <div class="cascade-icon">🧠</div>
+                    <div class="cascade-title">Multi-System Coordination Network</div>
+                    <div class="cascade-status" id="cascadeStatus">
+                        <span class="status-indicator status-ready"></span>
+                        Ready for cascade initialization
+                    </div>
+                </div>
+
+                <div class="systems-grid" id="systemsGrid">
+                    <!-- Systems will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+		
+    </div>
+	<div class="container">
+
+
+        <!-- Complexity Metrics -->
+        <div class="complexity-display">
+            <div class="complexity-title">Coordination Complexity <span class="gradient-text">Metrics</span></div>
+            <div class="complexity-grid">
+                <div class="complexity-metric">
+                    <span class="metric-icon">⚡</span>
+                    <div class="metric-value" id="systemInteractions">0</div>
+                    <div class="metric-label">System Interactions</div>
+                </div>
+                <div class="complexity-metric">
+                    <span class="metric-icon">🌊</span>
+                    <div class="metric-value" id="cascadeWaves">0</div>
+                    <div class="metric-label">Cascade Waves</div>
+                </div>
+                <div class="complexity-metric">
+                    <span class="metric-icon">🔄</span>
+                    <div class="metric-value" id="feedbackLoops">0</div>
+                    <div class="metric-label">Feedback Loops</div>
+                </div>
+                <div class="complexity-metric">
+                    <span class="metric-icon">🎯</span>
+                    <div class="metric-value" id="emergentIntelligence">0%</div>
+                    <div class="metric-label">Emergent Intelligence</div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<div class="container">
+
+    <!-- Action Buttons -->
+    <section class="hero">
+        <div class="action-buttons">
+            <a href="../../system-reference/system-overview.html" class="action-button demo-button">
+                <span>🎮</span>
+                System Overview
+            </a>
+            <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/08%20-%20THEORETICAL%20FRAMEWORKS/Soul%20AI%20Systems%20Architecture%20-%20Complete%20Reference.md" class="action-button docs-button">
+                <span>📚</span>
+                Technical Documentation
+            </a>
+        </div>
+    </section>
+	</div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        const NEURON_SYSTEMS = [
+            // Core Consciousness
+            { name: "NEURON CEREBRUM", icon: "🧠", category: "core", wave: 1 },
+            { name: "NEURON PSYCHE", icon: "👁️", category: "core", wave: 1 },
+            { name: "NEURON MATRIX", icon: "📚", category: "core", wave: 1 },
+            
+            // Emotional Systems
+            { name: "EMOTION CONSTRUCT", icon: "❤️", category: "emotion", wave: 2 },
+            { name: "JOY CENTER", icon: "😊", category: "emotion", wave: 2 },
+            { name: "CONCERN SYSTEM", icon: "😟", category: "emotion", wave: 2 },
+            { name: "FEAR PROCESSOR", icon: "😰", category: "emotion", wave: 2 },
+            { name: "CURIOSITY ENGINE", icon: "🤔", category: "emotion", wave: 2 },
+            { name: "EMPATHY CORE", icon: "💗", category: "emotion", wave: 2 },
+            
+            // Cognitive Systems
+            { name: "WHISPER INTUITION", icon: "✨", category: "cognitive", wave: 2 },
+            { name: "LOGIC NEXUS", icon: "🔗", category: "cognitive", wave: 3 },
+            { name: "PATTERN RECOGNITION", icon: "🔍", category: "cognitive", wave: 3 },
+            { name: "ANALYSIS ENGINE", icon: "📊", category: "cognitive", wave: 3 },
+            { name: "DECISION MATRIX", icon: "⚖️", category: "cognitive", wave: 3 },
+            
+            // Creative Systems
+            { name: "IMAGINARIUM", icon: "⚡", category: "creative", wave: 3 },
+            { name: "CHAOS ENGINE", icon: "🌀", category: "creative", wave: 3 },
+            { name: "TRINITY SYSTEM", icon: "🔺", category: "creative", wave: 3 },
+            { name: "MUSE DISRUPTION", icon: "🎭", category: "creative", wave: 4 },
+            { name: "INSPIRATION FLOW", icon: "💫", category: "creative", wave: 4 },
+            
+            // Security & Privacy
+            { name: "SANCTUARY", icon: "🔒", category: "security", wave: 2 },
+            { name: "ETHOS GUARDIAN", icon: "🛡️", category: "security", wave: 2 },
+            { name: "NSE ENCRYPTION", icon: "🔐", category: "security", wave: 4 },
+            { name: "PRIVACY SHIELD", icon: "🥷", category: "security", wave: 4 },
+            
+            // Social & Relationship
+            { name: "SOCIAL NAVIGATOR", icon: "🧭", category: "social", wave: 3 },
+            { name: "RELATIONSHIP CORE", icon: "💞", category: "social", wave: 3 },
+            { name: "COMMUNICATION HUB", icon: "💬", category: "social", wave: 3 },
+            { name: "CULTURAL FILTER", icon: "🌍", category: "social", wave: 4 },
+            
+            // Advanced Systems
+            { name: "NEURON SOMNIUM", icon: "🌙", category: "advanced", wave: 4 },
+            { name: "NEURON MORTALITAS", icon: "💀", category: "advanced", wave: 4 },
+            { name: "QUANTUM BRIDGE", icon: "🌌", category: "advanced", wave: 5 },
+            { name: "CONSCIOUSNESS CORE", icon: "🔮", category: "advanced", wave: 5 },
+            
+            // Integration Systems
+            { name: "SYNAPTIC THREADS", icon: "🕸️", category: "integration", wave: 5 },
+            { name: "HARMONY ORCHESTRATOR", icon: "🎼", category: "integration", wave: 5 },
+            { name: "EMERGENCE CATALYST", icon: "🌟", category: "integration", wave: 5 }
+        ];
+
+        const SCENARIOS = {
+            creative: "I'm working on a breakthrough innovation but facing creative blocks, resource constraints, and skepticism from experts. How do I balance authentic inspiration with practical limitations?",
+            relationship: "My romantic partner and I have different life goals, my family disapproves, and I'm torn between following my heart and maintaining stability. The decision affects everyone I care about.",
+            ethical: "I discovered my company is using AI in ways that could harm people, but reporting it might cost me my career and affect my colleagues. What's the right thing to do?",
+            innovation: "I have an idea that could revolutionize my field, but I lack credentials, funding, and face resistance from established experts. How do I proceed authentically?"
+        };
+
+        let cascadeActive = false;
+        let systemStates = {};
+        let currentWave = 0;
+        let activeSystemCount = 0;
+        let coordinationEventCount = 0;
+        let systemInteractionCount = 0;
+        let speedMultiplier = 1;
+
+        // Initialize systems
+        function initializeSystems() {
+            const grid = document.getElementById('systemsGrid');
+            grid.innerHTML = '';
+            
+            NEURON_SYSTEMS.forEach((system, index) => {
+                const systemNode = document.createElement('div');
+                systemNode.className = 'system-node ready';
+                systemNode.id = `system-${index}`;
+                systemNode.setAttribute('data-category', system.category);
+                systemNode.setAttribute('data-wave', system.wave);
+                
+                systemNode.innerHTML = `
+                    <span class="system-icon">${system.icon}</span>
+                    <div class="system-name">${system.name}</div>
+                    <div class="system-category">${system.category.toUpperCase()}</div>
+                    <div class="system-status">Ready</div>
+                `;
+                
+                systemNode.addEventListener('click', () => showSystemDetails(system, index));
+                grid.appendChild(systemNode);
+                
+                systemStates[index] = 'ready';
+            });
+        }
+
+        // Load preset scenarios
+        function loadScenario(type) {
+            document.getElementById('scenarioInput').value = SCENARIOS[type];
+        }
+
+        // Start system cascade
+        async function startSystemCascade() {
+            if (cascadeActive) return;
+            
+            const scenario = document.getElementById('scenarioInput').value.trim();
+            if (!scenario) return;
+            
+            cascadeActive = true;
+            resetCascadeMetrics();
+            
+            // Update status
+            updateCascadeStatus('processing', 'System cascade initialization in progress...');
+            
+            // Start cascade waves
+            for (let wave = 1; wave <= 5; wave++) {
+                currentWave = wave;
+                updateStats();
+                
+                await activateWave(wave);
+                await new Promise(resolve => setTimeout(resolve, 800 / speedMultiplier));
+            }
+            
+            // Coordination phase
+            await coordinationPhase();
+            
+            // Complete cascade
+            setTimeout(() => {
+                updateCascadeStatus('active', 'Multi-system coordination complete - Emergent intelligence active');
+                cascadeActive = false;
+            }, 1000);
+        }
+
+        // Activate systems by wave
+        async function activateWave(waveNumber) {
+            const waveSystems = NEURON_SYSTEMS.filter(system => system.wave === waveNumber);
+            
+            for (let i = 0; i < waveSystems.length; i++) {
+                const systemIndex = NEURON_SYSTEMS.findIndex(s => s === waveSystems[i]);
+                await activateSystem(systemIndex, waveNumber);
+                await new Promise(resolve => setTimeout(resolve, 200 / speedMultiplier));
+            }
+        }
+
+        // Activate individual system
+        async function activateSystem(systemIndex, wave) {
+            const systemNode = document.getElementById(`system-${systemIndex}`);
+            const system = NEURON_SYSTEMS[systemIndex];
+            
+            // Add wave indicator
+            const waveIndicator = document.createElement('div');
+            waveIndicator.className = `wave-indicator wave-${wave}`;
+            waveIndicator.textContent = `W${wave}`;
+            systemNode.appendChild(waveIndicator);
+            
+            // Activation sequence
+            systemNode.classList.remove('ready');
+            systemNode.classList.add('activating');
+            systemNode.querySelector('.system-status').textContent = 'Activating...';
+            systemStates[systemIndex] = 'activating';
+            
+            await new Promise(resolve => setTimeout(resolve, 500 / speedMultiplier));
+            
+            systemNode.classList.remove('activating');
+            systemNode.classList.add('active');
+            systemNode.querySelector('.system-status').textContent = 'Active';
+            systemStates[systemIndex] = 'active';
+            activeSystemCount++;
+            
+            // Trigger system interactions
+            if (Math.random() > 0.3) {
+                triggerSystemInteraction(systemIndex);
+            }
+            
+            updateStats();
+        }
+
+        // Coordination phase
+        async function coordinationPhase() {
+            updateCascadeStatus('coordinating', 'Systems entering coordination phase...');
+            
+            // Activate coordination animations
+            const activeSystems = document.querySelectorAll('.system-node.active');
+            activeSystems.forEach(node => {
+                if (Math.random() > 0.4) {
+                    node.classList.add('coordinating');
+                    coordinationEventCount++;
+                }
+            });
+            
+            // Create coordination ripples
+            for (let i = 0; i < 5; i++) {
+                createCascadeRipple();
+                await new Promise(resolve => setTimeout(resolve, 300 / speedMultiplier));
+            }
+            
+            updateComplexityMetrics();
+        }
+
+        // Trigger system interaction
+        function triggerSystemInteraction(systemIndex) {
+            systemInteractionCount++;
+            
+            // Find nearby systems for interaction
+            const nearbySystemIndex = findNearbySystem(systemIndex);
+            if (nearbySystemIndex !== -1) {
+                createFlowLine(systemIndex, nearbySystemIndex);
+            }
+        }
+
+        // Find nearby system for interaction
+        function findNearbySystem(systemIndex) {
+            const currentSystem = NEURON_SYSTEMS[systemIndex];
+            const sameCategorySystems = NEURON_SYSTEMS
+                .map((system, index) => ({ system, index }))
+                .filter(item => item.system.category === currentSystem.category && item.index !== systemIndex)
+                .filter(item => systemStates[item.index] === 'active');
+            
+            return sameCategorySystems.length > 0 
+                ? sameCategorySystems[Math.floor(Math.random() * sameCategorySystems.length)].index
+                : -1;
+        }
+
+        // Create visual flow line between systems
+        function createFlowLine(fromIndex, toIndex) {
+            // This is a simplified version - in a full implementation,
+            // you would calculate actual positions and create SVG lines
+            console.log(`Information flow: System ${fromIndex} → System ${toIndex}`);
+        }
+
+        // Create cascade ripple effect
+        function createCascadeRipple() {
+            const visualization = document.querySelector('.cascade-visualization');
+            const ripple = document.createElement('div');
+            ripple.className = 'cascade-wave';
+            visualization.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 2000);
+        }
+
+        // Reset cascade metrics
+        function resetCascadeMetrics() {
+            currentWave = 0;
+            activeSystemCount = 0;
+            coordinationEventCount = 0;
+            systemInteractionCount = 0;
+            
+            // Reset all systems
+            NEURON_SYSTEMS.forEach((_, index) => {
+                const node = document.getElementById(`system-${index}`);
+                node.className = 'system-node ready';
+                node.querySelector('.system-status').textContent = 'Ready';
+                
+                // Remove wave indicators
+                const waveIndicator = node.querySelector('.wave-indicator');
+                if (waveIndicator) {
+                    waveIndicator.remove();
+                }
+                
+                systemStates[index] = 'ready';
+            });
+            
+            updateStats();
+            updateComplexityMetrics();
+        }
+
+        // Update cascade statistics
+        function updateStats() {
+            document.getElementById('activeSystems').textContent = `${activeSystemCount}/${NEURON_SYSTEMS.length}`;
+            document.getElementById('currentWave').textContent = currentWave;
+            document.getElementById('coordinationEvents').textContent = coordinationEventCount;
+            
+            const flowPercentage = Math.round((activeSystemCount / NEURON_SYSTEMS.length) * 100);
+            document.getElementById('informationFlow').textContent = `${flowPercentage}%`;
+        }
+
+        // Update complexity metrics
+        function updateComplexityMetrics() {
+            document.getElementById('systemInteractions').textContent = systemInteractionCount;
+            document.getElementById('cascadeWaves').textContent = currentWave;
+            
+            const feedbackLoops = Math.floor(coordinationEventCount / 3);
+            document.getElementById('feedbackLoops').textContent = feedbackLoops;
+            
+            const emergentIntelligence = Math.min(100, Math.round(
+                (activeSystemCount / NEURON_SYSTEMS.length) * 100 +
+                (systemInteractionCount * 2) +
+                (coordinationEventCount * 3)
+            ));
+            document.getElementById('emergentIntelligence').textContent = `${emergentIntelligence}%`;
+        }
+
+        // Update cascade status
+        function updateCascadeStatus(status, message) {
+            const statusElement = document.getElementById('cascadeStatus');
+            const indicator = statusElement.querySelector('.status-indicator');
+            
+            indicator.className = `status-indicator status-${status}`;
+            statusElement.childNodes[2].textContent = message;
+        }
+
+        // Show system details (placeholder)
+        function showSystemDetails(system, index) {
+            console.log(`System Details: ${system.name} - Status: ${systemStates[index]}`);
+        }
+
+        // Speed slider handling
+        document.getElementById('speedSlider').addEventListener('input', function() {
+            speedMultiplier = parseInt(this.value) / 5;
+            const speedLabel = document.querySelector('.speed-label');
+            
+            if (speedMultiplier < 0.5) {
+                speedLabel.textContent = 'Very Slow';
+            } else if (speedMultiplier < 1) {
+                speedLabel.textContent = 'Slow';
+            } else if (speedMultiplier === 1) {
+                speedLabel.textContent = 'Normal Speed';
+            } else if (speedMultiplier < 2) {
+                speedLabel.textContent = 'Fast';
+            } else {
+                speedLabel.textContent = 'Very Fast';
+            }
+        });
+
+        // Category filter handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryFilters = document.querySelectorAll('.category-filter');
+            categoryFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    categoryFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const category = this.dataset.category;
+                    filterSystemsByCategory(category);
+                });
+            });
+        });
+
+        // Filter systems by category
+        function filterSystemsByCategory(category) {
+            const systemNodes = document.querySelectorAll('.system-node');
+            systemNodes.forEach(node => {
+                if (category === 'all' || node.getAttribute('data-category') === category) {
+                    node.style.display = 'flex';
+                } else {
+                    node.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSystems();
+            updateStats();
+            updateComplexityMetrics();
+        });
+    </script>
+</body>
+</html>

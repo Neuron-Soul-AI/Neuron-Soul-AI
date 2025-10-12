@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Memory - Personalized Cognitive Partnership Demo</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+            --memory-amber: #f59e0b;
+            --memory-orange: #fb923c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+		
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+		
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+        .linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: var(--memory-amber);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Learning Scenarios */
+        .scenario-section {
+            margin-bottom: 24px;
+        }
+
+        .scenario-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .scenario-button {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8125rem;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: var(--hover-bg);
+            border-color: var(--memory-amber);
+            transform: translateY(-2px);
+        }
+
+        .scenario-button.active {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: var(--memory-amber);
+        }
+
+        /* Learning Metrics */
+        .learning-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--memory-amber);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 1.125rem;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Memory Partnership Display */
+        .memory-display {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        /* Pattern Learning Panel */
+        .learning-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid var(--border-color);
+            min-height: 200px;
+            position: relative;
+        }
+
+        .learning-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .learning-icon {
+            font-size: 1.5rem;
+        }
+
+        .learning-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--memory-amber);
+        }
+
+        .learning-content {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .learning-content.analyzing {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.3), rgba(245, 158, 11, 0.1));
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Pattern Recognition Grid */
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .pattern-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .pattern-card.learned {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 136, 0.1);
+            transform: scale(1.02);
+        }
+
+        .pattern-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .pattern-icon {
+            font-size: 1.125rem;
+        }
+
+        .pattern-name {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .pattern-status {
+            font-size: 0.6875rem;
+            color: var(--memory-amber);
+        }
+
+        .pattern-description {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            line-height: 1.4;
+            display: none; /* Hidden by default */
+        }
+
+        .pattern-confidence {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            font-size: 0.6875rem;
+            display: none; /* Hidden by default */
+        }
+
+        .confidence-label {
+            color: var(--text-secondary);
+        }
+
+        .confidence-value {
+            color: var(--memory-amber);
+            font-weight: 600;
+        }
+
+        /* Cognitive Partnership Display */
+        .partnership-display {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid var(--memory-amber);
+        }
+
+        .partnership-header {
+            color: var(--memory-amber);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .partnership-content {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            display: none; /* Hidden by default */
+        }
+
+        .partnership-suggestions {
+            margin: 12px 0;
+            display: none; /* Hidden by default */
+        }
+
+        .suggestion-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--memory-amber);
+            font-size: 0.75rem;
+        }
+
+        .suggestion-type {
+            color: var(--memory-amber);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .suggestion-text {
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, var(--memory-amber), var(--memory-orange));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .process-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: var(--memory-amber);
+            font-size: 0.875rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* Progress Indicators */
+        .progress-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: conic-gradient(var(--memory-amber) 0deg, rgba(245, 158, 11, 0.2) 0deg);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .progress-indicator.active {
+            display: flex;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Memory Formation Animation */
+        .memory-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--memory-amber);
+            border-radius: 50%;
+            opacity: 0;
+            animation: memoryFloat 3s infinite;
+        }
+
+        @keyframes memoryFloat {
+            0% { 
+                opacity: 0;
+                transform: translateY(100px) translateX(0);
+            }
+            50% { 
+                opacity: 1;
+                transform: translateY(-50px) translateX(20px);
+            }
+            100% { 
+                opacity: 0;
+                transform: translateY(-100px) translateX(0);
+            }
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-memory {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .neuron-memory {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-memory .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-memory .comparison-list li::before {
+            color: var(--memory-amber);
+        }
+
+        /* Action Section */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Show classes for when content is revealed */
+        .show-content {
+            display: block !important;
+        }
+
+        .show-suggestions {
+            display: block !important;
+        }
+
+        .show-confidence {
+            display: block !important;
+        }
+
+        /* Animation helpers */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+    
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- System Header -->
+    <div class="container">
+        <header class="hero">
+            <div class="linha">
+                <span class="system-icon">💾</span>
+                <h1>NEURON MEMORY</h1>
+            </div>
+            <p>Personalized cognitive partnership that learns your unique thinking patterns and provides adaptive assistance</p>
+        </header>
+    </div>
+
+    <div class="container">
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🎯 Learning Scenarios
+                </div>
+
+                <!-- Learning Scenarios -->
+                <div class="scenario-section">
+                    <div class="scenario-label">Select Cognitive Task:</div>
+                    <div class="scenario-buttons">
+                        <button class="scenario-button active" data-scenario="problem-solving">
+                            🔧 Technical Problem Solving
+                        </button>
+                        <button class="scenario-button" data-scenario="creative-thinking">
+                            🎨 Creative Brainstorming
+                        </button>
+                        <button class="scenario-button" data-scenario="research">
+                            📚 Research & Analysis
+                        </button>
+                        <button class="scenario-button" data-scenario="decision-making">
+                            ⚖️ Decision Making
+                        </button>
+                        <button class="scenario-button" data-scenario="learning">
+                            🌱 Skill Learning
+                        </button>
+                        <button class="scenario-button" data-scenario="communication">
+                            💬 Communication Style
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Learning Metrics -->
+                <div class="learning-section">
+                    <div class="scenario-label">Learning Progress:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Pattern Confidence</div>
+                        <div class="metric-value" id="confidenceValue">
+                            87.3<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Adaptations Made</div>
+                        <div class="metric-value" id="adaptationValue">
+                            142<span class="metric-unit">adjustments</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Learning Velocity</div>
+                        <div class="metric-value" id="velocityValue">
+                            +34<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="memoryEngine">
+                    Analyze Cognitive Patterns
+                </button>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Learning and adapting to your cognitive patterns...
+                </div>
+            </div>
+
+            <!-- Memory Partnership Display -->
+            <div class="memory-display">
+                <!-- Pattern Learning Panel -->
+                <div class="learning-panel" id="learningPanel">
+                    <div class="progress-indicator" id="progressIndicator">
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="learning-header">
+                        <div class="learning-icon">🧮</div>
+                        <div class="learning-title">Cognitive Pattern Recognition</div>
+                    </div>
+                    <div class="learning-content" id="learningContent">
+                        Select a cognitive task and start the analysis to watch Neuron Memory learn your unique thinking patterns and adapt its assistance in real-time.
+                    </div>
+                </div>
+
+                <!-- Pattern Recognition Grid -->
+                <div class="patterns-grid">
+                    <div class="pattern-card" id="approachPattern">
+                        <div class="pattern-header">
+                            <div class="pattern-icon">🎯</div>
+                            <div>
+                                <div class="pattern-name">APPROACH PATTERN</div>
+                                <div class="pattern-status">Learning Phase</div>
+                            </div>
+                        </div>
+                        <div class="pattern-description" id="approachDescription">
+                            Your preferred method for approaching new problems: systematic breakdown vs intuitive exploration.
+                        </div>
+                        <div class="pattern-confidence" id="approachConfidence">
+                            <span class="confidence-label">Confidence:</span>
+                            <span class="confidence-value">87%</span>
+                        </div>
+                    </div>
+
+                    <div class="pattern-card" id="processingPattern">
+                        <div class="pattern-header">
+                            <div class="pattern-icon">⚡</div>
+                            <div>
+                                <div class="pattern-name">PROCESSING STYLE</div>
+                                <div class="pattern-status">Adaptation Ready</div>
+                            </div>
+                        </div>
+                        <div class="pattern-description" id="processingDescription">
+                            How you process information: sequential analysis vs parallel thinking patterns.
+                        </div>
+                        <div class="pattern-confidence" id="processingConfidence">
+                            <span class="confidence-label">Confidence:</span>
+                            <span class="confidence-value">92%</span>
+                        </div>
+                    </div>
+
+                    <div class="pattern-card" id="feedbackPattern">
+                        <div class="pattern-header">
+                            <div class="pattern-icon">🔄</div>
+                            <div>
+                                <div class="pattern-name">FEEDBACK PREFERENCE</div>
+                                <div class="pattern-status">Optimizing</div>
+                            </div>
+                        </div>
+                        <div class="pattern-description" id="feedbackDescription">
+                            Your preferred style of receiving assistance: detailed explanations vs concise guidance.
+                        </div>
+                        <div class="pattern-confidence" id="feedbackConfidence">
+                            <span class="confidence-label">Confidence:</span>
+                            <span class="confidence-value">79%</span>
+                        </div>
+                    </div>
+
+                    <div class="pattern-card" id="adaptationPattern">
+                        <div class="pattern-header">
+                            <div class="pattern-icon">🌱</div>
+                            <div>
+                                <div class="pattern-name">LEARNING ADAPTATION</div>
+                                <div class="pattern-status">Personalizing</div>
+                            </div>
+                        </div>
+                        <div class="pattern-description" id="adaptationDescription">
+                            How you adapt to new information: gradual integration vs rapid restructuring.
+                        </div>
+                        <div class="pattern-confidence" id="adaptationConfidence">
+                            <span class="confidence-label">Confidence:</span>
+                            <span class="confidence-value">84%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cognitive Partnership Display -->
+                <div class="partnership-display">
+                    <div class="partnership-header">
+                        🤝 Adaptive Cognitive Assistance
+                    </div>
+                    <div class="partnership-content" id="partnershipContent">
+                        Based on learned patterns, Neuron Memory provides personalized cognitive assistance tailored to your unique thinking style and problem-solving approach.
+                        
+                        <div class="partnership-suggestions" id="partnershipSuggestions">
+                            <div class="suggestion-item">
+                                <div class="suggestion-type">APPROACH OPTIMIZATION</div>
+                                <div class="suggestion-text">Based on your systematic approach, I'll provide structured breakdowns for complex problems</div>
+                            </div>
+                            
+                            <div class="suggestion-item">
+                                <div class="suggestion-type">PROCESSING ENHANCEMENT</div>
+                                <div class="suggestion-text">Your parallel thinking style suggests you'd benefit from multi-perspective analysis</div>
+                            </div>
+                            
+                            <div class="suggestion-item">
+                                <div class="suggestion-type">FEEDBACK ADAPTATION</div>
+                                <div class="suggestion-text">Adjusting explanation depth to match your preference for concise, actionable guidance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Section -->
+    <div class="container">
+        <div class="comparison-section" id="comparisonSection">
+            <h3 class="comparison-title">Traditional AI Memory vs Neuron Memory Partnership</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-memory">
+                    <h4>Traditional AI Memory Systems</h4>
+                    <ul class="comparison-list">
+                        <li>Static response patterns regardless of user preferences</li>
+                        <li>No learning from individual user thinking styles</li>
+                        <li>One-size-fits-all cognitive assistance approach</li>
+                        <li>Limited adaptation to personal problem-solving methods</li>
+                        <li>No understanding of individual learning patterns</li>
+                        <li>Uniform interaction style for all users</li>
+                        <li>No personalized optimization over time</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-memory">
+                    <h4>Neuron Memory Cognitive Partnership</h4>
+                    <ul class="comparison-list">
+                        <li>Dynamic learning of individual thinking patterns and preferences</li>
+                        <li>Adaptive cognitive assistance tailored to personal problem-solving style</li>
+                        <li>Real-time pattern recognition with confidence-based recommendations</li>
+                        <li>Personalized feedback and explanation styles matching user preferences</li>
+                        <li>Continuous optimization based on successful interaction patterns</li>
+                        <li>Cross-modal learning across different cognitive tasks and domains</li>
+                        <li>Genuine cognitive partnership that evolves with user growth</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="container">
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/memory-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/05%20-%20Intelligence%20Analytics%20Systems/Neuron%20Memory%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        let currentScenario = 'problem-solving';
+        let isAnalyzing = false;
+
+        // Scenario configurations
+        const scenarioConfigs = {
+            'problem-solving': {
+                name: "Technical Problem Solving",
+                confidence: 87.3,
+                adaptations: 142,
+                velocity: "+34",
+                analysis: "TECHNICAL PROBLEM SOLVING PATTERN DETECTED! Neuron Memory analyzing your systematic approach to breaking down complex technical challenges into manageable components.",
+                approach: "Your preferred method: systematic breakdown with logical progression, starting with problem definition and moving through structured analysis phases.",
+                processing: "Processing style: sequential analysis with occasional parallel verification, preferring validated steps before proceeding to next phase.",
+                feedback: "Feedback preference: detailed technical explanations with code examples and step-by-step reasoning for complex implementations.",
+                adaptation: "Learning adaptation: gradual integration of new concepts with thorough testing before adopting new methodologies.",
+                suggestions: [
+                    {
+                        type: "SYSTEMATIC APPROACH",
+                        text: "I'll provide structured problem breakdowns with clear logical progression, matching your methodical thinking style"
+                    },
+                    {
+                        type: "TECHNICAL DEPTH",
+                        text: "Based on your preference, I'll include detailed explanations with technical examples and implementation guidance"
+                    },
+                    {
+                        type: "VALIDATION SUPPORT",
+                        text: "Your careful verification pattern suggests you'd appreciate built-in error checking and testing strategies"
+                    }
+                ]
+            },
+            'creative-thinking': {
+                name: "Creative Brainstorming",
+                confidence: 91.7,
+                adaptations: 89,
+                velocity: "+67",
+                analysis: "CREATIVE THINKING PATTERN DETECTED! Neuron Memory analyzing your approach to ideation, creative exploration, and innovative problem-solving methodologies.",
+                approach: "Your preferred method: intuitive exploration with divergent thinking, starting with broad concept generation before narrowing focus.",
+                processing: "Processing style: parallel idea generation with rapid concept connection, comfortable with ambiguity and iterative refinement.",
+                feedback: "Feedback preference: inspirational guidance with creative examples and open-ended questions to stimulate further ideation.",
+                adaptation: "Learning adaptation: rapid integration of creative concepts with experimental application and quick pivoting based on results.",
+                suggestions: [
+                    {
+                        type: "DIVERGENT THINKING",
+                        text: "I'll provide broad concept exploration and multiple perspective approaches to stimulate your creative flow"
+                    },
+                    {
+                        type: "INSPIRATIONAL EXAMPLES",
+                        text: "Your creative pattern benefits from varied examples and cross-domain inspiration to spark new connections"
+                    },
+                    {
+                        type: "ITERATIVE REFINEMENT",
+                        text: "I'll support your experimental approach with quick feedback loops and encouragement for creative risk-taking"
+                    }
+                ]
+            },
+            'research': {
+                name: "Research & Analysis",
+                confidence: 94.2,
+                adaptations: 156,
+                velocity: "+23",
+                analysis: "RESEARCH & ANALYSIS PATTERN DETECTED! Neuron Memory analyzing your approach to information gathering, source evaluation, and analytical synthesis.",
+                approach: "Your preferred method: comprehensive information gathering with systematic source evaluation before drawing conclusions.",
+                processing: "Processing style: thorough analysis with cross-reference verification, building detailed mental models before synthesis.",
+                feedback: "Feedback preference: evidence-based explanations with source citations and detailed analytical reasoning for conclusions.",
+                adaptation: "Learning adaptation: methodical integration of new information with careful validation against existing knowledge frameworks.",
+                suggestions: [
+                    {
+                        type: "COMPREHENSIVE SOURCING",
+                        text: "I'll provide multiple authoritative sources and help you build comprehensive information foundations"
+                    },
+                    {
+                        type: "ANALYTICAL FRAMEWORKS",
+                        text: "Your systematic approach benefits from structured analysis templates and evidence evaluation criteria"
+                    },
+                    {
+                        type: "SYNTHESIS SUPPORT",
+                        text: "I'll help you connect disparate information sources and identify patterns across multiple research domains"
+                    }
+                ]
+            },
+            'decision-making': {
+                name: "Decision Making",
+                confidence: 83.8,
+                adaptations: 198,
+                velocity: "+41",
+                analysis: "DECISION MAKING PATTERN DETECTED! Neuron Memory analyzing your approach to evaluating options, weighing trade-offs, and making informed choices.",
+                approach: "Your preferred method: balanced evaluation with pros/cons analysis, considering both logical and intuitive factors.",
+                processing: "Processing style: multi-criteria analysis with stakeholder consideration, comfortable with uncertainty and risk assessment.",
+                feedback: "Feedback preference: balanced perspectives with clear option comparison and decision framework guidance.",
+                adaptation: "Learning adaptation: careful evaluation of decision outcomes with pattern recognition for improving future choices.",
+                suggestions: [
+                    {
+                        type: "STRUCTURED COMPARISON",
+                        text: "I'll provide clear decision matrices and option evaluation frameworks that match your balanced approach"
+                    },
+                    {
+                        type: "RISK ASSESSMENT",
+                        text: "Your thoughtful style benefits from comprehensive risk analysis and contingency planning support"
+                    },
+                    {
+                        type: "OUTCOME TRACKING",
+                        text: "I'll help you track decision outcomes to improve your personal decision-making patterns over time"
+                    }
+                ]
+            },
+            'learning': {
+                name: "Skill Learning",
+                confidence: 89.5,
+                adaptations: 167,
+                velocity: "+52",
+                analysis: "SKILL LEARNING PATTERN DETECTED! Neuron Memory analyzing your approach to acquiring new knowledge, practicing skills, and building expertise.",
+                approach: "Your preferred method: progressive skill building with hands-on practice, starting with fundamentals before advancing.",
+                processing: "Processing style: experiential learning with immediate application, preferring practical examples over theoretical concepts.",
+                feedback: "Feedback preference: actionable guidance with practice exercises and incremental skill development milestones.",
+                adaptation: "Learning adaptation: active experimentation with rapid feedback integration and adaptive strategy adjustment.",
+                suggestions: [
+                    {
+                        type: "PROGRESSIVE MASTERY",
+                        text: "I'll structure learning paths with clear skill progressions and milestone achievements matching your development style"
+                    },
+                    {
+                        type: "PRACTICAL APPLICATION",
+                        text: "Your hands-on approach benefits from immediate practice opportunities and real-world application examples"
+                    },
+                    {
+                        type: "ADAPTIVE PACING",
+                        text: "I'll adjust learning pace based on your mastery indicators and provide personalized challenge levels"
+                    }
+                ]
+            },
+            'communication': {
+                name: "Communication Style",
+                confidence: 92.1,
+                adaptations: 134,
+                velocity: "+28",
+                analysis: "COMMUNICATION STYLE PATTERN DETECTED! Neuron Memory analyzing your preferences for information exchange, explanation depth, and interaction style.",
+                approach: "Your preferred method: clear, direct communication with structured information flow and logical organization.",
+                processing: "Processing style: efficient information exchange with preference for concise but complete explanations.",
+                feedback: "Feedback preference: well-organized responses with clear action items and minimal ambiguity in communication.",
+                adaptation: "Learning adaptation: quick adjustment to communication patterns with preference for consistent interaction styles.",
+                suggestions: [
+                    {
+                        type: "STRUCTURED CLARITY",
+                        text: "I'll organize responses with clear headers, bullet points, and logical flow matching your preference for structure"
+                    },
+                    {
+                        type: "CONCISE COMPLETENESS",
+                        text: "Your efficiency preference benefits from comprehensive but brief explanations with all necessary details"
+                    },
+                    {
+                        type: "ACTION ORIENTATION",
+                        text: "I'll include clear next steps and actionable guidance in communications, matching your goal-oriented style"
+                    }
+                ]
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scenario selection
+            document.querySelectorAll('.scenario-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.scenario-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentScenario = this.dataset.scenario;
+                    updateScenarioMetrics();
+                    resetMemoryAnalysis();
+                });
+            });
+
+            // Memory engine button
+            const engineButton = document.getElementById('memoryEngine');
+            if (engineButton) {
+                engineButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    analyzeCognitivePatterns();
+                });
+            }
+
+            // Initialize with problem-solving scenario
+            updateScenarioMetrics();
+            createMemoryParticles();
+        });
+
+        function updateScenarioMetrics() {
+            const config = scenarioConfigs[currentScenario];
+            
+            // Update metrics
+            document.getElementById('confidenceValue').innerHTML = `${config.confidence}<span class="metric-unit">%</span>`;
+            document.getElementById('adaptationValue').innerHTML = `${config.adaptations}<span class="metric-unit">adjustments</span>`;
+            document.getElementById('velocityValue').innerHTML = `${config.velocity}<span class="metric-unit">%</span>`;
+        }
+
+        function resetMemoryAnalysis() {
+            // Hide all learning content
+            document.querySelectorAll('.pattern-description').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('show-content');
+            });
+            
+            document.querySelectorAll('.pattern-confidence').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('show-confidence');
+            });
+            
+            document.querySelectorAll('.pattern-card').forEach(card => {
+                card.classList.remove('learned');
+            });
+            
+            document.getElementById('partnershipContent').style.display = 'none';
+            document.getElementById('partnershipContent').classList.remove('show-content');
+            
+            document.getElementById('partnershipSuggestions').style.display = 'none';
+            document.getElementById('partnershipSuggestions').classList.remove('show-suggestions');
+            
+            // Reset learning content
+            document.getElementById('learningContent').innerHTML = `Select a cognitive task and start the analysis to watch Neuron Memory learn your unique thinking patterns and adapt its assistance in real-time.`;
+            document.getElementById('learningContent').classList.remove('analyzing');
+            
+            // Reset progress indicator
+            document.getElementById('progressIndicator').classList.remove('active');
+            document.getElementById('progressPercent').textContent = '0%';
+            
+            // Reset button text
+            document.getElementById('memoryEngine').textContent = 'Analyze Cognitive Patterns';
+            
+            // Hide simulation message
+            document.getElementById('simulationMessage').style.display = 'none';
+        }
+
+        function createMemoryParticles() {
+            const panel = document.getElementById('learningPanel');
+            
+            setInterval(() => {
+                if (!isAnalyzing) return;
+                
+                const particle = document.createElement('div');
+                particle.className = 'memory-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                
+                panel.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (panel.contains(particle)) {
+                        panel.removeChild(particle);
+                    }
+                }, 3000);
+            }, 500);
+        }
+
+        async function analyzeCognitivePatterns() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            
+            const button = document.getElementById('memoryEngine');
+            const message = document.getElementById('simulationMessage');
+            const learningContent = document.getElementById('learningContent');
+            const progressIndicator = document.getElementById('progressIndicator');
+            const progressPercent = document.getElementById('progressPercent');
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Analyzing Patterns...';
+            
+            // Show message and progress
+            message.style.display = 'block';
+            message.textContent = 'Learning and adapting to your cognitive patterns...';
+            progressIndicator.classList.add('active');
+            
+            try {
+                const config = scenarioConfigs[currentScenario];
+                
+                // Phase 1: Pattern Recognition
+                learningContent.classList.add('analyzing');
+                learningContent.textContent = 'Scanning cognitive patterns and behavioral indicators...';
+                message.textContent = `Analyzing your ${config.name.toLowerCase()} approach...`;
+                progressPercent.textContent = '25%';
+                await delay(2000);
+                
+                // Phase 2: Pattern Analysis
+                learningContent.textContent = config.analysis;
+                learningContent.classList.remove('analyzing');
+                message.textContent = 'Processing thinking patterns and adaptation strategies...';
+                progressPercent.textContent = '50%';
+                await delay(1500);
+                
+                // Phase 3: Pattern Learning
+                message.textContent = 'Learning individual cognitive preferences...';
+                progressPercent.textContent = '75%';
+                
+                // Show pattern cards progressively
+                const patterns = [
+                    { id: 'approachPattern', description: 'approachDescription', confidence: 'approachConfidence', content: config.approach },
+                    { id: 'processingPattern', description: 'processingDescription', confidence: 'processingConfidence', content: config.processing },
+                    { id: 'feedbackPattern', description: 'feedbackDescription', confidence: 'feedbackConfidence', content: config.feedback },
+                    { id: 'adaptationPattern', description: 'adaptationDescription', confidence: 'adaptationConfidence', content: config.adaptation }
+                ];
+                
+                for (let i = 0; i < patterns.length; i++) {
+                    await delay(800);
+                    const pattern = patterns[i];
+                    const card = document.getElementById(pattern.id);
+                    const desc = document.getElementById(pattern.description);
+                    const conf = document.getElementById(pattern.confidence);
+                    
+                    card.classList.add('learned');
+                    desc.textContent = pattern.content;
+                    desc.classList.add('show-content');
+                    conf.classList.add('show-confidence');
+                }
+                
+                // Phase 4: Cognitive Partnership Activation
+                await delay(1000);
+                progressPercent.textContent = '100%';
+                message.textContent = 'Activating personalized cognitive partnership...';
+                
+                document.getElementById('partnershipContent').classList.add('show-content');
+                updatePartnershipContent();
+                
+                await delay(1000);
+                document.getElementById('partnershipSuggestions').classList.add('show-suggestions');
+                
+                message.textContent = `Cognitive partnership active! Neuron Memory adapted to your ${config.name.toLowerCase()} patterns.`;
+                
+            } catch (error) {
+                console.error('Error during analysis:', error);
+                message.textContent = 'Cognitive pattern analysis completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isAnalyzing = false;
+                button.disabled = false;
+                button.textContent = 'Analyze Cognitive Patterns';
+                progressIndicator.classList.remove('active');
+                message.style.display = 'none';
+            }, 4000);
+        }
+
+        function updatePartnershipContent() {
+            const config = scenarioConfigs[currentScenario];
+            const content = document.getElementById('partnershipContent');
+            const suggestions = document.getElementById('partnershipSuggestions');
+            
+            content.innerHTML = `
+                <strong>COGNITIVE PARTNERSHIP ACTIVATED!</strong> Based on your ${config.name.toLowerCase()} patterns, Neuron Memory has personalized its assistance approach.
+                
+                <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                    Adaptive learning complete with ${config.confidence}% pattern confidence. Cognitive assistance now optimized for your unique thinking style.
+                </div>
+            `;
+            
+            // Update suggestions
+            suggestions.innerHTML = config.suggestions.map(suggestion => `
+                <div class="suggestion-item">
+                    <div class="suggestion-type">${suggestion.type}</div>
+                    <div class="suggestion-text">${suggestion.text}</div>
+                </div>
+            `).join('');
+            
+            // Make sure content is visible
+            content.classList.add('show-content');
+            suggestions.classList.add('show-suggestions');
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

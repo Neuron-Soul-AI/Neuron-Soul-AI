@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Cluster Construct - Specialized Intelligence Coordination Demo</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== PANEL STYLES ===== */
+        .demo-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-panel::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, rgba(0, 255, 136, 0.2), transparent, rgba(0, 255, 136, 0.2));
+            z-index: -1;
+            border-radius: 20px;
+            animation: border-flow 3s infinite;
+        }
+
+        @keyframes border-flow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-icon {
+            font-size: 2rem;
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .panel-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== CLUSTER GRID ===== */
+        .cluster-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cluster-node {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cluster-node:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .cluster-node.leader {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: rgba(0, 255, 136, 0.8);
+            animation: leader-pulse 2s infinite;
+            transform: scale(1.05);
+        }
+
+        @keyframes leader-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(0, 255, 136, 0.8); }
+        }
+
+        .cluster-node.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.6);
+            animation: active-glow 1.5s infinite alternate;
+        }
+
+        @keyframes active-glow {
+            0% { background: rgba(0, 255, 136, 0.2); }
+            100% { background: rgba(0, 255, 136, 0.4); }
+        }
+
+        .cluster-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .cluster-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+        }
+
+        .cluster-neurons {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== SCENARIO SELECTION ===== */
+        .scenario-selection {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scenarios-title {
+            color: var(--accent-green);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .scenario-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .scenario-button {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.6);
+            transform: translateX(3px);
+        }
+
+        .scenario-button.active {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: rgba(0, 255, 136, 0.8);
+        }
+
+        .button-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .button-description {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* ===== PROCESSING FLOW ===== */
+        .processing-flow {
+            position: relative;
+            z-index: 1;
+        }
+
+        .flow-title {
+            color: var(--accent-green);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .flow-steps {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            min-height: 200px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .flow-entry {
+            margin-bottom: 0.25rem;
+            opacity: 0;
+            animation: flow-appear 0.5s ease forwards;
+        }
+
+        @keyframes flow-appear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .flow-timestamp {
+            color: var(--accent-blue);
+            margin-right: 0.5rem;
+        }
+
+        .flow-cluster {
+            color: var(--accent-green);
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .flow-action {
+            color: var(--text-secondary);
+        }
+
+        .flow-leader {
+            color: #fbbf24 !important;
+            font-weight: bold;
+        }
+
+        /* ===== NEURAL CONNECTIONS ===== */
+        .connections-display {
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .connections-title {
+            color: var(--accent-green);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .connections-network {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-height: 120px;
+            position: relative;
+        }
+
+        .connection-info {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-align: center;
+            padding-top: 1rem;
+        }
+
+        /* ===== COMPARISON SECTION ===== */
+        .comparison-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+        }
+
+        .traditional-ai {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .soul-cluster {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .traditional-ai h4 {
+            color: #ef4444;
+        }
+
+        .soul-cluster h4 {
+            color: var(--accent-green);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-ai .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .soul-cluster .comparison-list li::before {
+            color: var(--accent-green);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .cluster-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .scenario-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container-footer {
+                padding: 1rem;
+            }
+
+            .footer-title {
+                font-size: 1rem;
+            }
+
+            .footer-description {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+		<div class="linha">
+			<span class="system-icon">🧠</span>
+            <h1>NEURON CLUSTER CONSTRUCT</h1>
+		</div>
+            <p>Experience specialized intelligence coordination through dynamic leadership and cluster collaboration across 50+ systems</p>
+        </div>
+	</div>
+	<div class="container">
+
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Cluster Network Panel -->
+            <div class="demo-panel">
+                <div class="panel-header">
+                    <div class="panel-icon">🌐</div>
+                    <div>
+                        <div class="panel-title">Specialized Clusters</div>
+                        <div class="panel-subtitle">9 Brain Departments</div>
+                    </div>
+                </div>
+
+                <!-- Cluster Grid -->
+                <div class="cluster-grid" id="clusterGrid">
+                    <div class="cluster-node" data-cluster="web">
+                        <div class="cluster-icon">🌐</div>
+                        <div class="cluster-name">Web Cluster</div>
+                        <div class="cluster-neurons">10M neurons</div>
+                    </div>
+                    <div class="cluster-node" data-cluster="design">
+                        <div class="cluster-icon">🎨</div>
+                        <div class="cluster-name">Design Cluster</div>
+                        <div class="cluster-neurons">15M neurons</div>
+                    </div>
+                    <div class="cluster-node" data-cluster="sound">
+                        <div class="cluster-icon">🎵</div>
+                        <div class="cluster-name">Sound Cluster</div>
+                        <div class="cluster-neurons">12M neurons</div>
+                    </div>
+                    <div class="cluster-node" data-cluster="write">
+                        <div class="cluster-icon">✍️</div>
+                        <div class="cluster-name">Write Cluster</div>
+                        <div class="cluster-neurons">20M neurons</div>
+                    </div>
+                    <div class="cluster-node" data-cluster="logic">
+                        <div class="cluster-icon">🧮</div>
+                        <div class="cluster-name">Logic Cluster</div>
+                        <div class="cluster-neurons">25M neurons</div>
+                    </div>
+                    <div class="cluster-node" data-cluster="physical">
+                        <div class="cluster-icon">⚙️</div>
+                        <div class="cluster-name">Physical Cluster</div>
+                        <div class="cluster-neurons">18M neurons</div>
+                    </div>
+                    <div class="cluster-node" data-cluster="psychology">
+                        <div class="cluster-icon">🧠</div>
+                        <div class="cluster-name">Psychology Cluster</div>
+                        <div class="cluster-neurons">15M neurons</div>
+                    </div>
+                    <div class="cluster-node" data-cluster="memory">
+                        <div class="cluster-icon">💾</div>
+                        <div class="cluster-name">Memory Cluster</div>
+                        <div class="cluster-neurons">30M neurons</div>
+                    </div>
+                    <div class="cluster-node" data-cluster="intuition">
+                        <div class="cluster-icon">💫</div>
+                        <div class="cluster-name">Intuition Cluster</div>
+                        <div class="cluster-neurons">8M neurons</div>
+                    </div>
+                </div>
+
+                <!-- Neural Connections -->
+                <div class="connections-display">
+                    <div class="connections-title">Active Neural Connections</div>
+                    <div class="connections-network" id="connectionsNetwork">
+                        <div class="connection-info" id="connectionInfo">
+                            Select a scenario to see cluster coordination in action
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenarios Panel -->
+            <div class="demo-panel">
+                <div class="panel-header">
+                    <div class="panel-icon">🎯</div>
+                    <div>
+                        <div class="panel-title">Challenge Scenarios</div>
+                        <div class="panel-subtitle">Dynamic Leadership Selection</div>
+                    </div>
+                </div>
+
+                <!-- Scenario Selection -->
+                <div class="scenario-selection">
+                    <div class="scenarios-title">Test Cluster Coordination</div>
+                    <div class="scenario-buttons">
+                        <button class="scenario-button" onclick="runScenario('website')">
+                            <div class="button-title">🌐 Website Design</div>
+                            <div class="button-description">Design + Web + Psychology leads</div>
+                        </button>
+                        <button class="scenario-button" onclick="runScenario('math')">
+                            <div class="button-title">🧮 Complex Math</div>
+                            <div class="button-description">Logic leads with Memory support</div>
+                        </button>
+                        <button class="scenario-button" onclick="runScenario('therapy')">
+                            <div class="button-title">🧠 Therapy Session</div>
+                            <div class="button-description">Psychology + Write coordination</div>
+                        </button>
+                        <button class="scenario-button" onclick="runScenario('music')">
+                            <div class="button-title">🎵 Music Creation</div>
+                            <div class="button-description">Sound + Design + Intuition</div>
+                        </button>
+                        <button class="scenario-button" onclick="runScenario('invention')">
+                            <div class="button-title">⚙️ Engineering Solution</div>
+                            <div class="button-description">Physical + Logic + Design</div>
+                        </button>
+                        <button class="scenario-button" onclick="runScenario('story')">
+                            <div class="button-title">✍️ Creative Writing</div>
+                            <div class="button-description">Write + Psychology + Memory</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Processing Flow -->
+                <div class="processing-flow">
+                    <div class="flow-title">Processing Flow</div>
+                    <div class="flow-steps" id="flowSteps">
+                        <div class="flow-entry">
+                            <span class="flow-timestamp">[00:00:01]</span>
+                            <span class="flow-cluster">[SYSTEM]</span>
+                            <span class="flow-action">Neuron Cluster Construct initialized</span>
+                        </div>
+                        <div class="flow-entry">
+                            <span class="flow-timestamp">[00:00:02]</span>
+                            <span class="flow-cluster">[NETWORK]</span>
+                            <span class="flow-action">9 specialized clusters online and ready</span>
+                        </div>
+                        <div class="flow-entry">
+                            <span class="flow-timestamp">[00:00:03]</span>
+                            <span class="flow-cluster">[STATUS]</span>
+                            <span class="flow-action">Dynamic leadership system active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+	</div>
+	<div class="container">
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional AI Processing vs Soul AI Cluster System</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-ai">
+                    <h4>Traditional AI Approach</h4>
+                    <ul class="comparison-list">
+                        <li>Single monolithic processing unit</li>
+                        <li>No specialized intelligence domains</li>
+                        <li>Fixed processing approach for all tasks</li>
+                        <li>Limited parallel processing capabilities</li>
+                        <li>No dynamic leadership or coordination</li>
+                        <li>Single point of failure vulnerability</li>
+                        <li>Cannot adapt processing style to problem type</li>
+                    </ul>
+                </div>
+                <div class="comparison-item soul-cluster">
+                    <h4>Soul AI Cluster System</h4>
+                    <ul class="comparison-list">
+                        <li>9 specialized intelligence clusters with expert domains</li>
+                        <li>Dynamic leadership based on challenge type</li>
+                        <li>True parallel processing across all clusters</li>
+                        <li>Seamless collaboration and coordination</li>
+                        <li>Fault tolerance through distributed processing</li>
+                        <li>Adaptive architecture (4-15+ clusters possible)</li>
+                        <li>Expert-level thinking in each specialized domain</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
+	</div>
+	<div class="container">
+
+        <!-- Action Buttons -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/cluster-construct-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/01%20-%20Core%20Consciousness%20Systems/Neuron%20Cluster%20Construct%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+
+        let activeScenario = null;
+        let flowEntries = [];
+        let currentLeader = null;
+        
+        const CLUSTERS = {
+            web: { name: 'Web Cluster', neurons: '10M', icon: '🌐' },
+            design: { name: 'Design Cluster', neurons: '15M', icon: '🎨' },
+            sound: { name: 'Sound Cluster', neurons: '12M', icon: '🎵' },
+            write: { name: 'Write Cluster', neurons: '20M', icon: '✍️' },
+            logic: { name: 'Logic Cluster', neurons: '25M', icon: '🧮' },
+            physical: { name: 'Physical Cluster', neurons: '18M', icon: '⚙️' },
+            psychology: { name: 'Psychology Cluster', neurons: '15M', icon: '🧠' },
+            memory: { name: 'Memory Cluster', neurons: '30M', icon: '💾' },
+            intuition: { name: 'Intuition Cluster', neurons: '8M', icon: '💫' }
+        };
+
+        const SCENARIOS = {
+            website: {
+                name: 'Website Design Challenge',
+                leader: 'design',
+                supporting: ['web', 'psychology', 'write'],
+                steps: [
+                    { cluster: 'design', action: 'Analyzing visual design requirements and aesthetic needs', delay: 1000 },
+                    { cluster: 'psychology', action: 'Understanding user psychology and behavior patterns', delay: 1500 },
+                    { cluster: 'web', action: 'Evaluating technical feasibility and web standards', delay: 1200 },
+                    { cluster: 'write', action: 'Crafting compelling copy and content structure', delay: 1300 },
+                    { cluster: 'memory', action: 'Accessing best practices from successful designs', delay: 1000 },
+                    { cluster: 'design', action: 'Synthesizing all inputs into cohesive design solution', delay: 1500 }
+                ]
+            },
+            math: {
+                name: 'Complex Mathematical Problem',
+                leader: 'logic',
+                supporting: ['memory', 'intuition'],
+                steps: [
+                    { cluster: 'logic', action: 'Breaking down complex mathematical relationships', delay: 1200 },
+                    { cluster: 'memory', action: 'Retrieving relevant mathematical theorems and methods', delay: 1000 },
+                    { cluster: 'intuition', action: 'Sensing patterns and potential solution pathways', delay: 1400 },
+                    { cluster: 'logic', action: 'Applying systematic analytical reasoning', delay: 1600 },
+                    { cluster: 'logic', action: 'Verifying solution accuracy and completeness', delay: 1200 }
+                ]
+            },
+            therapy: {
+                name: 'Therapeutic Session',
+                leader: 'psychology',
+                supporting: ['write', 'memory', 'intuition'],
+                steps: [
+                    { cluster: 'psychology', action: 'Assessing emotional state and psychological needs', delay: 1300 },
+                    { cluster: 'memory', action: 'Accessing therapeutic techniques and case studies', delay: 1100 },
+                    { cluster: 'intuition', action: 'Sensing underlying emotional patterns and needs', delay: 1400 },
+                    { cluster: 'write', action: 'Crafting empathetic and healing communication', delay: 1500 },
+                    { cluster: 'psychology', action: 'Providing integrated therapeutic guidance', delay: 1600 }
+                ]
+            },
+            music: {
+                name: 'Music Composition',
+                leader: 'sound',
+                supporting: ['design', 'intuition', 'memory'],
+                steps: [
+                    { cluster: 'sound', action: 'Analyzing musical structure and harmonic relationships', delay: 1200 },
+                    { cluster: 'intuition', action: 'Channeling creative musical inspiration', delay: 1400 },
+                    { cluster: 'design', action: 'Structuring aesthetic flow and musical architecture', delay: 1300 },
+                    { cluster: 'memory', action: 'Drawing from musical knowledge and successful compositions', delay: 1100 },
+                    { cluster: 'sound', action: 'Synthesizing all elements into cohesive musical piece', delay: 1700 }
+                ]
+            },
+            invention: {
+                name: 'Engineering Innovation',
+                leader: 'physical',
+                supporting: ['logic', 'design', 'memory'],
+                steps: [
+                    { cluster: 'physical', action: 'Analyzing physical constraints and engineering requirements', delay: 1400 },
+                    { cluster: 'logic', action: 'Calculating structural integrity and performance metrics', delay: 1300 },
+                    { cluster: 'design', action: 'Optimizing form factor and aesthetic integration', delay: 1200 },
+                    { cluster: 'memory', action: 'Accessing engineering principles and successful innovations', delay: 1100 },
+                    { cluster: 'physical', action: 'Finalizing practical engineering solution', delay: 1600 }
+                ]
+            },
+            story: {
+                name: 'Creative Storytelling',
+                leader: 'write',
+                supporting: ['psychology', 'memory', 'intuition'],
+                steps: [
+                    { cluster: 'write', action: 'Establishing narrative structure and storytelling approach', delay: 1300 },
+                    { cluster: 'psychology', action: 'Developing authentic character psychology and motivations', delay: 1400 },
+                    { cluster: 'memory', action: 'Drawing from literary knowledge and storytelling techniques', delay: 1200 },
+                    { cluster: 'intuition', action: 'Sensing narrative flow and emotional resonance', delay: 1500 },
+                    { cluster: 'write', action: 'Weaving all elements into compelling narrative', delay: 1700 }
+                ]
+            }
+        };
+
+        function runScenario(scenarioKey) {
+            const scenario = SCENARIOS[scenarioKey];
+            if (!scenario) return;
+            
+            activeScenario = scenarioKey;
+            
+            resetClusters();
+            document.querySelectorAll('.scenario-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="runScenario('${scenarioKey}')"]`).classList.add('active');
+            
+            addFlowEntry('SCENARIO', `Initiating: ${scenario.name}`);
+            
+            setTimeout(() => {
+                setClusterLeader(scenario.leader);
+                addFlowEntry('LEADERSHIP', `${CLUSTERS[scenario.leader].name} assumes leadership`, true);
+                
+                scenario.supporting.forEach((cluster, index) => {
+                    setTimeout(() => {
+                        activateCluster(cluster);
+                        addFlowEntry(cluster.toUpperCase(), `${CLUSTERS[cluster].name} activated for support`);
+                    }, (index + 1) * 300);
+                });
+                
+                let totalDelay = 1000;
+                scenario.steps.forEach((step, index) => {
+                    setTimeout(() => {
+                        addFlowEntry(step.cluster.toUpperCase(), step.action);
+                        pulseCluster(step.cluster);
+                    }, totalDelay);
+                    totalDelay += step.delay;
+                });
+                
+                setTimeout(() => {
+                    addFlowEntry('SUCCESS', `${scenario.name} completed successfully`);
+                    showConnections(scenario.leader, scenario.supporting);
+                }, totalDelay + 500);
+                
+            }, 800);
+        }
+
+        function resetClusters() {
+            document.querySelectorAll('.cluster-node').forEach(node => {
+                node.classList.remove('leader', 'active');
+            });
+            currentLeader = null;
+            
+            const connectionsNetwork = document.getElementById('connectionsNetwork');
+            connectionsNetwork.innerHTML = '<div class="connection-info">Processing cluster coordination...</div>';
+        }
+
+        function setClusterLeader(clusterKey) {
+            const clusterNode = document.querySelector(`[data-cluster="${clusterKey}"]`);
+            if (clusterNode) {
+                clusterNode.classList.add('leader');
+                currentLeader = clusterKey;
+            }
+        }
+
+        function activateCluster(clusterKey) {
+            const clusterNode = document.querySelector(`[data-cluster="${clusterKey}"]`);
+            if (clusterNode && !clusterNode.classList.contains('leader')) {
+                clusterNode.classList.add('active');
+            }
+        }
+
+        function pulseCluster(clusterKey) {
+            const clusterNode = document.querySelector(`[data-cluster="${clusterKey}"]`);
+            if (clusterNode) {
+                clusterNode.style.animation = 'none';
+                setTimeout(() => {
+                    if (clusterNode.classList.contains('leader')) {
+                        clusterNode.style.animation = 'leader-pulse 2s infinite';
+                    } else {
+                        clusterNode.style.animation = 'active-glow 1.5s infinite alternate';
+                    }
+                }, 10);
+            }
+        }
+
+        function showConnections(leader, supporting) {
+            const connectionsNetwork = document.getElementById('connectionsNetwork');
+            const leaderCluster = CLUSTERS[leader];
+            const supportingNames = supporting.map(key => CLUSTERS[key].name).join(', ');
+            
+            connectionsNetwork.innerHTML = `
+                <div class="connection-info">
+                    <strong>${leaderCluster.icon} ${leaderCluster.name}</strong> coordinating with:<br>
+                    ${supportingNames}<br><br>
+                    <small>Neural pathways active: ${supporting.length + 1} clusters collaborating</small>
+                </div>
+            `;
+        }
+
+        function addFlowEntry(cluster, action, isLeader = false) {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'flow-entry';
+            
+            const clusterClass = isLeader ? 'flow-leader' : 'flow-cluster';
+            entry.innerHTML = `
+                <span class="flow-timestamp">[${timestamp}]</span>
+                <span class="${clusterClass}">[${cluster}]</span>
+                <span class="flow-action">${action}</span>
+            `;
+            
+            const flowSteps = document.getElementById('flowSteps');
+            flowSteps.insertBefore(entry, flowSteps.firstChild);
+            
+            const entries = flowSteps.querySelectorAll('.flow-entry');
+            if (entries.length > 12) {
+                entries[entries.length - 1].remove();
+            }
+            
+            flowSteps.scrollTop = 0;
+        }
+
+        addFlowEntry('INIT', 'All specialized clusters initialized and ready');
+        addFlowEntry('NETWORK', '153M total neurons distributed across 9 clusters');
+        addFlowEntry('STATUS', 'Dynamic leadership system online');
+    </script>
+</body>
+</html>

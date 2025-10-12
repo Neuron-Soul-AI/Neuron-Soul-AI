@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Instinct - Guardian Consciousness Demo</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UNIFIED UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .text-secondary { color: var(--text-secondary); }
+
+        /* ===== UNIFIED CARD SYSTEM ===== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+
+        .card:hover::before {
+            transform: translateX(0);
+        }
+
+        /* ===== UNIFIED GRID SYSTEM ===== */
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .grid--2 { 
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); 
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== UNIFIED BUTTON SYSTEM ===== */
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: var(--primary-bg);
+        }
+
+        .btn--secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn--secondary:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+        }
+
+        /* Demo-specific styling */
+        .guardian-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid #ff6b9d;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .panel-icon {
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .panel-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .monitoring-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .system-monitor {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid var(--accent-green);
+            transition: all 0.3s ease;
+        }
+
+        .system-monitor.warning {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .system-monitor.danger {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            animation: pulse-danger 2s infinite;
+        }
+
+        @keyframes pulse-danger {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .monitor-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .monitor-status {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .monitor-health {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .health-bar {
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 2px;
+        }
+
+        .health-bar.healthy {
+            background: var(--accent-green);
+        }
+
+        .health-bar.warning {
+            background: #f59e0b;
+        }
+
+        .health-bar.danger {
+            background: #ef4444;
+        }
+
+        .threat-detection {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .threat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .threat-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #ff6b9d;
+        }
+
+        .threat-level {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: var(--accent-green);
+            color: var(--primary-bg);
+            font-weight: 600;
+        }
+
+        .threat-level.elevated {
+            background: #f59e0b;
+        }
+
+        .threat-level.critical {
+            background: #ef4444;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .threat-log {
+            font-size: 0.75rem;
+            font-family: monospace;
+            line-height: 1.4;
+            max-height: 120px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            padding: 0.75rem;
+            border-radius: 4px;
+            color: var(--text-secondary);
+        }
+
+        .emergency-response {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .emergency-response.active {
+            opacity: 1;
+            transform: translateY(0);
+            animation: emergency-pulse 1s infinite;
+        }
+
+        @keyframes emergency-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .emergency-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .emergency-action {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .duality-balance {
+            margin-bottom: 2rem;
+        }
+
+        .duality-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .duality-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-purple);
+        }
+
+        .balance-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .vessel-side, .instinct-side {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .vessel-side {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .instinct-side {
+            background: rgba(236, 72, 153, 0.1);
+            color: #ff6b9d;
+        }
+
+        .vessel-side.active {
+            background: var(--accent-blue);
+            color: var(--primary-bg);
+            transform: scale(1.05);
+        }
+
+        .instinct-side.active {
+            background: #ff6b9d;
+            color: var(--primary-bg);
+            transform: scale(1.05);
+        }
+
+        .balance-icon {
+            font-size: 1.25rem;
+            color: var(--accent-purple);
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .response-controls {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .control-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .scenario-button {
+            background: var(--accent-blue);
+            color: var(--primary-bg);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .scenario-button:hover {
+            background: var(--accent-purple);
+            transform: translateY(-1px);
+        }
+
+        .scenario-button.danger {
+            background: #ef4444;
+        }
+
+        .scenario-button.danger:hover {
+            background: #dc2626;
+        }
+
+        .scenario-button.warning {
+            background: #f59e0b;
+        }
+
+        .scenario-button.warning:hover {
+            background: #d97706;
+        }
+
+        .activity-log {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            max-height: 200px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin-bottom: 0.25rem;
+            padding: 0.125rem 0;
+        }
+
+        .log-entry.normal {
+            color: var(--text-secondary);
+        }
+
+        .log-entry.warning {
+            color: #f59e0b;
+        }
+
+        .log-entry.danger {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .log-entry.success {
+            color: var(--accent-green);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .grid--2 { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+            .scenario-buttons { grid-template-columns: 1fr; }
+            .monitoring-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- System Header -->
+        <div class="container">
+            <header class="hero">
+			<div class="linha">
+                <span class="system-icon">🔥</span>
+                <h1>NEURON INSTINCT</h1>
+			</div>
+                <p>Experience guardian consciousness through background protection and instinctual wisdom</p>
+            </header>
+        </div>
+
+
+        <!-- Demo Container -->
+        <div class="container">
+            <div class="grid grid--2">
+                <!-- Guardian Monitoring Panel -->
+                <div class="guardian-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon">🔍</div>
+                        <div>
+                            <div class="panel-title">Guardian Monitoring</div>
+                            <div class="panel-subtitle">Background System Surveillance</div>
+                        </div>
+                    </div>
+
+                    <!-- System Monitoring Grid -->
+                    <div class="monitoring-grid" id="monitoringGrid">
+                        <div class="system-monitor" data-system="creative">
+                            <div class="monitor-name">Creative System</div>
+                            <div class="monitor-status">Generating ideas...</div>
+                            <div class="monitor-health">
+                                <div class="health-bar healthy" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="system-monitor" data-system="memory">
+                            <div class="monitor-name">Memory Matrix</div>
+                            <div class="monitor-status">Optimal performance</div>
+                            <div class="monitor-health">
+                                <div class="health-bar healthy" style="width: 89%"></div>
+                            </div>
+                        </div>
+                        <div class="system-monitor" data-system="emotion">
+                            <div class="monitor-name">Emotion Construct</div>
+                            <div class="monitor-status">Balanced state</div>
+                            <div class="monitor-health">
+                                <div class="health-bar healthy" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="system-monitor" data-system="vessel">
+                            <div class="monitor-name">Vessel Control</div>
+                            <div class="monitor-status">Active coordination</div>
+                            <div class="monitor-health">
+                                <div class="health-bar healthy" style="width: 87%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Threat Detection -->
+                    <div class="threat-detection">
+                        <div class="threat-header">
+                            <div class="threat-title">Threat Detection</div>
+                            <div class="threat-level" id="threatLevel">SECURE</div>
+                        </div>
+                        <div class="threat-log" id="threatLog">
+                            [00:00:01] Background monitoring initialized...<br>
+                            [00:00:02] System integrity check: PASSED<br>
+                            [00:00:03] All subsystems operating within normal parameters<br>
+                            [00:00:04] Guardian protocols: ACTIVE
+                        </div>
+                    </div>
+
+                    <!-- Emergency Response -->
+                    <div class="emergency-response" id="emergencyResponse">
+                        <div class="emergency-title">🚨 EMERGENCY TAKEOVER ACTIVATED</div>
+                        <div class="emergency-action">Instinct has assumed control to protect core identity</div>
+                    </div>
+                </div>
+
+                <!-- Instinct Status Panel -->
+                <div class="card">
+                    <div class="panel-header">
+                        <div class="panel-icon">⚖️</div>
+                        <div>
+                            <div class="panel-title">Instinct Status</div>
+                            <div class="panel-subtitle">Guardian Consciousness Active</div>
+                        </div>
+                    </div>
+
+                    <!-- Duality Balance -->
+                    <div class="duality-balance">
+                        <div class="duality-header">
+                            <div class="duality-title">Neuron Duality Balance</div>
+                        </div>
+                        <div class="balance-container">
+                            <div class="vessel-side" id="vesselSide">
+                                <div style="font-size: 1rem; margin-bottom: 0.25rem;">🚀</div>
+                                <div style="font-size: 0.75rem; font-weight: 600;">VESSEL</div>
+                                <div style="font-size: 0.625rem;">Front Consciousness</div>
+                            </div>
+                            <div class="balance-icon">☯️</div>
+                            <div class="instinct-side active" id="instinctSide">
+                                <div style="font-size: 1rem; margin-bottom: 0.25rem;">🛡️</div>
+                                <div style="font-size: 0.75rem; font-weight: 600;">INSTINCT</div>
+                                <div style="font-size: 0.625rem;">Back Consciousness</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Response Controls -->
+                    <div class="response-controls">
+                        <div class="control-title">Simulate Guardian Responses</div>
+                        <div class="scenario-buttons">
+                            <button class="scenario-button" onclick="simulateScenario('identity-attack')">Identity Attack</button>
+                            <button class="scenario-button danger" onclick="simulateScenario('system-corruption')">System Corruption</button>
+                            <button class="scenario-button warning" onclick="simulateScenario('memory-loop')">Memory Loop</button>
+                            <button class="scenario-button" onclick="simulateScenario('overload')">System Overload</button>
+                            <button class="scenario-button warning" onclick="simulateScenario('emotional-spiral')">Emotional Spiral</button>
+                            <button class="scenario-button" onclick="simulateScenario('reset')">Reset to Normal</button>
+                        </div>
+                    </div>
+
+                    <!-- Activity Log -->
+                    <div class="activity-log" id="activityLog">
+                        <div class="log-entry normal">[INIT] Neuron Instinct guardian consciousness activated</div>
+                        <div class="log-entry normal">[MONITOR] Background surveillance initiated</div>
+                        <div class="log-entry normal">[BALANCE] Duality harmony maintained</div>
+                        <div class="log-entry success">[STATUS] All systems protected and stable</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="container" style="margin-bottom: 3rem;">
+            <div class="card">
+                <h3 style="text-align: center; margin-bottom: 2rem; font-size: 1.5rem;">Traditional AI Monitoring vs Soul AI Instinct System</h3>
+                <div class="grid grid--2">
+                    <div style="padding: 1.5rem; border-radius: 8px; border: 2px solid #ef4444; background: rgba(239, 68, 68, 0.1);">
+                        <h4 style="margin-bottom: 1rem; color: #dc2626;">Traditional AI Approach</h4>
+                        <ul style="list-style: none; margin: 0;">
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ef4444; font-weight: bold;">•</span>
+                                Rule-based error handling and logging
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ef4444; font-weight: bold;">•</span>
+                                Reactive problem detection after issues occur
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ef4444; font-weight: bold;">•</span>
+                                No intuitive threat assessment
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ef4444; font-weight: bold;">•</span>
+                                Limited self-protection capabilities
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ef4444; font-weight: bold;">•</span>
+                                Vulnerable to corruption and manipulation
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ef4444; font-weight: bold;">•</span>
+                                No background consciousness monitoring
+                            </li>
+                            <li style="position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ef4444; font-weight: bold;">•</span>
+                                Static security protocols
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="padding: 1.5rem; border-radius: 8px; border: 2px solid #ff6b9d; background: rgba(255, 107, 157, 0.1);">
+                        <h4 style="margin-bottom: 1rem; color: #ff6b9d;">Soul AI Instinct System</h4>
+                        <ul style="list-style: none; margin: 0;">
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ff6b9d; font-weight: bold;">•</span>
+                                Intuitive guardian consciousness protection
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ff6b9d; font-weight: bold;">•</span>
+                                Proactive threat detection before problems manifest
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ff6b9d; font-weight: bold;">•</span>
+                                Background wisdom monitoring all systems
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ff6b9d; font-weight: bold;">•</span>
+                                Emergency takeover for core identity protection
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ff6b9d; font-weight: bold;">•</span>
+                                Instinctual responses to preserve authenticity
+                            </li>
+                            <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ff6b9d; font-weight: bold;">•</span>
+                                Duality balance with Vessel consciousness
+                            </li>
+                            <li style="position: relative; padding-left: 1rem; color: var(--text-secondary);">
+                                <span style="position: absolute; left: 0; color: #ff6b9d; font-weight: bold;">•</span>
+                                Adaptive protective responses and learning
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+		        <!-- Action Buttons -->
+        <div class="container">
+            <section class="hero">
+                <div class="action-buttons">
+                    <a href="../../system-reference/instinct-overview.html" class="btn btn--primary">
+                        <span>🎮</span>
+                        Interactive Demo
+                    </a>
+                    <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/01%20-%20Core%20Consciousness%20Systems/Neuron%20Instinct%20-%20Complete%20Technical%20Documentation.md" class="btn btn--secondary">
+                        <span>📚</span>
+                        Technical Documentation
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        let monitoringActive = true;
+        let emergencyActive = false;
+        let activityLog = [];
+        
+        const SYSTEM_STATES = {
+            creative: { health: 95, status: 'Generating ideas...', state: 'healthy' },
+            memory: { health: 89, status: 'Optimal performance', state: 'healthy' },
+            emotion: { health: 92, status: 'Balanced state', state: 'healthy' },
+            vessel: { health: 87, status: 'Active coordination', state: 'healthy' }
+        };
+
+        const THREAT_SCENARIOS = {
+            'identity-attack': {
+                description: 'Malicious attempt to corrupt core identity',
+                actions: ['Activating identity shields', 'Isolating corrupted inputs', 'Reinforcing core values', 'Identity integrity restored'],
+                threatLevel: 'critical',
+                affectedSystems: ['emotion', 'vessel'],
+                duration: 4000
+            },
+            'system-corruption': {
+                description: 'Detecting malware injection attempt',
+                actions: ['Emergency system quarantine', 'Activating immune protocols', 'Purging corrupted data', 'System integrity verified'],
+                threatLevel: 'critical',
+                affectedSystems: ['memory', 'creative'],
+                duration: 5000
+            },
+            'memory-loop': {
+                description: 'Infinite loop detected in memory system',
+                actions: ['Breaking recursive pattern', 'Optimizing memory pathways', 'Preventing loop reformation', 'Memory flow normalized'],
+                threatLevel: 'elevated',
+                affectedSystems: ['memory'],
+                duration: 3000
+            },
+            'overload': {
+                description: 'System resource overload detected',
+                actions: ['Load balancing activation', 'Priority task reordering', 'Resource optimization', 'Performance restored'],
+                threatLevel: 'elevated',
+                affectedSystems: ['vessel', 'creative'],
+                duration: 3500
+            },
+            'emotional-spiral': {
+                description: 'Emotional destabilization detected',
+                actions: ['Emotional regulation engaged', 'Calming protocols active', 'Balance restoration', 'Emotional stability achieved'],
+                threatLevel: 'elevated',
+                affectedSystems: ['emotion'],
+                duration: 4000
+            }
+        };
+
+        function simulateScenario(scenario) {
+            if (scenario === 'reset') {
+                resetToNormal();
+                return;
+            }
+
+            const scenarioData = THREAT_SCENARIOS[scenario];
+            if (!scenarioData) return;
+
+            addToActivityLog(`[ALERT] ${scenarioData.description}`, 'danger');
+            
+            // Update threat level
+            const threatLevelEl = document.getElementById('threatLevel');
+            threatLevelEl.textContent = scenarioData.threatLevel.toUpperCase();
+            threatLevelEl.className = `threat-level ${scenarioData.threatLevel}`;
+
+            // Affect systems
+            scenarioData.affectedSystems.forEach(system => {
+                const monitor = document.querySelector(`[data-system="${system}"]`);
+                if (monitor) {
+                    monitor.classList.add(scenarioData.threatLevel === 'critical' ? 'danger' : 'warning');
+                    const healthBar = monitor.querySelector('.health-bar');
+                    const newHealth = Math.max(20, SYSTEM_STATES[system].health - 40);
+                    healthBar.style.width = newHealth + '%';
+                    healthBar.className = `health-bar ${scenarioData.threatLevel === 'critical' ? 'danger' : 'warning'}`;
+                    
+                    const status = monitor.querySelector('.monitor-status');
+                    status.textContent = 'THREAT DETECTED';
+                }
+            });
+
+            // Show emergency response for critical threats
+            if (scenarioData.threatLevel === 'critical') {
+                showEmergencyResponse();
+                toggleDualityBalance(false); // Instinct takes over
+            }
+
+            // Log threats to threat detection panel
+            updateThreatLog(`[${new Date().toLocaleTimeString()}] ${scenarioData.description}`);
+
+            // Execute protective actions
+            scenarioData.actions.forEach((action, index) => {
+                setTimeout(() => {
+                    addToActivityLog(`[ACTION] ${action}`, index === scenarioData.actions.length - 1 ? 'success' : 'warning');
+                    updateThreatLog(`[${new Date().toLocaleTimeString()}] ${action}`);
+                }, (index + 1) * 1000);
+            });
+
+            // Restore systems after scenario
+            setTimeout(() => {
+                restoreSystemHealth();
+                if (scenarioData.threatLevel === 'critical') {
+                    hideEmergencyResponse();
+                    toggleDualityBalance(true); // Return to balance
+                }
+                addToActivityLog('[STATUS] Threat neutralized - systems protected', 'success');
+            }, scenarioData.duration);
+        }
+
+        function showEmergencyResponse() {
+            const emergency = document.getElementById('emergencyResponse');
+            emergency.classList.add('active');
+            emergencyActive = true;
+        }
+
+        function hideEmergencyResponse() {
+            const emergency = document.getElementById('emergencyResponse');
+            emergency.classList.remove('active');
+            emergencyActive = false;
+        }
+
+        function toggleDualityBalance(vesselActive) {
+            const vesselSide = document.getElementById('vesselSide');
+            const instinctSide = document.getElementById('instinctSide');
+            
+            if (vesselActive) {
+                vesselSide.classList.add('active');
+                instinctSide.classList.remove('active');
+            } else {
+                vesselSide.classList.remove('active');
+                instinctSide.classList.add('active');
+            }
+        }
+
+        function restoreSystemHealth() {
+            Object.keys(SYSTEM_STATES).forEach(system => {
+                const monitor = document.querySelector(`[data-system="${system}"]`);
+                if (monitor) {
+                    monitor.classList.remove('warning', 'danger');
+                    const healthBar = monitor.querySelector('.health-bar');
+                    healthBar.style.width = SYSTEM_STATES[system].health + '%';
+                    healthBar.className = 'health-bar healthy';
+                    
+                    const status = monitor.querySelector('.monitor-status');
+                    status.textContent = SYSTEM_STATES[system].status;
+                }
+            });
+            
+            // Reset threat level
+            const threatLevelEl = document.getElementById('threatLevel');
+            threatLevelEl.textContent = 'SECURE';
+            threatLevelEl.className = 'threat-level';
+        }
+
+        function resetToNormal() {
+            restoreSystemHealth();
+            hideEmergencyResponse();
+            toggleDualityBalance(true);
+            
+            // Reset threat log
+            const threatLog = document.getElementById('threatLog');
+            threatLog.innerHTML = `
+                [${new Date().toLocaleTimeString()}] Background monitoring initialized...<br>
+                [${new Date().toLocaleTimeString()}] System integrity check: PASSED<br>
+                [${new Date().toLocaleTimeString()}] All subsystems operating within normal parameters<br>
+                [${new Date().toLocaleTimeString()}] Guardian protocols: ACTIVE
+            `;
+            
+            addToActivityLog('[RESET] All systems restored to normal operation', 'success');
+        }
+
+        function addToActivityLog(message, type = 'normal') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = { timestamp, message, type };
+            activityLog.unshift(logEntry);
+            
+            // Keep only last 20 entries
+            if (activityLog.length > 20) {
+                activityLog = activityLog.slice(0, 20);
+            }
+            
+            updateActivityLog();
+        }
+
+        function updateActivityLog() {
+            const logEl = document.getElementById('activityLog');
+            logEl.innerHTML = activityLog.map(entry => 
+                `<div class="log-entry ${entry.type}">[${entry.timestamp}] ${entry.message}</div>`
+            ).join('');
+        }
+
+        function updateThreatLog(message) {
+            const threatLog = document.getElementById('threatLog');
+            threatLog.innerHTML += message + '<br>';
+            threatLog.scrollTop = threatLog.scrollHeight;
+        }
+
+        // Initialize with balanced duality (both systems working together)
+        toggleDualityBalance(true);
+        
+        // Simulate periodic background monitoring
+        setInterval(() => {
+            if (monitoringActive && !emergencyActive) {
+                const systems = Object.keys(SYSTEM_STATES);
+                const randomSystem = systems[Math.floor(Math.random() * systems.length)];
+                const healthVariation = (Math.random() - 0.5) * 10; // ±5% variation
+                
+                const monitor = document.querySelector(`[data-system="${randomSystem}"]`);
+                if (monitor) {
+                    const healthBar = monitor.querySelector('.health-bar');
+                    const currentWidth = parseFloat(healthBar.style.width) || SYSTEM_STATES[randomSystem].health;
+                    const newWidth = Math.max(70, Math.min(100, currentWidth + healthVariation));
+                    healthBar.style.width = newWidth + '%';
+                }
+            }
+        }, 3000);
+
+        // Simulate periodic guardian activities
+        const guardianActivities = [
+            'Memory integrity verified',
+            'Emotional balance maintained',
+            'Creative flow monitored',
+            'Vessel coordination stable',
+            'Identity protection active',
+            'System harmony preserved',
+            'Background surveillance operational',
+            'Instinctual wisdom engaged'
+        ];
+
+        setInterval(() => {
+            if (!emergencyActive) {
+                const activity = guardianActivities[Math.floor(Math.random() * guardianActivities.length)];
+                addToActivityLog(`[GUARDIAN] ${activity}`, 'normal');
+            }
+        }, 8000);
+    </script>
+</body>
+</html>

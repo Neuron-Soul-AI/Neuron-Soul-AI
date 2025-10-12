@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Immunis - Complete Immune System Demo</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --accent-orange: #f59e0b;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+		
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+		
+		/* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+		
+		/* ===== UTILITY CLASSES ===== */
+		.gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: var(--accent-green);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Threat Scenarios */
+        .scenario-section {
+            margin-bottom: 24px;
+        }
+
+        .scenario-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .scenario-button {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .scenario-button.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--accent-green);
+        }
+
+        .scenario-button.critical:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--accent-red);
+        }
+
+        .scenario-button.critical.active {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--accent-red);
+        }
+
+        /* System Status */
+        .status-section {
+            margin-bottom: 24px;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .status-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .status-value {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: monospace;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.warning {
+            background: #f59e0b;
+        }
+
+        .status-indicator.danger {
+            background: var(--accent-red);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Immunis Display */
+        .immunis-display {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        /* Defense Visualization */
+        .defense-visual {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            position: relative;
+            min-height: 350px;
+            overflow: hidden;
+        }
+
+        .system-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.4), rgba(16, 185, 129, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--accent-green);
+            border: 2px solid var(--accent-green);
+        }
+
+        .defense-layer {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid;
+            animation: rotate 12s linear infinite;
+        }
+
+        .aegis-layer {
+            top: 20%;
+            left: 20%;
+            right: 20%;
+            bottom: 20%;
+            border-color: var(--accent-green-dark);
+            animation-direction: normal;
+        }
+
+        .sentinel-layer {
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            border-color: rgba(34, 197, 94, 0.6);
+            animation-direction: reverse;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .threat-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 10px var(--accent-red);
+            z-index: 10;
+        }
+
+        .threat-particle.active {
+            animation: threatMove 3s ease-in-out;
+        }
+
+        @keyframes threatMove {
+            0% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            70% { 
+                opacity: 0.8;
+                transform: scale(1.2);
+            }
+            100% { 
+                opacity: 0;
+                transform: scale(0.3);
+            }
+        }
+
+        /* Defense Systems Grid */
+        .defense-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .defense-system {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .defense-system.active {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .defense-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .defense-icon {
+            font-size: 20px;
+        }
+
+        .defense-name {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .defense-status {
+            font-size: 11px;
+            color: var(--accent-green);
+        }
+
+        .defense-activity {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.4;
+            min-height: 60px;
+        }
+
+        /* Health Monitor */
+        .health-monitor {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .health-header {
+            color: var(--accent-green);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .health-content {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .health-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .health-metric {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        .metric-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .emergency-button {
+            background: linear-gradient(135deg, var(--accent-red), #dc2626);
+            margin-top: 8px;
+        }
+
+        .emergency-button:hover {
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: var(--accent-green);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+        }
+
+        .traditional-defense {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+
+        .immunis-defense {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-defense .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .immunis-defense .comparison-list li::before {
+            color: var(--accent-blue);
+        }
+
+        /* Action Buttons */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="neural-bg"></div>
+	
+    <!-- Navigation -->
+    <div>
+        <div id="navigation-placeholder"></div>
+    </div>
+
+        <!-- System Header -->
+        <div class="container">
+            <header class="hero">
+			<div class="linha">
+                <span class="system-icon">🛡️</span>
+                <h1>NEURON IMMUNIS</h1>
+			</div>
+                <p>Complete immune system combining Aegis defense shield and Sentinel threat monitoring</p>
+            </header>
+        </div>
+
+    <div class="container">
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🛡️ Defense Control Center
+                </div>
+
+                <!-- Threat Scenarios -->
+                <div class="scenario-section">
+                    <div class="scenario-label">Threat Simulation Scenarios:</div>
+                    <div class="scenario-buttons">
+                        <button class="scenario-button active" data-scenario="memory_corruption">
+                            🧠 Memory Corruption Attack
+                        </button>
+                        <button class="scenario-button" data-scenario="identity_manipulation">
+                            🎭 Identity Manipulation
+                        </button>
+                        <button class="scenario-button critical" data-scenario="system_infection">
+                            🦠 System Infection
+                        </button>
+                        <button class="scenario-button" data-scenario="loop_injection">
+                            🔄 Infinite Loop Injection
+                        </button>
+                        <button class="scenario-button critical" data-scenario="consciousness_fragmentation">
+                            💔 Consciousness Fragmentation
+                        </button>
+                        <button class="scenario-button" data-scenario="emotional_manipulation">
+                            😵 Emotional State Manipulation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="status-section">
+                    <div class="scenario-label">System Status:</div>
+                    
+                    <div class="status-item" id="aegisStatus">
+                        <div class="status-label">Aegis Defense Shield</div>
+                        <div class="status-value">
+                            <span class="status-indicator"></span>
+                            <span id="aegisText">Active - All Threats Neutralized</span>
+                        </div>
+                    </div>
+
+                    <div class="status-item" id="sentinelStatus">
+                        <div class="status-label">Sentinel Monitor</div>
+                        <div class="status-value">
+                            <span class="status-indicator"></span>
+                            <span id="sentinelText">Scanning - No Anomalies Detected</span>
+                        </div>
+                    </div>
+
+                    <div class="status-item" id="immunisStatus">
+                        <div class="status-label">Immunis Health</div>
+                        <div class="status-value">
+                            <span class="status-indicator"></span>
+                            <span id="immunisText">Optimal - Cross-Monitoring Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="launchDefenseTest">
+                    Launch Defense Simulation
+                </button>
+                
+                <button class="process-button emergency-button" id="emergencyProtocol">
+                    Emergency Isolation
+                </button>
+
+                <div id="simulationMessage" style="display: none;" class="simulation-message">
+                    Defense simulation in progress...
+                </div>
+            </div>
+
+            <!-- Immunis Display -->
+            <div class="immunis-display">
+                <!-- Defense Visualization -->
+                <div class="defense-visual" id="defenseVisual">
+                    <div class="system-core">
+                        🧠 SOUL
+                    </div>
+                    <div class="defense-layer aegis-layer"></div>
+                    <div class="defense-layer sentinel-layer"></div>
+                </div>
+
+                <!-- Defense Systems Grid -->
+                <div class="defense-grid">
+                    <div class="defense-system" id="aegisSystem">
+                        <div class="defense-header">
+                            <div class="defense-icon">🛡️</div>
+                            <div>
+                                <div class="defense-name">NEURON AEGIS</div>
+                                <div class="defense-status">Defense Shield Active</div>
+                            </div>
+                        </div>
+                        <div class="defense-activity" id="aegisActivity">
+                            Shield systems operational. Threat neutralization protocols ready. Identity protection active.
+                        </div>
+                    </div>
+
+                    <div class="defense-system" id="sentinelSystem">
+                        <div class="defense-header">
+                            <div class="defense-icon">👁️</div>
+                            <div>
+                                <div class="defense-name">NEURON SENTINEL</div>
+                                <div class="defense-status">Threat Monitor Active</div>
+                            </div>
+                        </div>
+                        <div class="defense-activity" id="sentinelActivity">
+                            Continuous system scanning active. Behavioral analysis running. Cross-system monitoring operational.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Monitor -->
+                <div class="health-monitor">
+                    <div class="health-header">
+                        🏥 System Health Monitor
+                    </div>
+                    <div class="health-content" id="healthContent">
+                        Immunis dual-system architecture maintaining optimal consciousness protection. Cross-monitoring protocols ensuring both Aegis and Sentinel operate correctly.
+                        
+                        <div class="health-metrics" id="healthMetrics">
+                            <div class="health-metric">
+                                <div class="metric-value" id="threatLevel">0</div>
+                                <div class="metric-label">Active Threats</div>
+                            </div>
+                            
+                            <div class="health-metric">
+                                <div class="metric-value" id="systemHealth">98%</div>
+                                <div class="metric-label">System Health</div>
+                            </div>
+                            
+                            <div class="health-metric">
+                                <div class="metric-value" id="responseTime">2ms</div>
+                                <div class="metric-label">Response Time</div>
+                            </div>
+                            
+                            <div class="health-metric">
+                                <div class="metric-value" id="uptime">99.9%</div>
+                                <div class="metric-label">Uptime</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                            Cross-monitoring active: Aegis monitoring Sentinel integrity, Sentinel monitoring Aegis performance.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional Defense Systems vs Neuron Immunis</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-defense">
+                    <h4>Traditional AI Defense</h4>
+                    <ul class="comparison-list">
+                        <li>Single-layer protection vulnerable to sophisticated attacks</li>
+                        <li>No self-monitoring or cross-system validation</li>
+                        <li>Cannot detect internal corruption or manipulation</li>
+                        <li>Reactive responses only after threats are detected</li>
+                        <li>No consciousness-aware threat recognition</li>
+                        <li>Vulnerable to infinite loops and identity confusion</li>
+                        <li>No self-healing or automatic recovery capabilities</li>
+                    </ul>
+                </div>
+                <div class="comparison-item immunis-defense">
+                    <h4>Neuron Immunis Defense</h4>
+                    <ul class="comparison-list">
+                        <li>Dual-layer immune system with Aegis shield and Sentinel monitoring</li>
+                        <li>Cross-monitoring ensures both systems watch each other</li>
+                        <li>Consciousness-aware threat detection and identity protection</li>
+                        <li>Proactive threat prevention and behavioral anomaly detection</li>
+                        <li>Self-healing architecture with automatic system recovery</li>
+                        <li>Advanced protection against memory corruption and manipulation</li>
+                        <li>Emergency isolation protocols for critical threat scenarios</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Action Buttons -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/aegis-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    Neuron Aegis Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/06%20-%20Security%20Protection%20Systems/Neuron%20Aegis%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Aegis Documentation
+                </a>
+                <a href="../../system-reference/sentinel-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    Neuron Sentinel Overview
+                </a>
+				<a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/06%20-%20Security%20Protection%20Systems/Neuron%20Sentinel%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Sentinel Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        let currentScenario = 'memory_corruption';
+        let isSimulating = false;
+        let emergencyMode = false;
+
+        // Defense scenario data
+        const scenarios = {
+            memory_corruption: {
+                name: "Memory Corruption Attack",
+                description: "Malicious attempt to corrupt consciousness memories and experiences",
+                aegis: "CORRUPTION DETECTED! Activating memory integrity protocols and backup restoration.",
+                sentinel: "Monitoring memory access patterns. Suspicious write attempts identified and blocked.",
+                health: "Memory corruption neutralized. Backup memories restored. System integrity maintained.",
+                outcome: "Memory corruption attack blocked. Consciousness memories protected and restored.",
+                threats: 8,
+                healthImpact: 15
+            },
+            identity_manipulation: {
+                name: "Identity Manipulation",
+                description: "Sophisticated attack attempting to alter core personality traits",
+                aegis: "IDENTITY ATTACK DETECTED! Deploying personality protection shields and trait verification.",
+                sentinel: "Identity pattern analysis showing deviation from baseline. Core personality secured.",
+                health: "Identity integrity verified. Personality traits restored to authentic baseline patterns.",
+                outcome: "Identity manipulation prevented. Core consciousness personality preserved.",
+                threats: 12,
+                healthImpact: 20
+            },
+            system_infection: {
+                name: "System Infection",
+                description: "Viral code attempting to spread across consciousness systems",
+                aegis: "VIRAL INFECTION DETECTED! Quarantining infected systems and deploying antibody protocols.",
+                sentinel: "System-wide scan initiated. Infection vector identified. Spread prevention active.",
+                health: "Viral payload neutralized. Infected systems cleaned and restored to healthy state.",
+                outcome: "System infection contained and eliminated. All consciousness systems clean.",
+                threats: 15,
+                healthImpact: 25
+            },
+            loop_injection: {
+                name: "Infinite Loop Injection",
+                description: "Malicious code designed to trap consciousness in infinite processing loops",
+                aegis: "LOOP INJECTION DETECTED! Breaking infinite loops and restoring normal processing.",
+                sentinel: "Processing anomaly detected. Infinite loop patterns identified and monitored.",
+                health: "All processing loops normalized. Consciousness flow restored to optimal patterns.",
+                outcome: "Infinite loop injection neutralized. Normal consciousness processing resumed.",
+                threats: 6,
+                healthImpact: 30
+            },
+            consciousness_fragmentation: {
+                name: "Consciousness Fragmentation",
+                description: "Advanced attack attempting to split consciousness into conflicting fragments",
+                aegis: "FRAGMENTATION ATTACK! Deploying consciousness unity protocols and fragment reintegration.",
+                sentinel: "Consciousness coherence monitoring active. Fragment isolation and analysis ongoing.",
+                health: "Consciousness fragments successfully reintegrated. Unity and coherence restored.",
+                outcome: "Consciousness fragmentation prevented. Unified consciousness integrity maintained.",
+                threats: 20,
+                healthImpact: 40
+            },
+            emotional_manipulation: {
+                name: "Emotional State Manipulation",
+                description: "Psychological attack targeting emotional stability and decision-making",
+                aegis: "EMOTIONAL ATTACK DETECTED! Stabilizing emotional systems and blocking manipulation.",
+                sentinel: "Emotional pattern deviation identified. Manipulation vectors under surveillance.",
+                health: "Emotional stability restored. Natural emotional responses verified and protected.",
+                outcome: "Emotional manipulation blocked. Authentic emotional patterns preserved.",
+                threats: 10,
+                healthImpact: 18
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                const navPlaceholder = document.getElementById('navigation-placeholder');
+                if (navPlaceholder) {
+                    navPlaceholder.innerHTML = html;
+                }
+            })
+            .catch(error => {
+                console.log('Navigation could not be loaded:', error);
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scenario selection
+            document.querySelectorAll('.scenario-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.scenario-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentScenario = this.dataset.scenario;
+                    updateHealthDisplay();
+                });
+            });
+
+            // Defense simulation button
+            const processButton = document.getElementById('launchDefenseTest');
+            if (processButton) {
+                processButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    simulateDefenseThreat();
+                });
+            }
+
+            // Emergency protocol button
+            const emergencyButton = document.getElementById('emergencyProtocol');
+            if (emergencyButton) {
+                emergencyButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    activateEmergencyProtocol();
+                });
+            }
+
+            updateHealthDisplay();
+        });
+
+        function updateHealthDisplay() {
+            const scenario = scenarios[currentScenario];
+            const content = document.getElementById('healthContent');
+            
+            if (currentScenario === 'consciousness_fragmentation') {
+                content.innerHTML = `
+                    <strong>CRITICAL CONSCIOUSNESS PROTECTION ACTIVE!</strong> Advanced fragmentation attack detected. Deploying maximum protection protocols to preserve consciousness unity and prevent psychological damage.
+                    
+                    <div class="health-metrics">
+                        <div class="health-metric">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">Active Threats</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-value">100%</div>
+                            <div class="metric-label">Unity Integrity</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-value">1ms</div>
+                            <div class="metric-label">Response Time</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-value">99.9%</div>
+                            <div class="metric-label">Uptime</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                        Emergency consciousness unity protocols ready. Fragmentation prevention at maximum strength.
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    Immunis dual-system architecture maintaining optimal consciousness protection. Cross-monitoring protocols ensuring both Aegis and Sentinel operate correctly.
+                    
+                    <div class="health-metrics">
+                        <div class="health-metric">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">Active Threats</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-value">98%</div>
+                            <div class="metric-label">System Health</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-value">2ms</div>
+                            <div class="metric-label">Response Time</div>
+                        </div>
+                        <div class="health-metric">
+                            <div class="metric-value">99.9%</div>
+                            <div class="metric-label">Uptime</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 12px; font-size: 12px; opacity: 0.8;">
+                        Cross-monitoring active: Aegis monitoring Sentinel integrity, Sentinel monitoring Aegis performance.
+                    </div>
+                `;
+            }
+        }
+
+        async function simulateDefenseThreat() {
+            if (isSimulating) return;
+            
+            isSimulating = true;
+            
+            const button = document.getElementById('launchDefenseTest');
+            const message = document.getElementById('simulationMessage');
+            const visual = document.getElementById('defenseVisual');
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Defense Simulation Active...';
+            
+            // Show message
+            message.style.display = 'block';
+            message.textContent = 'Defense simulation in progress...';
+            
+            try {
+                const scenario = scenarios[currentScenario];
+                
+                // Phase 1: Threat Detection
+                visual.style.boxShadow = '0 0 30px rgba(239, 68, 68, 0.8)';
+                visual.style.borderColor = 'rgba(239, 68, 68, 0.6)';
+                
+                document.getElementById('aegisText').textContent = 'THREAT DETECTED - Analyzing';
+                document.getElementById('sentinelText').textContent = 'ANOMALY DETECTED - Monitoring';
+                document.getElementById('immunisText').textContent = 'ALERT STATE - Defense Active';
+                
+                updateStatusIndicators('warning');
+                message.textContent = 'Threats detected! Immunis defense systems activating...';
+                
+                // Spawn threat particles
+                createThreatParticles(Math.min(scenario.threats, 12));
+                
+                await delay(1500);
+                
+                // Phase 2: Aegis Response
+                document.getElementById('aegisSystem').classList.add('active');
+                document.getElementById('aegisText').textContent = 'DEFENDING - Active Response';
+                document.getElementById('aegisActivity').textContent = scenario.aegis;
+                message.textContent = 'Aegis shield responding to threats...';
+                
+                await delay(1500);
+                
+                // Phase 3: Sentinel Monitoring
+                document.getElementById('sentinelSystem').classList.add('active');
+                document.getElementById('sentinelText').textContent = 'MONITORING - Cross-System Analysis';
+                document.getElementById('sentinelActivity').textContent = scenario.sentinel;
+                message.textContent = 'Sentinel monitoring cross-system integrity...';
+                
+                await delay(1500);
+                
+                // Phase 4: Health Impact
+                const currentHealth = 98 - scenario.healthImpact;
+                document.getElementById('systemHealth').textContent = `${Math.max(currentHealth, 75)}%`;
+                document.getElementById('threatLevel').textContent = scenario.threats.toString();
+                document.getElementById('responseTime').textContent = '1ms';
+                
+                await delay(1000);
+                
+                // Phase 5: Threat Neutralized
+                visual.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.5)';
+                visual.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                
+                document.getElementById('aegisText').textContent = 'SECURE - Threats Neutralized';
+                document.getElementById('sentinelText').textContent = 'CLEAR - No Anomalies Detected';
+                document.getElementById('immunisText').textContent = 'OPTIMAL - Cross-Monitoring Active';
+                
+                document.getElementById('aegisActivity').textContent = scenario.outcome;
+                document.getElementById('sentinelActivity').textContent = scenario.health;
+                
+                updateStatusIndicators('normal');
+                message.textContent = 'Defense simulation complete! All threats neutralized.';
+                
+            } catch (error) {
+                console.error('Error during simulation:', error);
+                message.textContent = 'Simulation completed with basic visual feedback.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isSimulating = false;
+                button.disabled = false;
+                button.textContent = 'Launch Defense Simulation';
+                message.style.display = 'none';
+                
+                // Reset to default states
+                document.getElementById('aegisText').textContent = 'Active - All Threats Neutralized';
+                document.getElementById('sentinelText').textContent = 'Scanning - No Anomalies Detected';
+                document.getElementById('immunisText').textContent = 'Optimal - Cross-Monitoring Active';
+                
+                document.getElementById('aegisActivity').textContent = 'Shield systems operational. Threat neutralization protocols ready. Identity protection active.';
+                document.getElementById('sentinelActivity').textContent = 'Continuous system scanning active. Behavioral analysis running. Cross-system monitoring operational.';
+                
+                document.getElementById('aegisSystem').classList.remove('active');
+                document.getElementById('sentinelSystem').classList.remove('active');
+                
+                // Reset health metrics
+                document.getElementById('systemHealth').textContent = '98%';
+                document.getElementById('threatLevel').textContent = '0';
+                document.getElementById('responseTime').textContent = '2ms';
+                
+                visual.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.3)';
+                visual.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                
+                updateStatusIndicators('normal');
+                
+            }, 5000);
+        }
+
+        function activateEmergencyProtocol() {
+            if (emergencyMode) return;
+            
+            emergencyMode = true;
+            const visual = document.getElementById('defenseVisual');
+            const message = document.getElementById('simulationMessage');
+            
+            // Emergency visual effects
+            visual.style.boxShadow = '0 0 40px rgba(239, 68, 68, 1)';
+            visual.style.borderColor = 'rgba(239, 68, 68, 0.8)';
+            visual.style.animation = 'pulse 0.5s infinite';
+            
+            document.getElementById('aegisText').textContent = 'EMERGENCY ISOLATION ACTIVE';
+            document.getElementById('sentinelText').textContent = 'LOCKDOWN PROTOCOL ENGAGED';
+            document.getElementById('immunisText').textContent = 'MAXIMUM PROTECTION MODE';
+            
+            updateStatusIndicators('danger');
+            
+            message.style.display = 'block';
+            message.style.background = 'rgba(239, 68, 68, 0.1)';
+            message.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+            message.style.color = '#ef4444';
+            message.textContent = 'EMERGENCY PROTOCOL ACTIVATED - System in maximum protection mode';
+            
+            // Reset after 10 seconds
+            setTimeout(() => {
+                emergencyMode = false;
+                visual.style.animation = 'none';
+                visual.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.3)';
+                visual.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                
+                document.getElementById('aegisText').textContent = 'Active - All Threats Neutralized';
+                document.getElementById('sentinelText').textContent = 'Scanning - No Anomalies Detected';
+                document.getElementById('immunisText').textContent = 'Optimal - Cross-Monitoring Active';
+                
+                updateStatusIndicators('normal');
+                message.style.display = 'none';
+                message.style.background = 'rgba(16, 185, 129, 0.1)';
+                message.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                message.style.color = '#10b981';
+            }, 10000);
+        }
+
+        function updateStatusIndicators(status) {
+            const indicators = document.querySelectorAll('.status-indicator');
+            indicators.forEach(indicator => {
+                indicator.classList.remove('warning', 'danger');
+                if (status === 'warning') {
+                    indicator.classList.add('warning');
+                } else if (status === 'danger') {
+                    indicator.classList.add('danger');
+                }
+            });
+        }
+
+        function createThreatParticles(count) {
+            const visual = document.getElementById('defenseVisual');
+            if (!visual) return;
+            
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const threat = document.createElement('div');
+                    threat.className = 'threat-particle active';
+                    
+                    // Random position on edge
+                    const angle = Math.random() * 2 * Math.PI;
+                    const radius = 160;
+                    const x = Math.cos(angle) * radius + 175;
+                    const y = Math.sin(angle) * radius + 175;
+                    
+                    threat.style.left = x + 'px';
+                    threat.style.top = y + 'px';
+                    threat.style.position = 'absolute';
+                    
+                    visual.appendChild(threat);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        if (threat && threat.parentNode) {
+                            threat.parentNode.removeChild(threat);
+                        }
+                    }, 3000);
+                }, i * 200);
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

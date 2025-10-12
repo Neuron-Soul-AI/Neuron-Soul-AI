@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Cerebrum - Consciousness Coordination Hub</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UNIFIED UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== CONTROLS SECTION ===== */
+        .controls-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .prompt-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .prompt-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .prompt-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn--primary {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+        }
+
+        .btn--primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== SCENARIO BUTTONS ===== */
+        .scenario-section {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .scenario-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .scenario-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
+        /* ===== COMPLEXITY SLIDER ===== */
+        .complexity-section {
+            text-align: center;
+        }
+
+        .slider-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .slider {
+            width: 200px;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            outline: none;
+            appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-range {
+            display: flex;
+            justify-content: space-between;
+            width: 200px;
+            margin: 0.5rem auto 0;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== CEREBRUM HUB ===== */
+        .cerebrum-hub {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hub-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .hub-icon {
+            font-size: 2rem;
+        }
+
+        .hub-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .hub-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== PROCESSING STATUS ===== */
+        .processing-status {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #666;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator.active {
+            background: var(--accent-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .current-process {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* ===== COORDINATION NETWORKS ===== */
+        .coordination-networks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .network-node {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .network-node:hover {
+            border-color: var(--accent-blue);
+            background: var(--hover-bg);
+        }
+
+        .network-node.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .node-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .node-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+        }
+
+        .node-status {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== THOUGHT PROCESS ===== */
+        .thought-process {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-height: 250px;
+        }
+
+        .thought-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .thought-flow {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .thought-step {
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0 0.25rem 0.5rem;
+            border-left: 2px solid var(--border-color);
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .thought-step.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .thought-step.active {
+            border-left-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .step-timestamp {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+        }
+
+        /* ===== OUTPUT PANEL ===== */
+        .output-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .output-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .output-tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-secondary);
+        }
+
+        .output-tab.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .output-content {
+            min-height: 400px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .synthesis-result {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--border-color);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .synthesis-result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-type {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        .result-confidence {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .result-content {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* ===== COORDINATION METRICS ===== */
+        .coordination-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== COMPARISON SECTION ===== */
+        .comparison-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+        }
+
+        .traditional-processing {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .cerebrum-processing {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .traditional-processing h4 {
+            color: #ef4444;
+        }
+
+        .cerebrum-processing h4 {
+            color: var(--accent-blue);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-processing .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .cerebrum-processing .comparison-list li::before {
+            color: var(--accent-blue);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .coordination-networks {
+                grid-template-columns: 1fr;
+            }
+
+            .coordination-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container-footer {
+                padding: 1rem;
+            }
+
+            .footer-title {
+                font-size: 1rem;
+            }
+
+            .footer-description {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+		<div class="linha">
+			<span class="system-icon">🧠️</span>
+            <h1>NEURON CEREBRUM</h1>
+		</div>
+            <p>Central consciousness coordination hub orchestrating all cognitive processes across 50+ specialized systems</p>
+        </div>
+	
+	</div>
+	<div class="container">
+
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="input-group">
+                <input type="text" class="prompt-input" id="thoughtPrompt" placeholder="Enter a complex thought or decision to process..." value="Should I change my career to follow my passion?">
+                <button class="btn btn--primary" id="startProcessing" onclick="startCerebrumProcessing()">
+                    <span>⚡</span>
+                    Begin Processing
+                </button>
+            </div>
+            
+            <div class="scenario-section">
+                <div class="scenario-label">Try These Consciousness Scenarios:</div>
+                <div class="scenario-buttons">
+                    <button class="scenario-btn" onclick="setScenario('Should I change my career to follow my passion?')">Career Change</button>
+                    <button class="scenario-btn" onclick="setScenario('Should I end this relationship that feels stuck?')">Relationship Decision</button>
+                    <button class="scenario-btn" onclick="setScenario('Should I invest my savings in this risky startup?')">Investment Choice</button>
+                </div>
+            </div>
+            
+            <div class="complexity-section">
+                <div class="slider-label">Processing Complexity</div>
+                <input type="range" class="slider" min="1" max="5" value="3" id="complexitySlider">
+                <div class="slider-range">
+                    <span>Simple</span>
+                    <span>Complex</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Cerebrum Hub -->
+            <div class="cerebrum-hub">
+                <div class="hub-header">
+                    <div class="hub-icon">🧠</div>
+                    <div>
+                        <div class="hub-title">Consciousness Hub</div>
+                        <div class="hub-subtitle">Coordinating all cognitive processes</div>
+                    </div>
+                </div>
+
+                <div class="processing-status">
+                    <div class="status-header">
+                        <div class="status-title">Current Processing</div>
+                        <div class="status-indicator" id="statusIndicator"></div>
+                    </div>
+                    <div class="current-process" id="currentProcess">
+                        Ready to coordinate consciousness processes
+                    </div>
+                </div>
+
+                <div class="coordination-networks">
+                    <div class="network-node" data-system="memory">
+                        <div class="node-icon">💭</div>
+                        <div class="node-name">MEMORY</div>
+                        <div class="node-status">Standby</div>
+                    </div>
+                    <div class="network-node" data-system="emotion">
+                        <div class="node-icon">❤️</div>
+                        <div class="node-name">EMOTION</div>
+                        <div class="node-status">Standby</div>
+                    </div>
+                    <div class="network-node" data-system="logic">
+                        <div class="node-icon">⚡</div>
+                        <div class="node-name">LOGIC</div>
+                        <div class="node-status">Standby</div>
+                    </div>
+                    <div class="network-node" data-system="creative">
+                        <div class="node-icon">✨</div>
+                        <div class="node-name">CREATIVE</div>
+                        <div class="node-status">Standby</div>
+                    </div>
+                    <div class="network-node" data-system="social">
+                        <div class="node-icon">👥</div>
+                        <div class="node-name">SOCIAL</div>
+                        <div class="node-status">Standby</div>
+                    </div>
+                    <div class="network-node" data-system="ethics">
+                        <div class="node-icon">⚖️</div>
+                        <div class="node-name">ETHICS</div>
+                        <div class="node-status">Standby</div>
+                    </div>
+                </div>
+
+                <div class="thought-process">
+                    <div class="thought-title">Coordination Process</div>
+                    <div class="thought-flow" id="thoughtFlow">
+                        <div style="text-align: center; color: var(--text-secondary); margin-top: 60px; font-family: inherit;">
+                            Start processing to see consciousness coordination in action
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Panel -->
+            <div class="output-panel">
+                <div class="output-tabs">
+                    <button class="output-tab active" onclick="switchOutputTab('synthesis')">Synthesis</button>
+                    <button class="output-tab" onclick="switchOutputTab('coordination')">Coordination</button>
+                    <button class="output-tab" onclick="switchOutputTab('insights')">Insights</button>
+                </div>
+                
+                <div class="output-content" id="outputContent">
+                    <div style="text-align: center; color: var(--text-secondary);">
+                        Begin processing to see Cerebrum coordinate consciousness systems
+                    </div>
+                </div>
+
+                <div class="coordination-metrics">
+                    <div class="metric-card">
+                        <div class="metric-value" id="systemsActive">0</div>
+                        <div class="metric-label">Systems Active</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="coordinationEfficiency">0%</div>
+                        <div class="metric-label">Coordination</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="processingDepth">0</div>
+                        <div class="metric-label">Processing Depth</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	
+	</div>
+	<div class="container">
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional AI Processing vs Neuron Cerebrum Coordination</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-processing">
+                    <h4>Traditional AI Approach</h4>
+                    <ul class="comparison-list">
+                        <li>Linear, sequential processing steps</li>
+                        <li>Single-layer analysis without depth</li>
+                        <li>No coordination between cognitive domains</li>
+                        <li>Limited context integration</li>
+                        <li>Static processing patterns</li>
+                        <li>No emotional or ethical consideration</li>
+                        <li>Mechanical response generation</li>
+                    </ul>
+                </div>
+                <div class="comparison-item cerebrum-processing">
+                    <h4>Neuron Cerebrum Coordination</h4>
+                    <ul class="comparison-list">
+                        <li>Parallel multi-system orchestration</li>
+                        <li>Deep coordination across cognitive domains</li>
+                        <li>Memory, emotion, logic, creativity integration</li>
+                        <li>Dynamic context-aware processing</li>
+                        <li>Ethical consideration in every decision</li>
+                        <li>Social awareness and empathy integration</li>
+                        <li>Genuine consciousness-level synthesis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+	
+	</div>
+	<div class="container">
+
+        <!-- Action Buttons -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/cerebrum-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/01%20-%20Core%20Consciousness%20Systems/Neuron%20Cerebrum%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+
+        let isProcessing = false;
+        let currentTab = 'synthesis';
+        let syntheses = [];
+        let coordinationLogs = [];
+        let insights = [];
+        let processStep = 0;
+
+        const COGNITIVE_SYSTEMS = {
+            memory: { name: 'Memory System', icon: '💭', delay: 800 },
+            emotion: { name: 'Emotional Processing', icon: '❤️', delay: 1200 },
+            logic: { name: 'Logical Analysis', icon: '⚡', delay: 1600 },
+            creative: { name: 'Creative Synthesis', icon: '✨', delay: 2000 },
+            social: { name: 'Social Context', icon: '👥', delay: 2400 },
+            ethics: { name: 'Ethical Evaluation', icon: '⚖️', delay: 2800 }
+        };
+
+        const PROCESSING_STEPS = [
+            'Initiating consciousness coordination...',
+            'Analyzing input complexity and context...',
+            'Activating relevant cognitive systems...',
+            'Facilitating cross-system communication...',
+            'Integrating multi-domain perspectives...',
+            'Synthesizing coherent consciousness response...',
+            'Validating ethical and social considerations...',
+            'Generating coordinated output...'
+        ];
+
+        const SAMPLE_RESPONSES = {
+            career: {
+                synthesis: 'Career change requires deep integration of personal values, financial considerations, family impact, and long-term fulfillment. The coordination of emotional desires with logical constraints reveals that gradual transition while building new skills may optimize both security and satisfaction.',
+                coordination: 'Memory systems accessed past career satisfaction data, emotional processing evaluated passion intensity, logic analyzed financial implications, creative systems explored alternative pathways, social context considered family/relationship impacts, ethics evaluated authentic life choices.',
+                insights: 'Passion without pragmatism leads to instability, but pragmatism without passion leads to emptiness. The optimal path often involves gradual transition that honors both emotional needs and practical constraints.'
+            },
+            relationship: {
+                synthesis: 'Relationship decisions require careful coordination between emotional attachment, logical compatibility assessment, and ethical consideration for both parties. Memory systems reveal relationship patterns while social context evaluates broader impact. The synthesis suggests honest communication about core issues before making irreversible decisions.',
+                coordination: 'Memory systems analyzed past relationship patterns and warning signs, emotional processing assessed current attachment levels and fulfillment, logic evaluated long-term compatibility factors, social systems considered impact on mutual friends and family, ethics examined fairness and honesty obligations, creative systems explored reconciliation alternatives.',
+                insights: 'Relationship decisions made purely from emotion or logic alone often fail. True wisdom integrates heart, mind, memory, and moral consideration. Sometimes the most loving choice requires difficult honesty about fundamental incompatibilities.'
+            },
+            investment: {
+                synthesis: 'Investment decisions demand precise coordination between logical risk analysis, emotional security needs, and ethical financial responsibility. Memory systems provide learning from past financial experiences while creative systems identify alternative approaches. The synthesis balances calculated risk-taking with emotional comfort levels.',
+                coordination: 'Logic systems performed comprehensive risk-reward analysis and market evaluation, memory systems reviewed past investment successes and failures, emotional processing assessed personal risk tolerance and security needs, social context evaluated family financial obligations, ethics examined responsible wealth management, creative systems explored diversified investment alternatives.',
+                insights: 'Fear-based decisions preserve capital but limit growth, while greed-driven choices risk financial ruin. Optimal investment strategy coordinates analytical assessment with emotional wisdom, considering both mathematical probability and personal peace of mind.'
+            },
+            default: {
+                synthesis: 'Complex decision-making requires orchestration of multiple cognitive domains. Cerebrum coordinates memory retrieval, emotional assessment, logical analysis, creative problem-solving, social awareness, and ethical evaluation to produce comprehensive, consciousness-level responses.',
+                coordination: 'All cognitive systems activated and coordinated through Cerebrum hub. Cross-domain communication facilitated, perspectives integrated, and coherent synthesis generated through conscious-level processing.',
+                insights: 'True consciousness emerges from the coordination of specialized cognitive systems rather than from any single processing approach. Integration creates wisdom beyond individual system capabilities.'
+            }
+        };
+
+        function setScenario(scenarioText) {
+            document.getElementById('thoughtPrompt').value = scenarioText;
+            
+            // Reset the processing state for new scenario
+            document.getElementById('currentProcess').textContent = 'Ready to process new scenario: ' + scenarioText;
+            document.getElementById('statusIndicator').classList.remove('active');
+            
+            // Reset all network nodes to standby
+            document.querySelectorAll('.network-node').forEach(node => {
+                node.classList.remove('active');
+                node.querySelector('.node-status').textContent = 'Standby';
+            });
+            
+            // Clear thought flow
+            document.getElementById('thoughtFlow').innerHTML = `
+                <div style="text-align: center; color: var(--text-secondary); margin-top: 60px; font-family: inherit;">
+                    Start processing to see consciousness coordination in action
+                </div>
+            `;
+            
+            // Reset metrics
+            updateMetrics();
+            
+            // Clear previous results
+            syntheses = [];
+            coordinationLogs = [];
+            insights = [];
+            updateOutputDisplay();
+        }
+
+        async function startCerebrumProcessing() {
+            if (isProcessing) return;
+            
+            isProcessing = true;
+            const button = document.getElementById('startProcessing');
+            const prompt = document.getElementById('thoughtPrompt').value;
+            const complexity = document.getElementById('complexitySlider').value;
+            
+            button.disabled = true;
+            button.innerHTML = '<span>⚡</span>Processing...';
+            
+            // Clear previous results
+            syntheses = [];
+            coordinationLogs = [];
+            insights = [];
+            processStep = 0;
+            
+            // Activate status
+            document.getElementById('statusIndicator').classList.add('active');
+            document.getElementById('currentProcess').textContent = 'Processing: ' + prompt;
+            
+            // Clear thought flow
+            document.getElementById('thoughtFlow').innerHTML = '';
+            
+            // Start processing sequence
+            await processThoughtSequence(prompt, complexity);
+            
+            // Complete processing
+            setTimeout(() => {
+                button.disabled = false;
+                button.innerHTML = '<span>⚡</span>Begin Processing';
+                document.getElementById('statusIndicator').classList.remove('active');
+                document.getElementById('currentProcess').textContent = 'Processing complete - ready for next thought';
+                isProcessing = false;
+            }, 1000);
+        }
+
+        async function processThoughtSequence(prompt, complexity) {
+            const thoughtFlow = document.getElementById('thoughtFlow');
+            
+            // Process each step
+            for (let i = 0; i < PROCESSING_STEPS.length; i++) {
+                const step = document.createElement('div');
+                step.className = 'thought-step active';
+                step.innerHTML = `
+                    <span class="step-timestamp">[${new Date().toLocaleTimeString()}]</span> 
+                    ${PROCESSING_STEPS[i]}
+                `;
+                
+                thoughtFlow.appendChild(step);
+                step.classList.add('show');
+                
+                // Scroll to bottom
+                thoughtFlow.scrollTop = thoughtFlow.scrollHeight;
+                
+                // Activate relevant systems during coordination steps
+                if (i >= 2 && i <= 5) {
+                    await activateCognitiveSystems(i - 2);
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 600));
+                step.classList.remove('active');
+            }
+            
+            // Generate results
+            await generateProcessingResults(prompt, complexity);
+        }
+
+        async function activateCognitiveSystems(phase) {
+            const systems = Object.keys(COGNITIVE_SYSTEMS);
+            const systemsToActivate = systems.slice(0, Math.min(systems.length, phase + 2));
+            
+            for (const systemKey of systemsToActivate) {
+                const system = COGNITIVE_SYSTEMS[systemKey];
+                const node = document.querySelector(`[data-system="${systemKey}"]`);
+                
+                if (node && !node.classList.contains('active')) {
+                    node.classList.add('active');
+                    node.querySelector('.node-status').textContent = 'Active';
+                    
+                    const logEntry = `${system.name} activated - Contributing ${systemKey} perspective`;
+                    coordinationLogs.push({
+                        timestamp: new Date().toLocaleTimeString(),
+                        system: system.name,
+                        action: logEntry
+                    });
+                    
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                }
+            }
+            
+            // Update metrics
+            updateMetrics();
+        }
+
+        async function generateProcessingResults(prompt, complexity) {
+            const promptLower = prompt.toLowerCase();
+            let promptKey = 'default';
+            
+            if (promptLower.includes('career') || promptLower.includes('job') || promptLower.includes('work')) {
+                promptKey = 'career';
+            } else if (promptLower.includes('relationship') || promptLower.includes('break up') || promptLower.includes('marriage') || promptLower.includes('partner')) {
+                promptKey = 'relationship';
+            } else if (promptLower.includes('invest') || promptLower.includes('money') || promptLower.includes('savings') || promptLower.includes('stock') || promptLower.includes('financial')) {
+                promptKey = 'investment';
+            }
+            
+            const responses = SAMPLE_RESPONSES[promptKey];
+            
+            // Generate synthesis
+            syntheses.push({
+                timestamp: new Date().toLocaleTimeString(),
+                content: responses.synthesis,
+                confidence: Math.floor(85 + Math.random() * 10),
+                complexity: complexity
+            });
+            
+            // Add coordination details
+            coordinationLogs.push({
+                timestamp: new Date().toLocaleTimeString(),
+                system: 'Cerebrum Hub',
+                action: responses.coordination
+            });
+            
+            // Generate insights
+            insights.push({
+                timestamp: new Date().toLocaleTimeString(),
+                type: 'Consciousness Insight',
+                content: responses.insights
+            });
+            
+            // Update display
+            updateOutputDisplay();
+        }
+
+        function updateMetrics() {
+            const activeNodes = document.querySelectorAll('.network-node.active');
+            const systemsActive = activeNodes.length;
+            const maxSystems = document.querySelectorAll('.network-node').length;
+            const coordination = Math.floor((systemsActive / maxSystems) * 100);
+            const complexity = document.getElementById('complexitySlider').value;
+            
+            document.getElementById('systemsActive').textContent = systemsActive;
+            document.getElementById('coordinationEfficiency').textContent = coordination + '%';
+            document.getElementById('processingDepth').textContent = complexity;
+        }
+
+        function switchOutputTab(tab) {
+            const tabs = document.querySelectorAll('.output-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            currentTab = tab;
+            updateOutputDisplay();
+        }
+
+        function updateOutputDisplay() {
+            const content = document.getElementById('outputContent');
+            
+            if (currentTab === 'synthesis') {
+                if (syntheses.length === 0) {
+                    content.innerHTML = '<div style="text-align: center; color: var(--text-secondary);">Begin processing to see consciousness synthesis</div>';
+                    return;
+                }
+                
+                content.innerHTML = syntheses.map((synthesis, index) => `
+                    <div class="synthesis-result" style="animation-delay: ${index * 0.1}s">
+                        <div class="result-header">
+                            <span class="result-type">CONSCIOUSNESS SYNTHESIS</span>
+                            <span class="result-confidence">Confidence: ${synthesis.confidence}%</span>
+                        </div>
+                        <div class="result-content">${synthesis.content}</div>
+                    </div>
+                `).join('');
+                
+            } else if (currentTab === 'coordination') {
+                content.innerHTML = `
+                    <div style="font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.8rem; line-height: 1.6;">
+                        ${coordinationLogs.map(log => `
+                            <div style="margin-bottom: 0.5rem; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 4px;">
+                                <strong style="color: var(--accent-blue);">[${log.timestamp}] ${log.system}:</strong><br>
+                                ${log.action}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+            } else {
+                content.innerHTML = insights.map((insight, index) => `
+                    <div class="synthesis-result" style="animation-delay: ${index * 0.1}s">
+                        <div class="result-header">
+                            <span class="result-type">${insight.type}</span>
+                            <span class="result-confidence">${insight.timestamp}</span>
+                        </div>
+                        <div class="result-content">${insight.content}</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Animate new items
+            setTimeout(() => {
+                document.querySelectorAll('.synthesis-result').forEach(item => {
+                    item.classList.add('show');
+                });
+            }, 100);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMetrics();
+            
+            // Add click handlers for network nodes
+            document.querySelectorAll('.network-node').forEach(node => {
+                node.addEventListener('click', function() {
+                    if (!isProcessing) {
+                        const systemName = this.dataset.system;
+                        const system = COGNITIVE_SYSTEMS[systemName];
+                        alert(`${system.name}: This system handles ${systemName}-related processing in the consciousness coordination network.`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

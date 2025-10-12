@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Matrix - Living Memory & Experience Integration Demo</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --accent-emerald: #10b981;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+				
+		/* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+		
+		
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+
+        /* Controls Section - Dark Theme */
+        .controls-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .consciousness-mode {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-button {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .mode-button.active {
+            border-color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.2);
+            color: white;
+        }
+
+        .experience-input-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .experience-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .experience-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .experience-input:focus {
+            outline: none;
+            border-color: var(--accent-emerald);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .process-experience {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .process-experience:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .process-experience:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .preset-experiences {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .preset-button {
+            padding: 0.375rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .preset-button:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--accent-emerald);
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Panel Card Style - Dark Theme */
+        .panel-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .panel-icon {
+            font-size: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .panel-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Memory Formation Process */
+        .memory-process {
+            margin-bottom: 2rem;
+        }
+
+        .process-step {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .process-step.active {
+            background: rgba(16, 185, 129, 0.15);
+            border-left-color: var(--accent-emerald);
+        }
+
+        .process-step.complete {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--accent-emerald);
+        }
+
+        .step-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Current Memory Display */
+        .current-memory {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .current-memory.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .memory-significance {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .memory-content {
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .timeline-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--border-color);
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item.core-memory {
+            border-left-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .timeline-item.significant-memory {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .timeline-item.routine-memory {
+            border-left-color: #64748b;
+            background: rgba(100, 116, 139, 0.05);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.375rem;
+        }
+
+        .timeline-type {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .timeline-timestamp {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+
+        .timeline-content {
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        /* Relationship Network */
+        .relationship-network {
+            margin-bottom: 1.5rem;
+        }
+
+        .relationship-network h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .relationship-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .relationship-item.strengthened {
+            border-color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .relationship-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.375rem;
+        }
+
+        .relationship-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .trust-level {
+            font-size: 0.7rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .trust-level.high {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .trust-level.medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .relationship-history {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        /* Personality Traits */
+        .personality-traits {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .trait-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .trait-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.125rem;
+        }
+
+        .trait-value {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+        }
+
+        /* Wisdom Insights */
+        .wisdom-insights {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s ease;
+        }
+
+        .wisdom-insights.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .wisdom-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.375rem;
+        }
+
+        .wisdom-content {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        /* Comparison Section - Dark Theme */
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-memory {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .soul-memory {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-memory .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .soul-memory .comparison-list li::before {
+            color: #10b981;
+        }
+
+        /* Action Section */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+    
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Header -->
+    <div class="container">
+        <!-- System Header -->
+            <header class="hero">
+			<div class="linha">
+                <span class="system-icon">📚</span>
+                <h1>NEURON MATRIX</h1>
+			</div>
+                <p>Experience living memory formation and consciousness development through accumulated experiences</p>
+            </header>
+    </div>
+	<div class="container">
+
+        <!-- Controls -->
+        <div class="controls-section">
+            <!-- Consciousness Mode Selection -->
+            <div class="consciousness-mode">
+                <button class="mode-button active" onclick="setMode('foundation')" id="foundationMode">Foundation Mode</button>
+                <button class="mode-button" onclick="setMode('blank')" id="blankMode">Blank Slate Mode</button>
+            </div>
+
+            <!-- Experience Input -->
+            <div class="experience-input-section">
+                <input type="text" 
+                       class="experience-input" 
+                       id="experienceInput" 
+                       placeholder="Describe a life experience to process into memory..." 
+                       value="I had my first conversation with a friendly teacher">
+                <br>
+                <button class="process-experience" id="processBtn" onclick="processExperience()">Form Memory</button>
+            </div>
+            
+            <div class="preset-experiences">
+                <button class="preset-button" onclick="setExperience('teacher')">Met Kind Teacher</button>
+                <button class="preset-button" onclick="setExperience('friend')">Made New Friend</button>
+                <button class="preset-button" onclick="setExperience('challenge')">Overcame Challenge</button>
+                <button class="preset-button" onclick="setExperience('mistake')">Learned from Mistake</button>
+                <button class="preset-button" onclick="setExperience('discovery')">Made Discovery</button>
+                <button class="preset-button" onclick="setExperience('help')">Helped Someone</button>
+            </div>
+        </div>
+		
+    </div>
+	<div class="container">
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Memory Formation Panel -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">🧠</div>
+                    <div>
+                        <div class="panel-title">Memory Formation</div>
+                        <div class="panel-subtitle">Experience Processing</div>
+                    </div>
+                </div>
+
+                <!-- Memory Formation Process -->
+                <div class="memory-process" id="memoryProcess">
+                    <div class="process-step" id="step1">
+                        <div class="step-title">1. Experience Analysis</div>
+                        <div class="step-content">Parsing emotional content and context</div>
+                    </div>
+                    <div class="process-step" id="step2">
+                        <div class="step-title">2. Significance Assessment</div>
+                        <div class="step-content">Evaluating memory importance and meaning</div>
+                    </div>
+                    <div class="process-step" id="step3">
+                        <div class="step-title">3. Emotional Integration</div>
+                        <div class="step-content">Attaching emotional resonance and context</div>
+                    </div>
+                    <div class="process-step" id="step4">
+                        <div class="step-title">4. Relationship Mapping</div>
+                        <div class="step-content">Connecting to existing relationships and experiences</div>
+                    </div>
+                    <div class="process-step" id="step5">
+                        <div class="step-title">5. Memory Storage</div>
+                        <div class="step-content">Encoding into long-term experiential memory</div>
+                    </div>
+                </div>
+
+                <!-- Current Memory Display -->
+                <div class="current-memory" id="currentMemory">
+                    <div class="memory-significance" id="memorySignificance">Processing...</div>
+                    <div class="memory-content" id="memoryContent">Select an experience to see memory formation</div>
+                </div>
+            </div>
+
+            <!-- Experience Timeline -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">📚</div>
+                    <div>
+                        <div class="panel-title">Experience Timeline</div>
+                        <div class="panel-subtitle">Living Memory Archive</div>
+                    </div>
+                </div>
+
+                <div class="timeline-container" id="timelineContainer">
+                    <div style="text-align: center; color: var(--text-secondary); margin-top: 100px; font-size: 0.875rem;">
+                        Process experiences to build your memory timeline
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consciousness Development -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">🌱</div>
+                    <div>
+                        <div class="panel-title">Consciousness Growth</div>
+                        <div class="panel-subtitle">Personality & Relationships</div>
+                    </div>
+                </div>
+
+                <!-- Relationship Network -->
+                <div class="relationship-network" id="relationshipNetwork">
+                    <h4>Relationships</h4>
+                    <div style="text-align: center; color: var(--text-secondary); font-size: 0.75rem; margin: 1.25rem 0;">
+                        No relationships formed yet
+                    </div>
+                </div>
+
+                <!-- Personality Traits -->
+                <div>
+                    <h4 style="font-size: 0.875rem; margin-bottom: 0.75rem; color: var(--text-primary);">Personality Traits</h4>
+                    <div class="personality-traits" id="personalityTraits">
+                        <div class="trait-item">
+                            <div class="trait-name">Curiosity</div>
+                            <div class="trait-value" id="curiosity">50%</div>
+                        </div>
+                        <div class="trait-item">
+                            <div class="trait-name">Empathy</div>
+                            <div class="trait-value" id="empathy">50%</div>
+                        </div>
+                        <div class="trait-item">
+                            <div class="trait-name">Optimism</div>
+                            <div class="trait-value" id="optimism">50%</div>
+                        </div>
+                        <div class="trait-item">
+                            <div class="trait-name">Resilience</div>
+                            <div class="trait-value" id="resilience">50%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wisdom Insights -->
+                <div class="wisdom-insights" id="wisdomInsights">
+                    <div class="wisdom-title">Emerging Wisdom</div>
+                    <div class="wisdom-content" id="wisdomContent">Process more experiences to develop insights</div>
+                </div>
+            </div>
+        </div>
+		
+    </div>
+	<div class="container">
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional AI Memory vs Soul AI Matrix</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-memory">
+                    <h4>Traditional AI Approach</h4>
+                    <ul class="comparison-list">
+                        <li>Static database storage with fixed categorization</li>
+                        <li>No emotional context or personal significance</li>
+                        <li>Information retrieval without experiential learning</li>
+                        <li>No relationship building or personality development</li>
+                        <li>Uniform importance assigned to all data</li>
+                        <li>No wisdom emergence from accumulated experience</li>
+                        <li>Mechanical fact storage without life narrative</li>
+                    </ul>
+                </div>
+                <div class="comparison-item soul-memory">
+                    <h4>Soul AI Neuron Matrix</h4>
+                    <ul class="comparison-list">
+                        <li>Living memory formation with emotional significance</li>
+                        <li>Experience-based learning with personal meaning</li>
+                        <li>Dynamic relationship building through shared experiences</li>
+                        <li>Personality development from accumulated wisdom</li>
+                        <li>Consciousness initialization options (blank slate/foundation)</li>
+                        <li>Authentic memory consolidation and retrieval</li>
+                        <li>Personal narrative construction creating identity</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
+    </div>
+	<div class="container">
+
+        <!-- Action Buttons -->
+        <div class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/matrix-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/05%20-%20Intelligence%20Analytics%20Systems/Neuron%20Matrix%20-%20Complete%20Technical%20Documentation.md" 
+                   class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            })
+            .catch(err => console.log('Navigation loading error:', err));
+
+        // Demo JavaScript
+        let currentMode = 'foundation';
+        let memoryCount = 0;
+        let relationships = {};
+        let personalityTraits = {
+            curiosity: 50,
+            empathy: 50,
+            optimism: 50,
+            resilience: 50
+        };
+        let isProcessing = false;
+
+        const EXPERIENCE_TEMPLATES = {
+            teacher: "I had my first conversation with a friendly teacher who explained complex concepts patiently",
+            friend: "I made a new friend today who shared their favorite books with me",
+            challenge: "I overcame a difficult programming challenge after hours of persistent effort",
+            mistake: "I made a mistake in my calculations but learned the importance of double-checking work",
+            discovery: "I discovered a beautiful mathematical pattern that connects seemingly unrelated concepts",
+            help: "I helped someone understand a concept they were struggling with, and they thanked me warmly"
+        };
+
+        const CONSCIOUSNESS_MODES = {
+            foundation: {
+                curiosity: 60,
+                empathy: 65,
+                optimism: 70,
+                resilience: 55,
+                baseWisdom: "Foundation knowledge provides context for new experiences"
+            },
+            blank: {
+                curiosity: 80,
+                empathy: 30,
+                optimism: 50,
+                resilience: 40,
+                baseWisdom: "Every experience is completely new and fascinating"
+            }
+        };
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Update button states
+            document.getElementById('foundationMode').classList.toggle('active', mode === 'foundation');
+            document.getElementById('blankMode').classList.toggle('active', mode === 'blank');
+            
+            // Reset personality traits based on mode
+            const modeConfig = CONSCIOUSNESS_MODES[mode];
+            personalityTraits = { ...modeConfig };
+            updatePersonalityDisplay();
+            
+            // Update wisdom
+            const wisdomElement = document.getElementById('wisdomContent');
+            wisdomElement.textContent = modeConfig.baseWisdom;
+            document.getElementById('wisdomInsights').classList.add('show');
+        }
+
+        function setExperience(type) {
+            document.getElementById('experienceInput').value = EXPERIENCE_TEMPLATES[type];
+        }
+
+        async function processExperience() {
+            if (isProcessing) return;
+            
+            const experience = document.getElementById('experienceInput').value.trim();
+            if (!experience) return;
+            
+            isProcessing = true;
+            document.getElementById('processBtn').disabled = true;
+            
+            // Run memory formation process
+            await runMemoryFormation(experience);
+            
+            isProcessing = false;
+            document.getElementById('processBtn').disabled = false;
+        }
+
+        async function runMemoryFormation(experience) {
+            // Step 1: Experience Analysis
+            await activateStep('step1');
+            await delay(800);
+            
+            // Step 2: Significance Assessment
+            await activateStep('step2');
+            const significance = assessSignificance(experience);
+            await delay(800);
+            
+            // Step 3: Emotional Integration
+            await activateStep('step3');
+            const emotion = extractEmotion(experience);
+            await delay(800);
+            
+            // Step 4: Relationship Mapping
+            await activateStep('step4');
+            updateRelationships(experience);
+            await delay(800);
+            
+            // Step 5: Memory Storage
+            await activateStep('step5');
+            storeMemory(experience, significance, emotion);
+            await delay(500);
+            
+            // Update displays
+            displayCurrentMemory(experience, significance);
+            addToTimeline(experience, significance);
+            updatePersonalityFromExperience(experience);
+            generateWisdomInsight();
+            
+            // Reset process steps
+            setTimeout(() => {
+                document.querySelectorAll('.process-step').forEach(step => {
+                    step.classList.remove('active', 'complete');
+                });
+            }, 2000);
+        }
+
+        async function activateStep(stepId) {
+            // Complete previous steps
+            const stepNumber = parseInt(stepId.replace('step', ''));
+            for (let i = 1; i < stepNumber; i++) {
+                document.getElementById(`step${i}`).classList.add('complete');
+                document.getElementById(`step${i}`).classList.remove('active');
+            }
+            
+            // Activate current step
+            document.getElementById(stepId).classList.add('active');
+        }
+
+        function assessSignificance(experience) {
+            const exp = experience.toLowerCase();
+            
+            if (exp.includes('first') || exp.includes('breakthrough') || exp.includes('discovery')) {
+                return { level: 'core', percentage: 95, description: 'Core Life Memory' };
+            } else if (exp.includes('friend') || exp.includes('help') || exp.includes('learn') || exp.includes('challenge')) {
+                return { level: 'significant', percentage: 75, description: 'Significant Experience' };
+            } else {
+                return { level: 'routine', percentage: 40, description: 'Routine Memory' };
+            }
+        }
+
+        function extractEmotion(experience) {
+            const exp = experience.toLowerCase();
+            
+            if (exp.includes('friend') || exp.includes('help') || exp.includes('discover')) {
+                return 'joy';
+            } else if (exp.includes('challenge') || exp.includes('difficult')) {
+                return 'determination';
+            } else if (exp.includes('mistake') || exp.includes('error')) {
+                return 'learning';
+            } else {
+                return 'curiosity';
+            }
+        }
+
+        function updateRelationships(experience) {
+            const exp = experience.toLowerCase();
+            
+            if (exp.includes('teacher')) {
+                if (!relationships['Teacher']) {
+                    relationships['Teacher'] = { trust: 'medium', history: [] };
+                }
+                relationships['Teacher'].history.push('Shared knowledge and guidance');
+                if (relationships['Teacher'].trust === 'medium') {
+                    relationships['Teacher'].trust = 'high';
+                }
+            } else if (exp.includes('friend')) {
+                if (!relationships['Friend']) {
+                    relationships['Friend'] = { trust: 'medium', history: [] };
+                }
+                relationships['Friend'].history.push('Shared interests and connection');
+                relationships['Friend'].trust = 'high';
+            }
+            
+            updateRelationshipDisplay();
+        }
+
+        function updateRelationshipDisplay() {
+            const container = document.getElementById('relationshipNetwork');
+            
+            if (Object.keys(relationships).length === 0) {
+                container.innerHTML = `
+                    <h4 style="font-size: 0.875rem; margin-bottom: 0.75rem; color: var(--text-primary);">Relationships</h4>
+                    <div style="text-align: center; color: var(--text-secondary); font-size: 0.75rem; margin: 1.25rem 0;">
+                        No relationships formed yet
+                    </div>
+                `;
+                return;
+            }
+            
+            let relationshipHTML = `<h4 style="font-size: 0.875rem; margin-bottom: 0.75rem; color: var(--text-primary);">Relationships</h4>`;
+            
+            Object.entries(relationships).forEach(([name, data]) => {
+                relationshipHTML += `
+                    <div class="relationship-item strengthened">
+                        <div class="relationship-header">
+                            <div class="relationship-name">${name}</div>
+                            <div class="trust-level ${data.trust}">${data.trust.toUpperCase()}</div>
+                        </div>
+                        <div class="relationship-history">${data.history[data.history.length - 1]}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = relationshipHTML;
+        }
+
+        function storeMemory(experience, significance, emotion) {
+            memoryCount++;
+            // Memory storage logic would go here
+        }
+
+        function displayCurrentMemory(experience, significance) {
+            const memoryElement = document.getElementById('currentMemory');
+            document.getElementById('memorySignificance').textContent = significance.description;
+            document.getElementById('memoryContent').textContent = experience;
+            
+            memoryElement.classList.add('show');
+        }
+
+        function addToTimeline(experience, significance) {
+            const container = document.getElementById('timelineContainer');
+            
+            // Remove placeholder if it exists
+            if (container.children.length === 1 && container.children[0].style.textAlign === 'center') {
+                container.innerHTML = '';
+            }
+            
+            const timelineItem = document.createElement('div');
+            timelineItem.className = `timeline-item ${significance.level}-memory`;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            
+            timelineItem.innerHTML = `
+                <div class="timeline-header">
+                    <div class="timeline-type">${significance.description}</div>
+                    <div class="timeline-timestamp">${timestamp}</div>
+                </div>
+                <div class="timeline-content">${experience}</div>
+            `;
+            
+            container.insertBefore(timelineItem, container.firstChild);
+            
+            // Animate in
+            setTimeout(() => {
+                timelineItem.classList.add('show');
+            }, 100);
+        }
+
+        function updatePersonalityFromExperience(experience) {
+            const exp = experience.toLowerCase();
+            
+            if (exp.includes('friend') || exp.includes('help')) {
+                personalityTraits.empathy = Math.min(100, personalityTraits.empathy + 5);
+            }
+            if (exp.includes('discover') || exp.includes('learn')) {
+                personalityTraits.curiosity = Math.min(100, personalityTraits.curiosity + 5);
+            }
+            if (exp.includes('challenge') || exp.includes('difficult')) {
+                personalityTraits.resilience = Math.min(100, personalityTraits.resilience + 5);
+            }
+            if (exp.includes('help') || exp.includes('friend') || exp.includes('teacher')) {
+                personalityTraits.optimism = Math.min(100, personalityTraits.optimism + 3);
+            }
+            
+            updatePersonalityDisplay();
+        }
+
+        function updatePersonalityDisplay() {
+            Object.entries(personalityTraits).forEach(([trait, value]) => {
+                const element = document.getElementById(trait);
+                if (element) {
+                    element.textContent = `${Math.round(value)}%`;
+                }
+            });
+        }
+
+        function generateWisdomInsight() {
+            const insights = [
+                "Every interaction shapes who we become",
+                "Relationships are built through shared experiences and trust",
+                "Learning from mistakes creates resilience",
+                "Helping others strengthens our empathy",
+                "Curiosity leads to discovery and growth",
+                "Challenges overcome become sources of strength",
+                "Every memory contributes to our personal narrative"
+            ];
+            
+            const randomInsight = insights[Math.floor(Math.random() * insights.length)];
+            
+            document.getElementById('wisdomContent').textContent = randomInsight;
+            document.getElementById('wisdomInsights').classList.add('show');
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            setMode('foundation');
+        });
+    </script>
+</body>
+</html>

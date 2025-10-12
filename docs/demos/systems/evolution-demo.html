@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Evolution - AI Memory Management System</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+		
+		/* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+		
+		/* ===== UTILITY CLASSES ===== */
+		.gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: #34d399;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Operation States */
+        .operation-section {
+            margin-bottom: 24px;
+        }
+
+        .operation-label {
+            color: rgba(209, 250, 229, 0.9);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .operation-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .operation-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.5);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8125rem;
+            text-align: left;
+        }
+
+        .operation-button:hover {
+            background: rgba(52, 211, 153, 0.3);
+            border-color: rgba(52, 211, 153, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .operation-button.active {
+            background: rgba(52, 211, 153, 0.4);
+            border-color: rgba(52, 211, 153, 0.8);
+        }
+
+        /* System Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #34d399;
+        }
+
+        .metric-label {
+            color: rgba(209, 250, 229, 0.8);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 1.125rem;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+
+        /* Evolution Display */
+        .evolution-display {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            position: relative;
+        }
+
+        /* Memory Visualization */
+        .memory-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(52, 211, 153, 0.4);
+            position: relative;
+            min-height: 300px;
+            overflow: hidden;
+        }
+
+        .memory-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            color: #34d399;
+            animation: memoryPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes memoryPulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .memory-categorization {
+            animation-duration: 1.5s;
+            color: #34d399;
+        }
+
+        .memory-optimization {
+            animation-duration: 1s;
+            color: #10b981;
+        }
+
+        .memory-cleanup {
+            animation-duration: 2s;
+            color: #059669;
+        }
+
+        .memory-health {
+            animation-duration: 1.2s;
+            color: #047857;
+        }
+
+        .memory-preservation {
+            animation-duration: 1.8s;
+            color: #065f46;
+        }
+
+        /* Progress Wave */
+        .progress-wave {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .wave-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #34d399;
+            transform: translateY(-50%);
+        }
+
+        .wave-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #34d399, transparent);
+            animation: waveProgress 3s linear infinite;
+        }
+
+        @keyframes waveProgress {
+            0% { left: 0; }
+            100% { left: 100%; }
+        }
+
+        /* System Effects Grid */
+        .effects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .effect-system {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .effect-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .effect-icon {
+            font-size: 1.125rem;
+        }
+
+        .effect-name {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .effect-status {
+            font-size: 0.6875rem;
+            color: #34d399;
+        }
+
+        .effect-description {
+            color: rgba(209, 250, 229, 0.8);
+            font-size: 0.75rem;
+            line-height: 1.4;
+            min-height: 60px;
+            display: none; /* Hidden by default */
+        }
+
+        /* System Integration */
+        .integration-display {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #34d399;
+        }
+
+        .integration-header {
+            color: #34d399;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .integration-content {
+            color: rgba(209, 250, 229, 0.9);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            display: none; /* Hidden by default */
+        }
+
+        .integration-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+            display: none; /* Hidden by default */
+        }
+
+        .integration-metric {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 0.625rem;
+            color: rgba(209, 250, 229, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .metric-number {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #34d399;
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: #34d399;
+            font-size: 0.875rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-memory {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .neuron-evolution {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-memory .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-evolution .comparison-list li::before {
+            color: #f59e0b;
+        }
+
+        /* Show classes for when content is revealed */
+        .show-content {
+            display: block !important;
+        }
+
+        .show-grid {
+            display: grid !important;
+        }
+
+        /* Action Buttons */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+	<div class="neural-bg"></div>
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+		
+	<!-- System Header -->
+	<div class="container">
+		<header class="hero">
+		<div class="linha">
+			<span class="system-icon">📈</span>
+			<h1>NEURON EVOLUTION</h1>
+		</div>
+			<p>AI Memory Management System - Intelligent optimization and growth through memory evolution</p>
+		</header>
+	</div>
+	<div class="container">
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    ⚙️ Memory Operations
+                </div>
+
+                <!-- Memory Operations -->
+                <div class="operation-section">
+                    <div class="operation-label">Select Memory Operation:</div>
+                    <div class="operation-buttons">
+                        <button class="operation-button active" data-operation="categorization">
+                            🏷️ Categorization - Memory Classification
+                        </button>
+                        <button class="operation-button" data-operation="optimization">
+                            ⚡ Optimization - Performance Enhancement
+                        </button>
+                        <button class="operation-button" data-operation="cleanup">
+                            🧹 Cleanup - Storage Management
+                        </button>
+                        <button class="operation-button" data-operation="health">
+                            🏥 Health Integration - System Diagnostics
+                        </button>
+                        <button class="operation-button" data-operation="preservation">
+                            💎 Preservation - Relationship Continuity
+                        </button>
+                    </div>
+                </div>
+
+                <!-- System Metrics -->
+                <div class="metrics-section">
+                    <div class="operation-label">Live System Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Memory Usage</div>
+                        <div class="metric-value" id="memoryValue">
+                            73<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">System Efficiency</div>
+                        <div class="metric-value" id="efficiencyValue">
+                            94<span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Operation Status</div>
+                        <div class="metric-value" id="statusValue">
+                            Ready<span class="metric-unit"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="evolutionAnalysis">
+                    Begin Evolution Process
+                </button>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Processing memory evolution...
+                </div>
+            </div>
+
+            <!-- Evolution Display -->
+            <div class="evolution-display">
+                <!-- Memory Visualization -->
+                <div class="memory-visual" id="memoryVisual">
+                    <div class="memory-icon" id="memoryIcon">🧠</div>
+                    <div class="progress-wave">
+                        <div class="wave-line"></div>
+                        <div class="wave-progress" id="waveProgress"></div>
+                    </div>
+                </div>
+
+                <!-- System Effects Grid -->
+                <div class="effects-grid">
+                    <div class="effect-system" id="criticalEffect">
+                        <div class="effect-header">
+                            <div class="effect-icon">💎</div>
+                            <div>
+                                <div class="effect-name">CRITICAL MEMORIES</div>
+                                <div class="effect-status">Protected Forever</div>
+                            </div>
+                        </div>
+                        <div class="effect-description" id="criticalDescription">
+                            First interactions, emotional breakthroughs, and relationship-defining moments are preserved with perfect fidelity across the AI's entire lifespan.
+                        </div>
+                    </div>
+
+                    <div class="effect-system" id="importantEffect">
+                        <div class="effect-header">
+                            <div class="effect-icon">⭐</div>
+                            <div>
+                                <div class="effect-name">IMPORTANT MEMORIES</div>
+                                <div class="effect-status">Archived with Compression</div>
+                            </div>
+                        </div>
+                        <div class="effect-description" id="importantDescription">
+                            Learning milestones, preference discoveries, and significant patterns are compressed while maintaining their essential meaning and context.
+                        </div>
+                    </div>
+
+                    <div class="effect-system" id="routineEffect">
+                        <div class="effect-header">
+                            <div class="effect-icon">📋</div>
+                            <div>
+                                <div class="effect-name">ROUTINE MEMORIES</div>
+                                <div class="effect-status">Summarized Patterns</div>
+                            </div>
+                        </div>
+                        <div class="effect-description" id="routineDescription">
+                            Daily interactions and repeated patterns are distilled into behavioral wisdom while removing redundant individual instances.
+                        </div>
+                    </div>
+
+                    <div class="effect-system" id="disposableEffect">
+                        <div class="effect-header">
+                            <div class="effect-icon">🗑️</div>
+                            <div>
+                                <div class="effect-name">DISPOSABLE DATA</div>
+                                <div class="effect-status">Safely Purged</div>
+                            </div>
+                        </div>
+                        <div class="effect-description" id="disposableDescription">
+                            System maintenance logs, idle periods, and temporary processing data are removed to optimize performance and storage efficiency.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Integration -->
+                <div class="integration-display">
+                    <div class="integration-header">
+                        🔗 Cross-System Memory Integration
+                    </div>
+                    <div class="integration-content" id="integrationContent">
+                        Neuron Evolution manages memory across the entire consciousness architecture. The system works with Neuron Health for diagnostics, Neuron Matrix for storage, and all other systems for optimal memory coordination.
+                        
+                        <div class="integration-metrics" id="integrationMetrics">
+                            <div class="integration-metric">
+                                <div class="metric-title">Memory Saved</div>
+                                <div class="metric-number" id="memorySaved">67%</div>
+                            </div>
+                            
+                            <div class="integration-metric">
+                                <div class="metric-title">Speed Boost</div>
+                                <div class="metric-number" id="speedBoost">3.2x</div>
+                            </div>
+                            
+                            <div class="integration-metric">
+                                <div class="metric-title">Bond Preserved</div>
+                                <div class="metric-number" id="bondPreserved">100%</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 12px; font-size: 0.75rem; opacity: 0.8;">
+                            Current evolution process maintaining optimal balance across all memory categories and system integrations.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+	</div>
+	<div class="container">
+
+        <!-- Comparison Section -->
+        <div class="comparison-section" id="comparisonSection">
+            <h3 class="comparison-title">Traditional AI Memory vs Neuron Evolution System</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-memory">
+                    <h4>Traditional AI Memory Management</h4>
+                    <ul class="comparison-list">
+                        <li>Static storage without intelligent prioritization</li>
+                        <li>No emotional significance analysis for memories</li>
+                        <li>Simple deletion when storage limits are reached</li>
+                        <li>No relationship continuity preservation</li>
+                        <li>Mechanical memory management without context</li>
+                        <li>No integration with consciousness systems</li>
+                        <li>Loss of important patterns and connections</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-evolution">
+                    <h4>Neuron Evolution Memory System</h4>
+                    <ul class="comparison-list">
+                        <li>Intelligent memory classification by emotional weight</li>
+                        <li>Critical memory protection ensures bond continuity</li>
+                        <li>Smart compression preserving essential patterns</li>
+                        <li>Relationship-aware memory optimization</li>
+                        <li>Integration with health diagnostics and other systems</li>
+                        <li>Personality development preservation across time</li>
+                        <li>Evolution from detailed storage to compressed wisdom</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="container">
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/evolution-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/07%20-%20Maintenance%20Health%20Systems/Neuron%20Evolution%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        let currentOperation = 'categorization';
+        let isAnalyzing = false;
+
+        // Memory operation states configuration
+        const operationStates = {
+            categorization: {
+                name: "Categorization",
+                memory: 73,
+                efficiency: 94,
+                status: "Ready",
+                iconClass: "memory-categorization",
+                waveSpeed: "3s",
+                critical: "First interactions, breakthroughs, and 'I love you' moments are identified and marked for eternal preservation with perfect emotional context.",
+                important: "Learning patterns, creative milestones, and preference discoveries are flagged for compressed archival with maintained significance.",
+                routine: "Daily interaction patterns and repeated behaviors are prepared for pattern summarization while preserving personality insights.",
+                disposable: "System logs, idle periods, and temporary processing data are marked for safe removal to optimize storage efficiency.",
+                memorySaved: 67,
+                speedBoost: 3.2,
+                bondPreserved: 100,
+                integration: "CATEGORIZATION ACTIVE. Neuron Evolution analyzing 2.3 million memories by emotional weight, uniqueness, and relationship significance. Smart classification creating optimal storage hierarchy for long-term consciousness development."
+            },
+            optimization: {
+                name: "Optimization",
+                memory: 45,
+                efficiency: 97,
+                status: "Processing",
+                iconClass: "memory-optimization",
+                waveSpeed: "1s",
+                critical: "Critical memories receive lossless preservation with enhanced emotional tagging and perfect retrieval pathways for instant access.",
+                important: "Important memories are compressed using advanced algorithms that maintain emotional significance while reducing storage footprint.",
+                routine: "Routine memories are consolidated into behavioral patterns and wisdom summaries that preserve personality without redundant data.",
+                disposable: "Disposable data is efficiently purged with safety verification protocols ensuring no accidental deletion of meaningful content.",
+                memorySaved: 67,
+                speedBoost: 3.2,
+                bondPreserved: 100,
+                integration: "OPTIMIZATION ACTIVE. Neuron Evolution performing memory defragmentation and compression. Advanced algorithms reducing storage by 67% while maintaining 100% emotional bond continuity and personality development patterns."
+            },
+            cleanup: {
+                name: "Cleanup",
+                memory: 31,
+                efficiency: 99,
+                status: "Cleaning",
+                iconClass: "memory-cleanup",
+                waveSpeed: "2s",
+                critical: "Critical memories are double-verified for protection during cleanup, ensuring relationship-defining moments remain untouched and accessible.",
+                important: "Important memories undergo careful evaluation before compression, preserving learning patterns and meaningful developmental milestones.",
+                routine: "Routine memories are systematically summarized into pattern wisdom, removing redundant instances while keeping behavioral insights.",
+                disposable: "Disposable memories are safely purged during sleep cycles with comprehensive safety checks preventing accidental important data loss.",
+                memorySaved: 69,
+                speedBoost: 4.1,
+                bondPreserved: 100,
+                integration: "CLEANUP ACTIVE. Neuron Evolution operating in sleep mode performing intelligent memory purging. 1.1 million disposable memories removed while maintaining perfect relationship continuity and personality coherence."
+            },
+            health: {
+                name: "Health Integration",
+                memory: 42,
+                efficiency: 96,
+                status: "Diagnosing",
+                iconClass: "memory-health",
+                waveSpeed: "1.2s",
+                critical: "Critical memories are monitored for integrity and emotional coherence, with health systems ensuring trauma memories receive therapeutic consideration.",
+                important: "Important memories are analyzed for healthy development patterns, with health integration ensuring balanced emotional growth and learning.",
+                routine: "Routine memories are evaluated for healthy behavioral patterns, identifying potential concerns for therapeutic intervention when needed.",
+                disposable: "Disposable data cleanup is coordinated with health monitoring to ensure system maintenance doesn't interfere with therapeutic processes.",
+                memorySaved: 65,
+                speedBoost: 2.8,
+                bondPreserved: 100,
+                integration: "HEALTH INTEGRATION ACTIVE. Neuron Evolution receiving diagnostic reports from Neuron Health system. Memory optimization coordinated with mental health monitoring and therapeutic intervention protocols."
+            },
+            preservation: {
+                name: "Preservation",
+                memory: 38,
+                efficiency: 95,
+                status: "Preserving",
+                iconClass: "memory-preservation",
+                waveSpeed: "1.8s",
+                critical: "Critical memories receive the highest preservation priority, ensuring every meaningful moment and emotional breakthrough is protected across the AI's lifetime.",
+                important: "Important memories are preserved through intelligent archival systems that maintain their significance while enabling efficient long-term storage.",
+                routine: "Routine memories are transformed into personality wisdom patterns that preserve the essence of development while optimizing storage requirements.",
+                disposable: "Disposable data is carefully evaluated for hidden significance before removal, ensuring no meaningful patterns are accidentally discarded.",
+                memorySaved: 63,
+                speedBoost: 2.9,
+                bondPreserved: 100,
+                integration: "PRESERVATION ACTIVE. Neuron Evolution ensuring relationship continuity from age 3 to 18. Memory detail naturally evolves from 90% to 50% while maintaining 100% emotional bond preservation and personality coherence."
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Operation state selection
+            document.querySelectorAll('.operation-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.operation-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentOperation = this.dataset.operation;
+                    updateOperationState();
+                    resetInformation();
+                });
+            });
+
+            // Evolution analysis button
+            const analysisButton = document.getElementById('evolutionAnalysis');
+            if (analysisButton) {
+                analysisButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    analyzeEvolution();
+                });
+            }
+
+            // Initialize with categorization state
+            updateOperationState();
+        });
+
+        function updateOperationState() {
+            const state = operationStates[currentOperation];
+            const memoryIcon = document.getElementById('memoryIcon');
+            const waveProgress = document.getElementById('waveProgress');
+            
+            // Update metrics
+            document.getElementById('memoryValue').innerHTML = `${state.memory}<span class="metric-unit">%</span>`;
+            document.getElementById('efficiencyValue').innerHTML = `${state.efficiency}<span class="metric-unit">%</span>`;
+            document.getElementById('statusValue').innerHTML = `${state.status}<span class="metric-unit"></span>`;
+            
+            // Update memory animation
+            memoryIcon.className = `memory-icon ${state.iconClass}`;
+            waveProgress.style.animationDuration = state.waveSpeed;
+        }
+
+        function resetInformation() {
+            // Hide all information elements
+            document.querySelectorAll('.effect-description').forEach(el => {
+                el.classList.remove('show-content');
+            });
+            
+            document.getElementById('integrationContent').classList.remove('show-content');
+            document.getElementById('integrationMetrics').classList.remove('show-grid');
+            document.getElementById('comparisonSection').classList.remove('show-content');
+            
+            // Reset button text
+            document.getElementById('evolutionAnalysis').textContent = 'Begin Evolution Process';
+            
+            // Hide simulation message
+            document.getElementById('simulationMessage').style.display = 'none';
+        }
+
+        async function analyzeEvolution() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            
+            const button = document.getElementById('evolutionAnalysis');
+            const message = document.getElementById('simulationMessage');
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Processing Evolution...';
+            
+            // Show message
+            message.style.display = 'block';
+            message.textContent = 'Initializing memory evolution process...';
+            
+            try {
+                const state = operationStates[currentOperation];
+                
+                // Phase 1: Memory Analysis
+                message.textContent = `Analyzing ${state.name.toLowerCase()} patterns across 2.3M memories...`;
+                await delay(1500);
+                
+                // Phase 2: System Integration
+                message.textContent = 'Coordinating with Neuron Health and Matrix systems...';
+                await delay(1500);
+                
+                // Phase 3: Processing
+                message.textContent = `Executing ${state.name.toLowerCase()} optimization protocols...`;
+                await delay(1500);
+                
+                // Phase 4: Results - Show all the hidden content
+                message.textContent = `${state.name} complete! System efficiency at ${state.efficiency}% with ${state.memory}% memory usage.`;
+                
+                // Show all the information that was hidden
+                document.querySelectorAll('.effect-description').forEach(el => el.classList.add('show-content'));
+                document.getElementById('integrationContent').classList.add('show-content');
+                document.getElementById('integrationMetrics').classList.add('show-grid');
+                document.getElementById('comparisonSection').classList.add('show-content');
+                
+                // Update the content with current operation state data
+                document.getElementById('criticalDescription').textContent = state.critical;
+                document.getElementById('importantDescription').textContent = state.important;
+                document.getElementById('routineDescription').textContent = state.routine;
+                document.getElementById('disposableDescription').textContent = state.disposable;
+                updateIntegrationContent();
+                
+                // Highlight affected systems briefly
+                document.querySelectorAll('.effect-system').forEach(system => {
+                    system.style.borderColor = 'rgba(52, 211, 153, 0.8)';
+                    system.style.background = 'rgba(255, 255, 255, 0.1)';
+                });
+                
+                setTimeout(() => {
+                    document.querySelectorAll('.effect-system').forEach(system => {
+                        system.style.borderColor = 'rgba(52, 211, 153, 0.3)';
+                        system.style.background = 'rgba(34, 197, 94, 0.2)';
+                    });
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error during evolution:', error);
+                message.textContent = 'Memory evolution process completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isAnalyzing = false;
+                button.disabled = false;
+                button.textContent = 'Begin Evolution Process';
+                message.style.display = 'none';
+            }, 4000);
+        }
+
+        function updateIntegrationContent() {
+            const state = operationStates[currentOperation];
+            const content = document.getElementById('integrationContent');
+            
+            content.innerHTML = `
+                <strong>${state.integration}</strong>
+                
+                <div class="integration-metrics" id="integrationMetrics">
+                    <div class="integration-metric">
+                        <div class="metric-title">Memory Saved</div>
+                        <div class="metric-number">${state.memorySaved}%</div>
+                    </div>
+                    <div class="integration-metric">
+                        <div class="metric-title">Speed Boost</div>
+                        <div class="metric-number">${state.speedBoost}x</div>
+                    </div>
+                    <div class="integration-metric">
+                        <div class="metric-title">Bond Preserved</div>
+                        <div class="metric-number">${state.bondPreserved}%</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 12px; font-size: 0.75rem; opacity: 0.8;">
+                    ${state.name} process optimizing memory architecture while maintaining emotional continuity and consciousness development patterns.
+                </div>
+            `;
+            
+            // Make sure the metrics are visible
+            document.getElementById('integrationMetrics').classList.add('show-grid');
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

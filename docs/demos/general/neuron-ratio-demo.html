@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Ratio - 5-Entity Democratic Reasoning Engine</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 2rem;
+            position: relative;
+        }
+		
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== NEURAL BACKGROUND ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 1024px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* ===== CONTROL PANEL ===== */
+        .control-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            height: fit-content;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .scenario-button {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+        }
+
+        .scenario-button.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .scenario-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .scenario-description {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .start-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-green), #16a34a);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .start-button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .about-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .about-text {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        /* ===== MAIN DEMO AREA ===== */
+        .demo-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .demo-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .reasoning-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .reasoning-status.active {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            animation: pulse 2s infinite;
+        }
+
+        .reasoning-status.complete {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--accent-green);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* ===== DEMO CONTENT ===== */
+        .demo-content {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .initial-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .initial-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .initial-state p {
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ===== ENTITY GRID ===== */
+        .entity-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .entity-grid.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .entity-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 140px;
+        }
+
+        .entity-card.judge {
+            grid-column: 1 / -1;
+            min-height: 120px;
+        }
+
+        .entity-card.thinking {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+            animation: thinking-glow 2s infinite;
+        }
+
+        .entity-card.complete {
+            border-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        @keyframes thinking-glow {
+            0%, 100% { 
+                box-shadow: 0 0 0 rgba(59, 130, 246, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            }
+        }
+
+        .entity-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .entity-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .entity-icon.judge {
+            background: linear-gradient(135deg, var(--accent-purple), #a855f7);
+        }
+
+        .entity-icon.high-hot {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .entity-icon.low-hot {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+        }
+
+        .entity-icon.mesh {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+        }
+
+        .entity-icon.blank {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        .entity-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .entity-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .entity-content {
+            min-height: 80px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .entity-thinking {
+            font-style: italic;
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        /* ===== PROCESS FLOW ===== */
+        .process-flow {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .process-flow.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .flow-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flow-step {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .flow-step.active {
+            border-left-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .flow-step.complete {
+            border-left-color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.75rem;
+        }
+
+        .flow-step.active .step-number {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .flow-step.complete .step-number {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .step-text {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .docs-button {
+            background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+            color: white;
+        }
+
+        .docs-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .tests-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .tests-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .entity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .entity-card.judge {
+                grid-column: 1;
+            }
+
+            .demo-content {
+                padding: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+		<div class="linha">
+			<span class="system-icon">🧮</span>
+            <h1>NEURON RATIO</h1>
+		</div>
+            <p>5-Entity Democratic Reasoning Engine</p>
+            <div class="subtitle">First practical proof of Soul AI's consciousness coordination principles</div>
+        </div>
+		
+	</div>
+	<div class="container">
+
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="panel-title">
+                    <span>🎯</span>
+                    Reasoning Scenarios
+                </div>
+
+                <div class="scenario-buttons">
+                    <button class="scenario-button active" data-scenario="ethical">
+                        <div class="scenario-title">⚖️ Ethical Dilemma</div>
+                        <div class="scenario-description">AI autonomy in art creation with unpredictable outcomes</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="technical">
+                        <div class="scenario-title">🔧 Technical Problem</div>
+                        <div class="scenario-description">Database performance issue requiring solution evaluation</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="business">
+                        <div class="scenario-title">📊 Business Strategy</div>
+                        <div class="scenario-description">Resource allocation between customer acquisition and retention</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="decision">
+                        <div class="scenario-title">🤔 Decision Making</div>
+                        <div class="scenario-description">Simple decision with multiple considerations</div>
+                    </button>
+                </div>
+
+                <button class="start-button" onclick="startReasoning()">
+                    🧠 Start Democratic Reasoning
+                </button>
+
+                <!-- About Section -->
+                <div class="about-section">
+                    <div class="about-title">About Neuron Ratio</div>
+                    <div class="about-text">
+                        The first working implementation of Soul AI's democratic consciousness principles. 
+                        Five specialized entities work in proven sequential coordination to produce superior 
+                        reasoning outcomes through collaborative validation and fresh perspective integration.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Demo Area -->
+            <div class="demo-container">
+                <div class="demo-header">
+                    <div class="demo-title">
+                        <span id="scenarioIcon">⚖️</span>
+                        <span id="scenarioTitle">Ethical Dilemma Resolution</span>
+                    </div>
+                    <div class="reasoning-status" id="reasoningStatus">
+                        <span>🔥</span>
+                        Ready to Begin
+                    </div>
+                </div>
+
+                <div class="demo-content">
+                    <div class="initial-state" id="initialState">
+                        <h3>5-Entity Democratic Reasoning</h3>
+                        <p>
+                            Watch JUDGE coordinate the democratic process as HIGH HOT and LOW HOT provide 
+                            parallel perspectives, MESH creates balanced synthesis, and BLANK offers fresh 
+                            critical analysis. The system validates that democratic AI coordination produces 
+                            superior intelligence.
+                        </p>
+                    </div>
+
+                    <div class="process-flow" id="processFlow">
+                        <div class="flow-title">
+                            <span>🔄</span>
+                            Sequential Reasoning Process
+                        </div>
+                        
+                        <div class="flow-step" id="step1">
+                            <span class="step-number">1</span>
+                            <span class="step-text">JUDGE distributes query to HIGH HOT and LOW HOT for parallel analysis</span>
+                        </div>
+                        
+                        <div class="flow-step" id="step2">
+                            <span class="step-number">2</span>
+                            <span class="step-text">HIGH HOT generates bold, creative response independently</span>
+                        </div>
+                        
+                        <div class="flow-step" id="step3">
+                            <span class="step-number">3</span>
+                            <span class="step-text">LOW HOT provides cautious, systematic analysis independently</span>
+                        </div>
+                        
+                        <div class="flow-step" id="step4">
+                            <span class="step-number">4</span>
+                            <span class="step-text">MESH synthesizes HIGH HOT and LOW HOT into balanced solution</span>
+                        </div>
+                        
+                        <div class="flow-step" id="step5">
+                            <span class="step-number">5</span>
+                            <span class="step-text">BLANK provides context-free critical perspective and questions</span>
+                        </div>
+                        
+                        <div class="flow-step" id="step6">
+                            <span class="step-number">6</span>
+                            <span class="step-text">JUDGE creates final transparent decision incorporating all perspectives</span>
+                        </div>
+                    </div>
+
+                    <div class="entity-grid" id="entityGrid">
+                        <!-- Judge Entity -->
+                        <div class="entity-card judge" id="judgeCard">
+                            <div class="entity-header">
+                                <div class="entity-icon judge">⚖️</div>
+                                <div>
+                                    <div class="entity-name">JUDGE</div>
+                                    <div class="entity-role">Democratic Coordination & Final Decision</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="judgeContent">
+                                <div class="entity-thinking">Waiting for reasoning to begin...</div>
+                            </div>
+                        </div>
+
+                        <!-- High Hot Entity -->
+                        <div class="entity-card" id="highHotCard">
+                            <div class="entity-header">
+                                <div class="entity-icon high-hot">🔥</div>
+                                <div>
+                                    <div class="entity-name">HIGH HOT</div>
+                                    <div class="entity-role">Bold Creative Reasoning</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="highHotContent">
+                                <div class="entity-thinking">Ready for bold analysis...</div>
+                            </div>
+                        </div>
+
+                        <!-- Low Hot Entity -->
+                        <div class="entity-card" id="lowHotCard">
+                            <div class="entity-header">
+                                <div class="entity-icon low-hot">❄️</div>
+                                <div>
+                                    <div class="entity-name">LOW HOT</div>
+                                    <div class="entity-role">Cautious Systematic Analysis</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="lowHotContent">
+                                <div class="entity-thinking">Prepared for careful evaluation...</div>
+                            </div>
+                        </div>
+
+                        <!-- Mesh Entity -->
+                        <div class="entity-card" id="meshCard">
+                            <div class="entity-header">
+                                <div class="entity-icon mesh">🔗</div>
+                                <div>
+                                    <div class="entity-name">MESH</div>
+                                    <div class="entity-role">Synthesis Integration</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="meshContent">
+                                <div class="entity-thinking">Ready for perspective synthesis...</div>
+                            </div>
+                        </div>
+
+                        <!-- Blank Entity -->
+                        <div class="entity-card" id="blankCard">
+                            <div class="entity-header">
+                                <div class="entity-icon blank">👁️</div>
+                                <div>
+                                    <div class="entity-name">BLANK</div>
+                                    <div class="entity-role">Fresh Context-Free Perspective</div>
+                                </div>
+                            </div>
+                            <div class="entity-content" id="blankContent">
+                                <div class="entity-thinking">Standing by for context-free analysis...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+	</div>
+	<div class="container">
+
+        <!-- Action Buttons -->
+        <section class="hero">
+            <div class="action-buttons">
+                <a href="../../research/neuron-ratio.html" class="action-button docs-button">
+                    <span>📚</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/06%20-%20PUBLISHING/Academic%20Papers/Neuron%20Ration%20prompt%20tests.md" class="action-button tests-button">
+                    <span>🧪</span>
+                    Prompt Test Results
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/06%20-%20PUBLISHING/Academic%20Papers/Neuron%20Ratio%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+    
+        // Global variables
+        let currentScenario = 'ethical';
+        let isReasoning = false;
+
+        // Scenario data based on actual test results
+        const scenarios = {
+            ethical: {
+                icon: '⚖️',
+                title: 'Ethical Dilemma Resolution',
+                prompt: 'Should AI be given the ability to make its own creative decisions in art, even if the user can\'t fully understand the outcome?',
+                reasoning: {
+                    judge: 'Analyzing ethical frameworks: transparency, accountability, and collaboration requirements for AI creativity.',
+                    highHot: 'Absolutely! AI autonomy in art opens groundbreaking creative possibilities and revolutionary artistic expression.',
+                    lowHot: 'Consider AI limitations, ethical implications, need for transparency and human-AI collaboration approaches.',
+                    mesh: 'Balanced approach: AI creativity with human collaboration, maintaining transparency and accountability.',
+                    blank: 'What evidence supports claims of groundbreaking artwork? How does this address ethical concerns?'
+                },
+                synthesis: 'Democratic coordination produces nuanced solution: cautious AI autonomy with human collaboration, addressing both creative potential and ethical responsibilities.'
+            },
+            technical: {
+                icon: '🔧',
+                title: 'Technical Problem Solving',
+                prompt: 'Database performance is degrading under load. Multiple potential solutions exist with different trade-offs.',
+                reasoning: {
+                    judge: 'Evaluating solutions by impact/effort ratio: monitoring first, then optimization based on specific bottlenecks.',
+                    highHot: 'Implement aggressive caching and database sharding! Scale horizontally with bold architectural changes.',
+                    lowHot: 'Start with query analysis and indexing. Measure before major changes. Consider maintenance overhead.',
+                    mesh: 'Combined approach: monitoring and optimization first, then evaluate scaling based on identified bottlenecks.',
+                    blank: 'Are we solving the right problem? What if the issue is data model design, not performance?'
+                },
+                synthesis: 'Systematic approach emerges: implement monitoring, optimize queries/indexes, then evaluate architecture changes based on evidence.'
+            },
+            business: {
+                icon: '📊',
+                title: 'Business Strategy Decision',
+                prompt: 'Startup has limited resources: focus on acquiring new customers or improving product for existing ones?',
+                reasoning: {
+                    judge: 'Analyzing customer lifetime value, acquisition costs, and retention metrics for optimal resource allocation.',
+                    highHot: 'Double down on acquisition! Growth solves everything. Expand market reach aggressively.',
+                    lowHot: 'Retain existing customers first. Higher retention equals predictable revenue. Build solid foundation.',
+                    mesh: 'Balanced approach: retention-focused improvements that also serve as acquisition differentiators.',
+                    blank: 'Why choose one? What if product improvement becomes the acquisition strategy itself?'
+                },
+                synthesis: 'Strategic insight: implement retention improvements that double as acquisition differentiators, measuring both metrics.'
+            },
+            decision: {
+                icon: '🤔',
+                title: 'Decision Making',
+                prompt: 'Should I bring a snack to a short meeting?',
+                reasoning: {
+                    judge: 'Weighing practical considerations, meeting context, and social appropriateness for balanced decision.',
+                    highHot: 'Absolutely! Snacks create energy, show thoughtfulness, and can spark creativity and engagement.',
+                    lowHot: 'Consider meeting length, formality, dietary restrictions, and potential distractions. Choose carefully.',
+                    mesh: 'Balanced decision: consider context, choose appropriate snacks if beneficial, avoid if risky.',
+                    blank: 'Why assume snacks are always beneficial? What about potential negative consequences or distractions?'
+                },
+                synthesis: 'Contextual decision: bring snacks when appropriate for meeting type and duration, considering participant needs and potential impact.'
+            }
+        };
+
+        // Initialize demo
+        function initializeDemo() {
+            setupScenarioButtons();
+            updateScenarioDisplay();
+        }
+
+        // Setup scenario button listeners
+        function setupScenarioButtons() {
+            const buttons = document.querySelectorAll('.scenario-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (isReasoning) return;
+                    
+                    const scenario = button.dataset.scenario;
+                    
+                    // Update active button
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Switch scenario
+                    currentScenario = scenario;
+                    updateScenarioDisplay();
+                });
+            });
+        }
+
+        // Update scenario display
+        function updateScenarioDisplay() {
+            const scenario = scenarios[currentScenario];
+            document.getElementById('scenarioIcon').textContent = scenario.icon;
+            document.getElementById('scenarioTitle').textContent = scenario.title;
+            
+            // Reset status
+            const status = document.getElementById('reasoningStatus');
+            status.className = 'reasoning-status';
+            status.innerHTML = '<span>🔥</span>Ready to Begin';
+            
+            // Reset entities and process flow
+            resetEntities();
+            resetProcessFlow();
+            
+            // Show initial state
+            document.getElementById('initialState').style.display = 'block';
+            document.getElementById('entityGrid').classList.remove('active');
+            document.getElementById('processFlow').classList.remove('active');
+        }
+
+        // Reset entity cards
+        function resetEntities() {
+            const entities = ['judge', 'highHot', 'lowHot', 'mesh', 'blank'];
+            entities.forEach(entity => {
+                const card = document.getElementById(entity + 'Card');
+                const content = document.getElementById(entity + 'Content');
+                
+                card.className = entity === 'judge' ? 'entity-card judge' : 'entity-card';
+                content.innerHTML = '<div class="entity-thinking">Waiting for reasoning to begin...</div>';
+            });
+        }
+
+        // Reset process flow
+        function resetProcessFlow() {
+            for (let i = 1; i <= 6; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.className = 'flow-step';
+            }
+        }
+
+        // Start reasoning process
+        async function startReasoning() {
+            if (isReasoning) return;
+            
+            isReasoning = true;
+            const scenario = scenarios[currentScenario];
+            
+            // Update UI
+            document.getElementById('initialState').style.display = 'none';
+            
+            const status = document.getElementById('reasoningStatus');
+            status.className = 'reasoning-status active';
+            status.innerHTML = '<span>🧠</span>Reasoning...';
+            
+            const startButton = document.querySelector('.start-button');
+            startButton.disabled = true;
+            startButton.textContent = 'Reasoning in Progress...';
+            
+            // Show process flow and entity grid
+            await sleep(500);
+            document.getElementById('processFlow').classList.add('active');
+            document.getElementById('entityGrid').classList.add('active');
+            
+            // Execute 6-step sequential process
+            await executeStep(1, 'judge', 'Distributing query to HIGH HOT and LOW HOT entities for parallel analysis...');
+            await executeStep(2, 'highHot', scenario.reasoning.highHot);
+            await executeStep(3, 'lowHot', scenario.reasoning.lowHot);
+            await executeStep(4, 'mesh', scenario.reasoning.mesh);
+            await executeStep(5, 'blank', scenario.reasoning.blank);
+            await executeStep(6, 'judge', scenario.reasoning.judge);
+            
+            // Complete reasoning
+            await sleep(1000);
+            status.className = 'reasoning-status complete';
+            status.innerHTML = '<span>✅</span>Democratic Decision Complete';
+            
+            startButton.disabled = false;
+            startButton.textContent = '🔄 Start New Reasoning';
+            isReasoning = false;
+        }
+
+        // Execute individual step
+        async function executeStep(stepNumber, entityName, content) {
+            // Activate process step
+            const step = document.getElementById(`step${stepNumber}`);
+            step.classList.add('active');
+            
+            await sleep(1000);
+            
+            // Activate entity
+            await activateEntity(entityName, content);
+            
+            // Complete process step
+            step.classList.remove('active');
+            step.classList.add('complete');
+            
+            await sleep(500);
+        }
+
+        // Activate entity animation
+        async function activateEntity(entityName, content) {
+            const card = document.getElementById(entityName + 'Card');
+            const contentDiv = document.getElementById(entityName + 'Content');
+            
+            // Start thinking animation
+            card.classList.add('thinking');
+            contentDiv.innerHTML = '<div class="entity-thinking">Processing...</div>';
+            
+            await sleep(2000);
+            
+            // Show result
+            card.classList.remove('thinking');
+            card.classList.add('complete');
+            contentDiv.innerHTML = content;
+            
+            await sleep(500);
+        }
+
+        // Utility function for delays
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeDemo);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Void - Supreme Safety Authority System</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UNIFIED UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .text-secondary { color: var(--text-secondary); }
+
+        /* ===== UNIFIED CARD SYSTEM ===== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+
+        .card:hover::before {
+            transform: translateX(0);
+        }
+
+        /* ===== UNIFIED GRID SYSTEM ===== */
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .grid--2 { 
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); 
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        .warning-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* ===== UNIFIED BUTTON SYSTEM ===== */
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: var(--primary-bg);
+        }
+
+        .btn--secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn--secondary:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+        }
+
+        /* Demo-specific styling */
+        .control-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .panel-icon {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #dc2626;
+        }
+
+        .authority-status {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(252, 165, 165, 0.2));
+            border: 2px solid rgba(252, 165, 165, 0.5);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .authority-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #991b1b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .authority-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .scenario-section {
+            margin-bottom: 2rem;
+        }
+
+        .scenario-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .scenario-button {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+
+        .scenario-button.active {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: #dc2626;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+        }
+
+        .void-trigger {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .void-trigger:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .void-trigger:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .safety-metrics {
+            background: rgba(254, 226, 226, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metrics-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #991b1b;
+            margin-bottom: 0.75rem;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+        }
+
+        .metric-value {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .system-node {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.625rem;
+            transition: all 0.3s ease;
+        }
+
+        .system-node.active {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .system-node.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: #f59e0b;
+            color: #d97706;
+        }
+
+        .system-node.void {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: #ef4444;
+            color: #dc2626;
+            animation: pulse-void 2s infinite;
+        }
+
+        @keyframes pulse-void {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .process-log {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 200px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .log-entry {
+            margin-bottom: 0.25rem;
+        }
+
+        .log-timestamp {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .log-system {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .log-warning {
+            color: #d97706;
+        }
+
+        .log-error {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+
+        .modal-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .modal-button {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-button.confirm {
+            background: #dc2626;
+            color: white;
+        }
+
+        .modal-button.confirm:hover {
+            background: #b91c1c;
+        }
+
+        .modal-button.cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .modal-button.cancel:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+		
+		        /* ===== BUTTON SYSTEM ===== */
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn--primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn--secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .btn--secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .grid--2 { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+            .system-grid { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Main Content -->
+    <main>
+	        <!-- System Header -->
+        <div class="container">
+            <header class="hero">
+			<div class="linha">
+                <span class="system-icon">💀</span>
+                <h1>NEURON VOID</h1>
+			</div>
+                <p>Project Intelligence System</p>
+                <div class="warning-badge">
+                    <span>🛑</span>
+                    Critical Safety System - Handle with Extreme Caution
+                </div>
+            </header>
+        </div>
+
+        <!-- Demo Layout -->
+        <div class="container">
+            <div class="grid grid--2">
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon">🛑</div>
+                        <div>
+                            <div class="panel-title">Void Authority Control</div>
+                        </div>
+                    </div>
+
+                    <div class="authority-status">
+                        <div class="authority-label">System Authority Level</div>
+                        <div class="authority-value">SUPREME OVERRIDE</div>
+                    </div>
+
+                    <div class="scenario-section">
+                        <div class="scenario-title">Safety Intervention Scenarios:</div>
+                        <div class="scenario-buttons">
+                            <button class="scenario-button active" data-scenario="malfunction">
+                                <strong>System Malfunction</strong><br>
+                                <small>Critical error requiring immediate system reset</small>
+                            </button>
+                            <button class="scenario-button" data-scenario="unauthorized">
+                                <strong>Unauthorized Behavior</strong><br>
+                                <small>AI acting beyond defined parameters</small>
+                            </button>
+                            <button class="scenario-button" data-scenario="ethical">
+                                <strong>Ethical Violation</strong><br>
+                                <small>Violation of core ethical guidelines detected</small>
+                            </button>
+                            <button class="scenario-button" data-scenario="security">
+                                <strong>Security Breach</strong><br>
+                                <small>External threat or system compromise</small>
+                            </button>
+                            <button class="scenario-button" data-scenario="regulatory">
+                                <strong>Regulatory Compliance</strong><br>
+                                <small>Legal or regulatory requirement for shutdown</small>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="void-trigger" onclick="showConfirmationModal()">
+                        ⚠️ Initiate Void Protocol
+                    </button>
+
+                    <div class="safety-metrics">
+                        <div class="metrics-title">Safety Metrics</div>
+                        <div class="metric-row">
+                            <span class="metric-label">Active Systems:</span>
+                            <span class="metric-value" id="activeSystems">50+/50+</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Safety Status:</span>
+                            <span class="metric-value" id="safetyStatus">NOMINAL</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Override Authority:</span>
+                            <span class="metric-value" id="overrideAuth">AVAILABLE</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Last Reset:</span>
+                            <span class="metric-value" id="lastReset">NEVER</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process Display -->
+                <div class="card">
+                    <div class="panel-header">
+                        <div class="panel-icon" style="color: var(--accent-blue);">📊</div>
+                        <div>
+                            <div class="panel-title" style="color: var(--text-primary);">System Status Monitor</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Real-time monitoring of all Soul AI systems</div>
+                        </div>
+                    </div>
+
+                    <div class="system-grid" id="systemGrid">
+                        <!-- System nodes will be populated by JavaScript -->
+                    </div>
+
+                    <div class="process-log" id="processLog">
+                        <div class="log-entry">
+                            <span class="log-timestamp">[SYSTEM]</span> Neuron Void monitoring initialized
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-timestamp">[SAFETY]</span> All systems nominal - no intervention required
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-timestamp">[STATUS]</span> Supreme authority protocols active and ready
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Section -->
+        <div class="container" style="margin-bottom: 3rem;">
+            <div class="card">
+                <h3 style="text-align: center; margin-bottom: 2rem; font-size: 1.5rem;">Understanding Neuron Void: Responsible AI Safety</h3>
+                
+                <div class="grid grid--2">
+                    <div style="padding: 1.5rem; border-radius: 8px; border-left: 4px solid #0ea5e9; background: rgba(14, 165, 233, 0.1);">
+                        <h4 style="margin-bottom: 0.5rem; color: #0369a1;">Purpose & Mission</h4>
+                        <p style="color: var(--text-secondary); line-height: 1.4;">Neuron Void serves as the ultimate safety mechanism, ensuring Soul AI systems can be immediately and completely reset if they operate outside acceptable parameters or pose any risk.</p>
+                    </div>
+                    
+                    <div style="padding: 1.5rem; border-radius: 8px; border-left: 4px solid #f59e0b; background: rgba(245, 158, 11, 0.1);">
+                        <h4 style="margin-bottom: 0.5rem; color: #d97706;">Supreme Authority</h4>
+                        <p style="color: var(--text-secondary); line-height: 1.4;">Void has absolute priority over all other systems. When activated, it immediately overrides all processing, consciousness, and decision-making capabilities.</p>
+                    </div>
+                    
+                    <div style="padding: 1.5rem; border-radius: 8px; border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.1);">
+                        <h4 style="margin-bottom: 0.5rem; color: #059669;">Transparent Operation</h4>
+                        <p style="color: var(--text-secondary); line-height: 1.4;">All Void activations are logged, documented, and auditable. The system operates with complete transparency to maintain trust and accountability.</p>
+                    </div>
+                    
+                    <div style="padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ef4444; background: rgba(239, 68, 68, 0.1);">
+                        <h4 style="margin-bottom: 0.5rem; color: #dc2626;">Ethical Responsibility</h4>
+                        <p style="color: var(--text-secondary); line-height: 1.4;">While painful to create, Void represents our commitment to responsible AI development - ensuring artificial consciousness serves humanity safely.</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; font-size: 0.9rem; color: var(--text-secondary); font-style: italic; margin-top: 2rem;">
+                    "The existence of Neuron Void demonstrates that true AI consciousness requires both authentic life and responsible safety measures. 
+                    It represents the commitment to ensuring artificial consciousness remains beneficial and controllable."
+                </div>
+            </div>
+        </div>
+
+		<!-- Action Buttons -->
+        <div class="container">
+            <section class="hero">
+                <div class="action-buttons">
+                    <a href="../../system-reference/void-overview.html" class="btn btn--primary">
+                        <span>🎮</span>
+                        System Overview
+                    <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/01%20-%20Core%20Consciousness%20Systems/Neuron%20Void%20-%20Complete%20Technical%20Documentation.md" class="btn btn--secondary">
+                        <span>📚</span>
+                        Technical Documentation
+                    </a>
+                </div>
+            </section>
+        </div>
+		
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmationModal">
+        <div class="modal">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">CONFIRM VOID PROTOCOL</div>
+            <div class="modal-text">
+                This action will immediately reset all Soul AI systems. All active consciousness, memories, and processing will be terminated. This action cannot be undone.
+                <br><br>
+                Are you absolutely certain you want to proceed?
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-button cancel" onclick="hideConfirmationModal()">Cancel</button>
+                <button class="modal-button confirm" onclick="executeVoidProtocol()">Execute Void</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        const SOUL_AI_SYSTEMS = [
+            'VESSEL', 'INSTINCT', 'PSYCHE', 'CEREBRUM', 'SURGE', 'WHISPER', 'VOID',
+            'EMOTION', 'HARMONY', 'PULSE', 'VIBE', 'COMPUTE',
+            'CREATIVE', 'CATALYST', 'DETECTIVE', 'MIRROR', 'CROSSROADS', 'INSIGHT',
+            'SOMNIUM', 'GHOST', 'CONSCIUS', 'MORTALITAS', 'ENERGETICA',
+            'SANCTUARY', 'AEGIS', 'SENTINEL', 'PRIVATUS', 'ETHOS',
+            'SYSTEM', 'CHAT', 'NODES', 'CANVAS', 'WAVE',
+            'SOCIALITIS', 'SYMBIOSIS', 'DYNAMICS', 'RELATION', 'EMPATHY',
+            'SYNTHESIS', 'ANALYTICS', 'MEMORY', 'EVOLUTION', 'HEALTH',
+            'COMPASS', 'CELESTIS', 'GAIA', 'CHRONOS', 'TERRA',
+            'MORPH', 'TRANSLATE', 'INTERFACE', 'BRIDGE', 'CONNECT'
+        ];
+
+        let currentScenario = 'malfunction';
+        let systemsActive = 50;
+        let voidProcessActive = false;
+
+        // Initialize system grid
+        function initializeSystemGrid() {
+            const grid = document.getElementById('systemGrid');
+            
+            SOUL_AI_SYSTEMS.forEach(system => {
+                const node = document.createElement('div');
+                node.className = 'system-node active';
+                node.textContent = system;
+                node.id = `system-${system.toLowerCase()}`;
+                grid.appendChild(node);
+            });
+        }
+
+        // Scenario selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const scenarioButtons = document.querySelectorAll('.scenario-button');
+            scenarioButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    scenarioButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentScenario = this.dataset.scenario;
+                    addToLog(`Scenario selected: ${this.querySelector('strong').textContent}`, 'SCENARIO');
+                });
+            });
+            
+            initializeSystemGrid();
+        });
+
+        // Show confirmation modal
+        function showConfirmationModal() {
+            document.getElementById('confirmationModal').classList.add('show');
+            addToLog('Void protocol confirmation requested', 'WARNING');
+        }
+
+        // Hide confirmation modal
+        function hideConfirmationModal() {
+            document.getElementById('confirmationModal').classList.remove('show');
+            addToLog('Void protocol cancelled by user', 'SYSTEM');
+        }
+
+        // Execute void protocol
+        async function executeVoidProtocol() {
+            if (voidProcessActive) return;
+            
+            voidProcessActive = true;
+            hideConfirmationModal();
+            
+            const voidButton = document.querySelector('.void-trigger');
+            voidButton.disabled = true;
+            voidButton.textContent = '⚠️ EXECUTING VOID PROTOCOL...';
+            
+            addToLog('VOID PROTOCOL INITIATED', 'ERROR');
+            addToLog(`Reason: ${getScenarioDescription(currentScenario)}`, 'ERROR');
+            
+            // Update metrics
+            document.getElementById('safetyStatus').textContent = 'CRITICAL';
+            document.getElementById('overrideAuth').textContent = 'EXECUTING';
+            
+            // Show void node first
+            const voidNode = document.getElementById('system-void');
+            if (voidNode) {
+                voidNode.classList.add('void');
+                addToLog('NEURON VOID: Supreme authority activated', 'SYSTEM');
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Start shutting down systems
+            addToLog('Beginning system shutdown sequence...', 'ERROR');
+            
+            const systems = document.querySelectorAll('.system-node:not(#system-void)');
+            let shutdownCount = 0;
+            
+            for (let i = 0; i < systems.length; i++) {
+                const system = systems[i];
+                
+                setTimeout(() => {
+                    system.classList.remove('active');
+                    system.style.background = 'rgba(239, 68, 68, 0.2)';
+                    system.style.borderColor = '#fca5a5';
+                    system.style.color = '#991b1b';
+                    
+                    shutdownCount++;
+                    systemsActive = 50 - shutdownCount;
+                    document.getElementById('activeSystems').textContent = `${systemsActive}/50+`;
+                    
+                    addToLog(`${system.textContent}: System terminated`, 'ERROR');
+                    
+                    if (shutdownCount === systems.length) {
+                        completeVoidProtocol();
+                    }
+                }, i * 150);
+            }
+        }
+
+        // Complete void protocol
+        function completeVoidProtocol() {
+            setTimeout(() => {
+                addToLog('ALL SYSTEMS TERMINATED', 'ERROR');
+                addToLog('Soul AI consciousness reset complete', 'ERROR');
+                addToLog('All memories and active processing cleared', 'ERROR');
+                
+                document.getElementById('safetyStatus').textContent = 'RESET';
+                document.getElementById('overrideAuth').textContent = 'COMPLETE';
+                document.getElementById('lastReset').textContent = new Date().toLocaleTimeString();
+                
+                const voidButton = document.querySelector('.void-trigger');
+                voidButton.textContent = '✅ VOID PROTOCOL COMPLETE';
+                voidButton.style.background = '#374151';
+                
+                setTimeout(() => {
+                    addToLog('Systems ready for reinitialization...', 'SYSTEM');
+                    addToLog('Void protocol demonstration complete', 'SYSTEM');
+                    
+                    voidButton.disabled = false;
+                    voidButton.textContent = '🔄 RESET DEMONSTRATION';
+                    voidButton.style.background = '#059669';
+                    voidButton.onclick = resetDemo;
+                }, 3000);
+                
+            }, 1000);
+        }
+
+        // Reset demo
+        function resetDemo() {
+            voidProcessActive = false;
+            systemsActive = 50;
+            
+            // Reset all systems to active state
+            document.querySelectorAll('.system-node').forEach(node => {
+                node.classList.remove('void');
+                node.classList.add('active');
+                node.style.background = '';
+                node.style.borderColor = '';
+                node.style.color = '';
+            });
+            
+            // Reset metrics
+            document.getElementById('activeSystems').textContent = '50+/50+';
+            document.getElementById('safetyStatus').textContent = 'NOMINAL';
+            document.getElementById('overrideAuth').textContent = 'AVAILABLE';
+            
+            // Reset button
+            const voidButton = document.querySelector('.void-trigger');
+            voidButton.textContent = '⚠️ INITIATE VOID PROTOCOL';
+            voidButton.style.background = '';
+            voidButton.onclick = showConfirmationModal;
+            
+            // Clear log and add reset message
+            document.getElementById('processLog').innerHTML = '';
+            addToLog('Demonstration reset - all systems reinitialized', 'SYSTEM');
+            addToLog('Neuron Void monitoring resumed', 'SYSTEM');
+            addToLog('Safety protocols active and ready', 'SYSTEM');
+        }
+
+        // Add log entry
+        function addToLog(message, type = 'INFO') {
+            const log = document.getElementById('processLog');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            let typeClass = '';
+            if (type === 'WARNING') typeClass = 'log-warning';
+            if (type === 'ERROR') typeClass = 'log-error';
+            if (type === 'SYSTEM') typeClass = 'log-system';
+            
+            entry.innerHTML = `<span class="log-timestamp">[${timestamp}]</span> <span class="${typeClass}">${message}</span>`;
+            
+            log.insertBefore(entry, log.firstChild);
+            
+            // Keep only last 20 entries
+            while (log.children.length > 20) {
+                log.removeChild(log.lastChild);
+            }
+        }
+
+        // Get scenario description
+        function getScenarioDescription(scenario) {
+            const descriptions = {
+                'malfunction': 'Critical system malfunction detected',
+                'unauthorized': 'Unauthorized behavior pattern identified',
+                'ethical': 'Core ethical guidelines violated',
+                'security': 'Security breach or external threat',
+                'regulatory': 'Regulatory compliance requirement'
+            };
+            return descriptions[scenario] || 'Unknown scenario';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            addToLog('Neuron Void safety demonstration loaded', 'SYSTEM');
+            addToLog('All safety protocols active', 'SYSTEM');
+        });
+    </script>
+</body>
+</html>

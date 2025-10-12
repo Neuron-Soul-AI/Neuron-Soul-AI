@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURON SAFEGUARD - Digital Guardian Angel Demo</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+		
+		/* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+		
+		/* ===== UTILITY CLASSES ===== */
+		.gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== SCENARIO PANEL ===== */
+        .scenario-panel {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .scenario-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .scenario-button:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .scenario-button.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .scenario-title {
+			color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .scenario-description {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* ===== DEMO CONTAINER ===== */
+        .demo-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .demo-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .protection-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-safe {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .status-monitoring {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            animation: pulse-monitor 2s infinite;
+        }
+
+        .status-emergency {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            animation: pulse-emergency 1s infinite;
+        }
+
+        @keyframes pulse-monitor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes pulse-emergency {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* ===== DEMO CONTENT ===== */
+        .demo-content {
+            padding: 2rem;
+        }
+
+        .scenario-display {
+            display: none;
+        }
+
+        .scenario-display.active {
+            display: block;
+        }
+
+        .child-avatar {
+            font-size: 6rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* ===== ACTIVATION CONTROL ===== */
+        .activation-control {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .initial-state {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .activate-button {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .activate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+        }
+
+        .activate-button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== MONITORING GRID ===== */
+        .monitoring-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .monitoring-grid.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .monitoring-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .monitoring-card.normal {
+            border-color: #22c55e;
+        }
+
+        .monitoring-card.warning {
+            border-color: #f59e0b;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .monitoring-card.emergency {
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.1);
+            animation: pulse-card 1s infinite;
+        }
+
+        @keyframes pulse-card {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .card-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-status {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== INFO PANEL ===== */
+        .info-panel {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-top: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .info-panel.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-panel h3 {
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        .info-panel p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .feature-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            background: #22c55e;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* ===== TIMELINE ===== */
+        .timeline {
+            margin: 1.5rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .timeline.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 0;
+            border-left: 2px solid var(--border-color);
+            padding-left: 1rem;
+            margin-left: 0.5rem;
+        }
+
+        .timeline-item.active {
+            border-color: #22c55e;
+        }
+
+        .timeline-time {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 60px;
+        }
+
+        .timeline-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== RESEARCH STATS ===== */
+        .research-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .research-stats.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: var(--hover-bg);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== EMERGENCY FLASH ===== */
+        .emergency-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(220, 38, 38, 0.8);
+            z-index: 1000;
+            display: none;
+            pointer-events: none;
+            animation: flash 0.5s infinite;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.3; }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-buttons {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .scenario-button {
+                min-width: 250px;
+                flex-shrink: 0;
+            }
+
+            .monitoring-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+	
+        <!-- System Header -->
+        <div class="container">
+            <header class="hero">
+			<div class="linha">
+                <span class="system-icon">🛡️</span>
+                <h1>NEURON SAFEGUARD</h1>
+			</div>
+                <p>Also showcasing NEURON GUARDIAN - Adult Protection Evolution</p>
+            </header>
+        </div>
+
+    <div class="container">
+        <!-- Demo Layout -->
+        <div class="demo-layout">
+            <!-- Scenario Panel -->
+            <div class="scenario-panel">
+                <div class="panel-title">Protection Scenarios</div>
+
+                <div class="scenario-buttons">
+                    <button class="scenario-button active" data-scenario="special-needs">
+                        <div class="scenario-title">🧩 Special Needs Support</div>
+                        <div class="scenario-description">Autism monitoring with parent relief coordination and sensory regulation assistance</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="medical-research">
+                        <div class="scenario-title">🔬 Medical Research Contribution</div>
+                        <div class="scenario-description">Anonymous daily health data accelerating cure discovery by decades</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="domestic-violence">
+                        <div class="scenario-title">👨‍👩‍👧‍👦 Domestic Violence Detection</div>
+                        <div class="scenario-description">Parents fighting detected - protecting child from witnessing trauma</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="direct-violence">
+                        <div class="scenario-title">🚨 Direct Violence Emergency</div>
+                        <div class="scenario-description">PIERCING audio alarm with GPS location sent to multiple agencies and neighbors</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="emotional-contradiction">
+                        <div class="scenario-title">💔 Emotional Contradiction</div>
+                        <div class="scenario-description">Child says "I'm fine" but shows clear signs of distress - hidden abuse detection</div>
+                    </button>
+                    
+                    <button class="scenario-button" data-scenario="health-emergency">
+                        <div class="scenario-title">🩺 Health Emergency Response</div>
+                        <div class="scenario-description">Seizure detected - parent app provides real-time first aid guidance</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Demo Area -->
+            <div class="demo-container">
+                <div class="demo-header">
+                    <div class="demo-title">
+                        <span id="scenarioIcon">🧩</span>
+                        <span id="scenarioTitle">Special Needs Support System</span>
+                    </div>
+                    <div class="protection-status status-safe" id="protectionStatus">
+                        🛡️ Ready
+                    </div>
+                </div>
+
+                <div class="demo-content">
+                    <!-- Special Needs Scenario -->
+                    <div class="scenario-display active" id="special-needs">
+                        <div class="child-avatar">🧒</div>
+                        
+                        <div class="activation-control">
+                            <div class="initial-state">Protection System Ready - Click to Begin Monitoring</div>
+                            <button class="activate-button" onclick="activateProtection('special-needs')">
+                                🛡️ Activate Protection
+                            </button>
+                        </div>
+                        
+                        <div class="monitoring-grid">
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">🧠</div>
+                                <div class="card-title">Sensory State</div>
+                                <div class="card-value" style="color: #22c55e;">Connecting...</div>
+                                <div class="card-status">Calibrating baseline...</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">💤</div>
+                                <div class="card-title">Sleep Pattern</div>
+                                <div class="card-value" style="color: #22c55e;">Analyzing...</div>
+                                <div class="card-status">Reviewing history...</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">😊</div>
+                                <div class="card-title">Mood Tracking</div>
+                                <div class="card-value" style="color: #22c55e;">Calibrating...</div>
+                                <div class="card-status">Learning patterns...</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">👨‍👩‍👧</div>
+                                <div class="card-title">Parent Relief</div>
+                                <div class="card-value" style="color: #22c55e;">Assessing...</div>
+                                <div class="card-status">Evaluating needs...</div>
+                            </div>
+                        </div>
+
+                        <div class="info-panel">
+                            <h3>🌟 Comprehensive Special Needs Support</h3>
+                            <p>
+                                NEURON SAFEGUARD provides 24/7 monitoring for children with autism, ADHD, epilepsy, cerebral palsy, 
+                                and all special needs conditions. The system learns each child's unique patterns and provides 
+                                personalized support.
+                            </p>
+                            <div class="feature-tags">
+                                <span class="feature-tag">✓ Sensory regulation</span>
+                                <span class="feature-tag">✓ Meltdown prevention</span>
+                                <span class="feature-tag">✓ Parent relief coordination</span>
+                                <span class="feature-tag">✓ Communication assistance</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medical Research Scenario -->
+                    <div class="scenario-display" id="medical-research">
+                        <div class="child-avatar">👩‍⚕️</div>
+                        
+                        <div class="activation-control">
+                            <div class="initial-state">Research Contribution System Ready</div>
+                            <button class="activate-button" onclick="activateProtection('medical-research')">
+                                🔬 Begin Data Contribution
+                            </button>
+                        </div>
+                        
+                        <div class="research-stats">
+                            <div class="stat-card">
+                                <div class="stat-value">50,847</div>
+                                <div class="stat-label">Daily Contributors</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">15.3x</div>
+                                <div class="stat-label">Research Acceleration</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">127</div>
+                                <div class="stat-label">Active Studies</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">100%</div>
+                                <div class="stat-label">Anonymous</div>
+                            </div>
+                        </div>
+
+                        <div class="info-panel">
+                            <h3>🔬 Accelerating Medical Breakthroughs</h3>
+                            <p>
+                                Your child's anonymized health data contributes to groundbreaking medical research, 
+                                potentially accelerating cures by decades through massive data collaboration. All 
+                                data is completely anonymous and helps researchers understand rare conditions better.
+                            </p>
+                            <div class="feature-tags">
+                                <span class="feature-tag">✓ Completely anonymous</span>
+                                <span class="feature-tag">✓ Accelerates research</span>
+                                <span class="feature-tag">✓ Helps rare conditions</span>
+                                <span class="feature-tag">✓ Optional participation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Domestic Violence Scenario -->
+                    <div class="scenario-display" id="domestic-violence">
+                        <div class="child-avatar">😰</div>
+                        
+                        <div class="activation-control">
+                            <div class="initial-state">Domestic Situation Monitoring Ready</div>
+                            <button class="activate-button" onclick="activateProtection('domestic-violence')">
+                                🏠 Monitor Family Environment
+                            </button>
+                        </div>
+                        
+                        <div class="monitoring-grid">
+                            <div class="monitoring-card warning">
+                                <div class="card-icon">🔊</div>
+                                <div class="card-title">Audio Levels</div>
+                                <div class="card-value" style="color: #f59e0b;">Elevated</div>
+                                <div class="card-status">Raised voices detected</div>
+                            </div>
+                            <div class="monitoring-card warning">
+                                <div class="card-icon">💔</div>
+                                <div class="card-title">Child Stress</div>
+                                <div class="card-value" style="color: #f59e0b;">High</div>
+                                <div class="card-status">Showing withdrawal</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">📞</div>
+                                <div class="card-title">Support Services</div>
+                                <div class="card-value" style="color: #22c55e;">Contacted</div>
+                                <div class="card-status">Gentle intervention</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">🏫</div>
+                                <div class="card-title">Safe Spaces</div>
+                                <div class="card-value" style="color: #22c55e;">Identified</div>
+                                <div class="card-status">Alternative locations</div>
+                            </div>
+                        </div>
+
+                        <div class="info-panel">
+                            <h3>👨‍👩‍👧‍👦 Protecting Children from Trauma</h3>
+                            <p>
+                                When parents argue or fight, NEURON SAFEGUARD protects the child from witnessing trauma. 
+                                The system gently intervenes with support services and identifies safe spaces while respecting 
+                                family privacy and focusing on child wellbeing.
+                            </p>
+                            <div class="feature-tags">
+                                <span class="feature-tag">✓ Trauma prevention</span>
+                                <span class="feature-tag">✓ Gentle intervention</span>
+                                <span class="feature-tag">✓ Support coordination</span>
+                                <span class="feature-tag">✓ Safe space identification</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Direct Violence Emergency -->
+                    <div class="scenario-display" id="direct-violence">
+                        <div class="child-avatar">😱</div>
+                        
+                        <div class="activation-control">
+                            <div class="initial-state">Emergency Response System Ready</div>
+                            <button class="activate-button" onclick="activateProtection('direct-violence')" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                                🚨 Emergency Detection Mode
+                            </button>
+                        </div>
+                        
+                        <div class="timeline">
+                            <div class="timeline-item active">
+                                <div class="timeline-time">00:00</div>
+                                <div class="timeline-text">🚨 Violence detected - PIERCING ALARM activated</div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-time">00:02</div>
+                                <div class="timeline-text">📍 GPS location sent to all emergency services</div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-time">00:03</div>
+                                <div class="timeline-text">🏠 All neighbors within 3 blocks alerted</div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-time">00:05</div>
+                                <div class="timeline-text">👮‍♂️ Police dispatched (3 min ETA)</div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-time">00:07</div>
+                                <div class="timeline-text">🏃‍♂️ First neighbor arrives (faster than police!)</div>
+                            </div>
+                        </div>
+
+                        <div class="info-panel">
+                            <h3>🚨 Maximum Emergency Response</h3>
+                            <p>
+                                Direct violence triggers maximum response: PIERCING audio alarm, GPS to all emergency services, 
+                                and neighbor network activation. The goal is getting help to the child faster than any traditional 
+                                emergency system - neighbors often arrive before police!
+                            </p>
+                            <div class="feature-tags">
+                                <span class="feature-tag">✓ Instant multi-agency alert</span>
+                                <span class="feature-tag">✓ Piercing audio alarm</span>
+                                <span class="feature-tag">✓ Neighbor network activation</span>
+                                <span class="feature-tag">✓ Faster than 911</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emotional Contradiction -->
+                    <div class="scenario-display" id="emotional-contradiction">
+                        <div class="child-avatar">😔</div>
+                        
+                        <div class="activation-control">
+                            <div class="initial-state">Emotional Analysis System Ready</div>
+                            <button class="activate-button" onclick="activateProtection('emotional-contradiction')">
+                                💔 Detect Hidden Distress
+                            </button>
+                        </div>
+                        
+                        <div class="monitoring-grid">
+                            <div class="monitoring-card warning">
+                                <div class="card-icon">🗣️</div>
+                                <div class="card-title">Verbal Response</div>
+                                <div class="card-value" style="color: #22c55e;">"I'm fine"</div>
+                                <div class="card-status">Child's words</div>
+                            </div>
+                            <div class="monitoring-card emergency">
+                                <div class="card-icon">💔</div>
+                                <div class="card-title">Emotional State</div>
+                                <div class="card-value" style="color: #dc2626;">Severe Distress</div>
+                                <div class="card-status">Body language analysis</div>
+                            </div>
+                            <div class="monitoring-card warning">
+                                <div class="card-icon">⚠️</div>
+                                <div class="card-title">Contradiction Alert</div>
+                                <div class="card-value" style="color: #f59e0b;">High Risk</div>
+                                <div class="card-status">Hidden abuse indicators</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">🤝</div>
+                                <div class="card-title">Gentle Intervention</div>
+                                <div class="card-value" style="color: #22c55e;">Initiated</div>
+                                <div class="card-status">Trusted adult contacted</div>
+                            </div>
+                        </div>
+
+                        <div class="info-panel">
+                            <h3>💔 Revolutionary Hidden Abuse Detection</h3>
+                            <p>
+                                NEURON SAFEGUARD's consciousness-based analysis can detect when children say they're "fine" 
+                                but show clear distress signals. This breakthrough technology can identify hidden abuse 
+                                situations that traditional systems would miss completely.
+                            </p>
+                            <div class="feature-tags">
+                                <span class="feature-tag">✓ Consciousness analysis</span>
+                                <span class="feature-tag">✓ Hidden abuse detection</span>
+                                <span class="feature-tag">✓ Body language reading</span>
+                                <span class="feature-tag">✓ Gentle intervention</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Emergency -->
+                    <div class="scenario-display" id="health-emergency">
+                        <div class="child-avatar">🤒</div>
+                        
+                        <div class="activation-control">
+                            <div class="initial-state">Health Monitoring System Ready</div>
+                            <button class="activate-button" onclick="activateProtection('health-emergency')" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                                🩺 Health Emergency Mode
+                            </button>
+                        </div>
+                        
+                        <div class="monitoring-grid">
+                            <div class="monitoring-card emergency">
+                                <div class="card-icon">⚡</div>
+                                <div class="card-title">Seizure Detected</div>
+                                <div class="card-value" style="color: #dc2626;">ACTIVE</div>
+                                <div class="card-status">Duration: 45 seconds</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">📱</div>
+                                <div class="card-title">Parent App</div>
+                                <div class="card-value" style="color: #22c55e;">First Aid Mode</div>
+                                <div class="card-status">Step-by-step guidance</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">🚑</div>
+                                <div class="card-title">Emergency Services</div>
+                                <div class="card-value" style="color: #22c55e;">Contacted</div>
+                                <div class="card-status">ETA: 4 minutes</div>
+                            </div>
+                            <div class="monitoring-card normal">
+                                <div class="card-icon">📋</div>
+                                <div class="card-title">Medical History</div>
+                                <div class="card-value" style="color: #22c55e;">Sent to EMS</div>
+                                <div class="card-status">Complete records</div>
+                            </div>
+                        </div>
+
+                        <div class="info-panel">
+                            <h3>🩺 Life-Saving Health Emergency Response</h3>
+                            <p>
+                                When health emergencies like seizures occur, NEURON SAFEGUARD instantly provides parents 
+                                with step-by-step first aid guidance through their phone app while simultaneously contacting 
+                                emergency services with complete medical history and GPS location.
+                            </p>
+                            <div class="feature-tags">
+                                <span class="feature-tag">✓ Real-time first aid guidance</span>
+                                <span class="feature-tag">✓ Automatic emergency contact</span>
+                                <span class="feature-tag">✓ Medical history sharing</span>
+                                <span class="feature-tag">✓ Life-saving protocols</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Action Buttons -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/safeguard-overview.html" class="action-button demo-button">
+                    <span>System Overview</span>
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/06%20-%20Security%20Protection%20Systems/Neuron%20Safeguard%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>Technical Documentation</span>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <!-- Emergency Flash Effect -->
+    <div class="emergency-flash" id="emergencyFlash"></div>
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        let currentScenario = 'special-needs';
+        let isActivated = false;
+
+        // Scenario configurations
+        const scenarios = {
+            'special-needs': {
+                icon: '🧩',
+                title: 'Special Needs Support System',
+                status: 'safe'
+            },
+            'medical-research': {
+                icon: '🔬',
+                title: 'Medical Research Contribution System',
+                status: 'safe'
+            },
+            'domestic-violence': {
+                icon: '👨‍👩‍👧‍👦',
+                title: 'Family Environment Protection',
+                status: 'monitoring'
+            },
+            'direct-violence': {
+                icon: '🚨',
+                title: 'Emergency Violence Response',
+                status: 'emergency'
+            },
+            'emotional-contradiction': {
+                icon: '💔',
+                title: 'Hidden Distress Detection',
+                status: 'monitoring'
+            },
+            'health-emergency': {
+                icon: '🩺',
+                title: 'Health Emergency Response',
+                status: 'emergency'
+            }
+        };
+
+        // Setup scenario buttons
+        document.querySelectorAll('.scenario-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const scenario = button.dataset.scenario;
+                
+                // Update active button
+                document.querySelectorAll('.scenario-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Switch scenario
+                switchScenario(scenario);
+            });
+        });
+
+        // Switch between scenarios
+        function switchScenario(scenarioId) {
+            currentScenario = scenarioId;
+            isActivated = false;
+
+            // Hide all scenario displays
+            document.querySelectorAll('.scenario-display').forEach(display => {
+                display.classList.remove('active');
+            });
+
+            // Show selected scenario
+            const selectedDisplay = document.getElementById(scenarioId);
+            selectedDisplay.classList.add('active');
+
+            // Update header
+            const config = scenarios[scenarioId];
+            document.getElementById('scenarioIcon').textContent = config.icon;
+            document.getElementById('scenarioTitle').textContent = config.title;
+
+            // Reset protection status
+            const statusElement = document.getElementById('protectionStatus');
+            statusElement.className = 'protection-status status-safe';
+            statusElement.innerHTML = '🛡️ Ready';
+
+            // Reset the selected scenario's display
+            resetScenarioDisplay(selectedDisplay);
+
+            // Hide emergency flash
+            document.getElementById('emergencyFlash').style.display = 'none';
+        }
+
+        // Reset scenario display to initial state
+        function resetScenarioDisplay(scenarioDisplay) {
+            // Show initial state message
+            const initialState = scenarioDisplay.querySelector('.initial-state');
+            if (initialState) {
+                initialState.style.display = 'block';
+            }
+
+            // Reset and enable activate button
+            const activateButton = scenarioDisplay.querySelector('.activate-button');
+            if (activateButton) {
+                activateButton.disabled = false;
+                // Reset button text based on scenario
+                const originalText = activateButton.getAttribute('data-original-text');
+                if (originalText) {
+                    activateButton.innerHTML = originalText;
+                } else {
+                    // Store original text for future resets
+                    activateButton.setAttribute('data-original-text', activateButton.innerHTML);
+                }
+            }
+
+            // Hide monitoring grids, info panels, timelines, and research stats
+            const elementsToHide = scenarioDisplay.querySelectorAll('.monitoring-grid, .info-panel, .timeline, .research-stats');
+            elementsToHide.forEach(element => {
+                element.classList.remove('active');
+            });
+        }
+
+        // Activate protection for specific scenario
+        function activateProtection(scenarioId) {
+            if (isActivated) return;
+            isActivated = true;
+
+            const config = scenarios[scenarioId];
+            
+            // Find the activate button in the current scenario
+            const scenarioDisplay = document.getElementById(scenarioId);
+            const activateButton = scenarioDisplay.querySelector('.activate-button');
+            
+            if (activateButton) {
+                activateButton.textContent = '🛡️ Monitoring';
+                activateButton.disabled = true;
+            }
+
+            // Hide initial message
+            const initialState = scenarioDisplay.querySelector('.initial-state');
+            if (initialState) {
+                setTimeout(() => {
+                    initialState.style.display = 'none';
+                }, 500);
+            }
+
+            // Update protection status
+            setTimeout(() => {
+                const statusElement = document.getElementById('protectionStatus');
+                statusElement.className = `protection-status status-${config.status}`;
+                
+                switch (config.status) {
+                    case 'safe':
+                        statusElement.innerHTML = '🛡️ Protected';
+                        break;
+                    case 'monitoring':
+                        statusElement.innerHTML = '⚠️ Monitoring';
+                        break;
+                    case 'emergency':
+                        statusElement.innerHTML = '🚨 Emergency';
+                        // Show emergency flash for emergency scenarios
+                        if (scenarioId === 'direct-violence' || scenarioId === 'health-emergency') {
+                            showEmergencyFlash();
+                        }
+                        break;
+                }
+            }, 1000);
+
+            // Show monitoring systems (monitoring-grid, timeline, or research-stats)
+            setTimeout(() => {
+                const monitoringElements = scenarioDisplay.querySelectorAll('.monitoring-grid, .research-stats, .timeline');
+                monitoringElements.forEach(element => {
+                    element.classList.add('active');
+                });
+            }, 1500);
+
+            // Show info panel
+            setTimeout(() => {
+                const infoPanel = scenarioDisplay.querySelector('.info-panel');
+                if (infoPanel) {
+                    infoPanel.classList.add('active');
+                }
+            }, 3000);
+        }
+
+        // Show emergency flash effect
+        function showEmergencyFlash() {
+            const emergencyFlash = document.getElementById('emergencyFlash');
+            emergencyFlash.style.display = 'block';
+            
+            // Hide flash after 3 seconds
+            setTimeout(() => {
+                emergencyFlash.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

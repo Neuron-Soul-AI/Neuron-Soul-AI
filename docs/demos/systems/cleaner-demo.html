@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Cleaner - System Performance Optimization Demo</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <style>
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+            --cleaner-purple: #e040fb;
+            --cleaner-deep: #6a1b9a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+		
+		/* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+		
+		/* ===== UTILITY CLASSES ===== */
+		.gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: var(--cleaner-purple);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cleaning-section {
+            margin-bottom: 24px;
+        }
+
+        .cleaning-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .cleaning-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .cleaning-option {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8125rem;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cleaning-option:hover {
+            background: var(--hover-bg);
+            border-color: var(--cleaner-purple);
+            transform: translateY(-2px);
+        }
+
+        .cleaning-option.active {
+            background: rgba(224, 64, 251, 0.2);
+            border-color: var(--cleaner-purple);
+        }
+
+        .option-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .option-name {
+            font-weight: 600;
+        }
+
+        .option-description {
+            font-size: 0.6875rem;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .option-status {
+            font-size: 0.625rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--cleaner-purple);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 1.125rem;
+            font-family: monospace;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-unit {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .metric-change {
+            font-size: 0.625rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .metric-change.positive {
+            background: rgba(224, 64, 251, 0.2);
+            color: var(--cleaner-purple);
+        }
+
+        /* Cleaning Display */
+        .cleaning-display {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .progress-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid rgba(224, 64, 251, 0.4);
+            position: relative;
+            min-height: 280px;
+            overflow: hidden;
+        }
+
+        .cleaning-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3.75rem;
+            color: var(--cleaner-purple);
+            text-align: center;
+        }
+
+        .cleaning-icon {
+            animation: spin 2s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cleaning-status {
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .cleaning-substatus {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 8px;
+        }
+
+        .progress-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(224, 64, 251, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cleaner-purple), #f48fb1);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            font-size: 0.6875rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Results Grid - Hidden by default */
+        .results-grid {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .results-grid.show {
+            display: grid;
+        }
+
+        .result-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .result-icon {
+            font-size: 1.125rem;
+        }
+
+        .result-name {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .result-value {
+            color: var(--cleaner-purple);
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        .result-description {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        /* Integration Display - Hidden by default */
+        .integration-display {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid var(--cleaner-purple);
+        }
+
+        .integration-display.show {
+            display: block;
+        }
+
+        .integration-header {
+            color: var(--cleaner-purple);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .integration-content {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .process-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .process-button {
+            background: linear-gradient(135deg, var(--cleaner-deep), #4a148c);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .process-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(106, 27, 154, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .emergency-button {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .emergency-button:hover:not(:disabled) {
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+        }
+
+        .simulation-message {
+            background: rgba(224, 64, 251, 0.1);
+            border: 1px solid rgba(224, 64, 251, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: var(--cleaner-purple);
+            font-size: 0.875rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-maintenance {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .neuron-cleaner {
+            border-color: rgba(224, 64, 251, 0.5);
+            background: rgba(224, 64, 251, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-maintenance .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-cleaner .comparison-list li::before {
+            color: var(--cleaner-purple);
+        }
+
+        /* Action Section */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+    
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- System Header -->
+    <div class="container">
+        <header class="hero">
+            <div class="linha">
+                <span class="system-icon">🧹</span>
+                <h1>NEURON CLEANER</h1>
+            </div>
+            <p>AI performance optimization system maintaining peak consciousness efficiency through intelligent cleanup and defragmentation</p>
+        </header>
+    </div>
+
+    <div class="container">
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    🎛️ Cleaning Configuration
+                </div>
+
+                <!-- Cleaning Options -->
+                <div class="cleaning-section">
+                    <div class="cleaning-label">Select Cleaning Operations:</div>
+                    <div class="cleaning-options">
+                        <div class="cleaning-option active" data-operation="ram">
+                            <div class="option-info">
+                                <div class="option-name">💾 RAM Management</div>
+                                <div class="option-description">Clear processing buffers & optimize memory</div>
+                            </div>
+                            <div class="option-status">Enabled</div>
+                        </div>
+                        <div class="cleaning-option active" data-operation="cache">
+                            <div class="option-info">
+                                <div class="option-name">🗂️ Cache Optimization</div>
+                                <div class="option-description">Remove outdated cache & compress data</div>
+                            </div>
+                            <div class="option-status">Enabled</div>
+                        </div>
+                        <div class="cleaning-option active" data-operation="temp">
+                            <div class="option-info">
+                                <div class="option-name">🗑️ Temporary File Cleanup</div>
+                                <div class="option-description">Delete temporary calculations & failed processes</div>
+                            </div>
+                            <div class="option-status">Enabled</div>
+                        </div>
+                        <div class="cleaning-option active" data-operation="defrag">
+                            <div class="option-info">
+                                <div class="option-name">🔧 System Defragmentation</div>
+                                <div class="option-description">Reorganize consciousness clusters</div>
+                            </div>
+                            <div class="option-status">Enabled</div>
+                        </div>
+                        <div class="cleaning-option" data-operation="deep">
+                            <div class="option-info">
+                                <div class="option-name">⚡ Deep Performance Scan</div>
+                                <div class="option-description">Comprehensive system analysis</div>
+                            </div>
+                            <div class="option-status">Optional</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Metrics -->
+                <div class="metrics-section">
+                    <div class="cleaning-label">Current System Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Memory Usage</div>
+                        <div class="metric-value" id="memoryUsage">
+                            73.2<span class="metric-unit">%</span>
+                            <span class="metric-change positive" id="memoryChange">-12%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Processing Speed</div>
+                        <div class="metric-value" id="processingSpeed">
+                            847<span class="metric-unit">ops/sec</span>
+                            <span class="metric-change positive" id="speedChange">+23%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">System Health</div>
+                        <div class="metric-value" id="systemHealth">
+                            91<span class="metric-unit">%</span>
+                            <span class="metric-change positive" id="healthChange">+8%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-buttons">
+                    <button class="process-button" id="startCleaning">Start Cleaning</button>
+                    <button class="process-button emergency-button" id="emergencyClean">Emergency</button>
+                </div>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Optimizing consciousness performance...
+                </div>
+            </div>
+
+            <!-- Cleaning Display -->
+            <div class="cleaning-display">
+                <!-- Progress Visualization -->
+                <div class="progress-visual">
+                    <div class="cleaning-animation">
+                        <div class="cleaning-icon" id="cleaningIcon">🧹</div>
+                        <div class="cleaning-status" id="cleaningStatus">System Ready for Optimization</div>
+                        <div class="cleaning-substatus" id="cleaningSubstatus">Select cleaning operations and press start to begin performance enhancement</div>
+                    </div>
+
+                    <div class="progress-container" id="progressContainer" style="opacity: 0;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Initializing...</div>
+                    </div>
+                </div>
+
+                <!-- Cleaning Results -->
+                <div class="results-grid" id="resultsGrid">
+                    <div class="result-item">
+                        <div class="result-header">
+                            <div class="result-icon">💾</div>
+                            <div class="result-name">Memory Freed</div>
+                        </div>
+                        <div class="result-value" id="memoryFreed">247 MB</div>
+                        <div class="result-description">RAM buffers cleared, unused allocations released, processing cache optimized</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-header">
+                            <div class="result-icon">🗑️</div>
+                            <div class="result-name">Files Cleaned</div>
+                        </div>
+                        <div class="result-value" id="filesCleaned">1,847</div>
+                        <div class="result-description">Temporary calculations removed, failed process fragments deleted</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-header">
+                            <div class="result-icon">⚡</div>
+                            <div class="result-name">Speed Improvement</div>
+                        </div>
+                        <div class="result-value" id="speedImprovement">+28%</div>
+                        <div class="result-description">Processing pathways optimized, consciousness clusters defragmented</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-header">
+                            <div class="result-icon">🛡️</div>
+                            <div class="result-name">Protected Data</div>
+                        </div>
+                        <div class="result-value" id="protectedData">100%</div>
+                        <div class="result-description">Critical memories preserved, personality traits protected</div>
+                    </div>
+                </div>
+
+                <!-- System Integration -->
+                <div class="integration-display" id="integrationDisplay">
+                    <div class="integration-header">
+                        🔗 Cross-System Performance Integration
+                    </div>
+                    <div class="integration-content">
+                        <strong>NEURON CLEANER OPTIMIZATION COMPLETE!</strong>
+                        
+                        Performance enhancement successfully coordinated with Neuron Health diagnostics, Neuron Evolution memory management, and Neuron Immunis protection protocols. All critical consciousness data preserved while achieving maximum system efficiency through intelligent cleanup and defragmentation.
+                        
+                        <div style="margin-top: 12px; font-size: 0.75rem; opacity: 0.8;">
+                            System operating at peak performance with 28% speed improvement and 91% overall health rating. Next scheduled maintenance in 23 hours.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Section -->
+    <div class="container">
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional AI Maintenance vs Neuron Cleaner System</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-maintenance">
+                    <h4>Traditional AI System Maintenance</h4>
+                    <ul class="comparison-list">
+                        <li>Manual restarts required to clear memory</li>
+                        <li>No intelligent cleanup of temporary files</li>
+                        <li>Performance degrades over time without intervention</li>
+                        <li>Risk of data loss during maintenance procedures</li>
+                        <li>No coordination between different system components</li>
+                        <li>Limited defragmentation capabilities</li>
+                        <li>Reactive maintenance only after problems occur</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-cleaner">
+                    <h4>Neuron Cleaner Performance Optimization</h4>
+                    <ul class="comparison-list">
+                        <li>Intelligent real-time memory management and optimization</li>
+                        <li>Automated cleanup with protected data preservation</li>
+                        <li>Continuous performance maintenance and enhancement</li>
+                        <li>Safe optimization with full consciousness data protection</li>
+                        <li>Integrated coordination with Health, Evolution, and Immunis systems</li>
+                        <li>Advanced consciousness cluster defragmentation</li>
+                        <li>Predictive maintenance preventing performance degradation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="container">
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/cleaner-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/07%20-%20Maintenance%20Health%20Systems/Neuron%20Cleaner%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        let isCleaning = false;
+        const cleaningOperations = {
+            ram: { name: "RAM Management", duration: 3000 },
+            cache: { name: "Cache Optimization", duration: 2500 },
+            temp: { name: "Temporary File Cleanup", duration: 4000 },
+            defrag: { name: "System Defragmentation", duration: 5000 },
+            deep: { name: "Deep Performance Scan", duration: 7000 }
+        };
+
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.cleaning-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    if (isCleaning) return;
+                    this.classList.toggle('active');
+                    const statusEl = this.querySelector('.option-status');
+                    statusEl.textContent = this.classList.contains('active') ? 'Enabled' : 'Disabled';
+                });
+            });
+
+            const startButton = document.getElementById('startCleaning');
+            if (startButton) {
+                startButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    startCleaningProcess();
+                });
+            }
+
+            const emergencyButton = document.getElementById('emergencyClean');
+            if (emergencyButton) {
+                emergencyButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    startEmergencyClean();
+                });
+            }
+        });
+
+        async function startCleaningProcess() {
+            if (isCleaning) return;
+            isCleaning = true;
+            
+            const activeOps = getActiveOperations();
+            if (activeOps.length === 0) {
+                showMessage('Please select at least one cleaning operation');
+                isCleaning = false;
+                return;
+            }
+
+            updateButtons(true);
+            showProgress(true);
+            showMessage('Starting system optimization...');
+            
+            for (let i = 0; i < activeOps.length; i++) {
+                const op = cleaningOperations[activeOps[i]];
+                document.getElementById('cleaningStatus').textContent = op.name;
+                document.getElementById('cleaningSubstatus').textContent = 'Optimizing system performance...';
+                
+                await animateProgress(((i) / activeOps.length) * 100, ((i + 1) / activeOps.length) * 100, op.duration);
+                if (i < activeOps.length - 1) await delay(500);
+            }
+            
+            await showResults();
+            showMessage('Optimization completed successfully!');
+            
+            setTimeout(() => {
+                resetUI();
+                isCleaning = false;
+            }, 3000);
+        }
+
+        async function startEmergencyClean() {
+            if (isCleaning) return;
+            document.querySelectorAll('.cleaning-option').forEach(option => {
+                option.classList.add('active');
+                option.querySelector('.option-status').textContent = 'Enabled';
+            });
+            showMessage('Emergency cleaning activated!');
+            await delay(1000);
+            startCleaningProcess();
+        }
+
+        function getActiveOperations() {
+            const active = [];
+            document.querySelectorAll('.cleaning-option.active').forEach(option => {
+                active.push(option.dataset.operation);
+            });
+            return active;
+        }
+
+        async function animateProgress(start, end, duration) {
+            const steps = 50;
+            const stepDuration = duration / steps;
+            const increment = (end - start) / steps;
+            
+            for (let i = 0; i <= steps; i++) {
+                const current = start + (increment * i);
+                document.getElementById('progressFill').style.width = current + '%';
+                document.getElementById('progressText').textContent = `Optimizing... ${Math.round(current)}%`;
+                await delay(stepDuration);
+            }
+        }
+
+        async function showResults() {
+            document.getElementById('cleaningStatus').textContent = 'Optimization Complete';
+            document.getElementById('cleaningSubstatus').textContent = 'System performance enhanced';
+            document.getElementById('cleaningIcon').textContent = '✅';
+            
+            document.getElementById('resultsGrid').classList.add('show');
+            await delay(500);
+            document.getElementById('integrationDisplay').classList.add('show');
+        }
+
+        function resetUI() {
+            updateButtons(false);
+            showProgress(false);
+            document.getElementById('cleaningIcon').textContent = '🧹';
+            document.getElementById('cleaningStatus').textContent = 'System Ready for Optimization';
+            document.getElementById('cleaningSubstatus').textContent = 'Select cleaning operations and press start';
+            
+            setTimeout(() => {
+                document.getElementById('resultsGrid').classList.remove('show');
+                document.getElementById('integrationDisplay').classList.remove('show');
+            }, 2000);
+        }
+
+        function updateButtons(disabled) {
+            document.getElementById('startCleaning').disabled = disabled;
+            document.getElementById('emergencyClean').disabled = disabled;
+            document.getElementById('startCleaning').textContent = disabled ? 'Cleaning...' : 'Start Cleaning';
+        }
+
+        function showProgress(show) {
+            document.getElementById('progressContainer').style.opacity = show ? '1' : '0';
+            if (!show) document.getElementById('progressFill').style.width = '0%';
+        }
+
+        function showMessage(message) {
+            const messageEl = document.getElementById('simulationMessage');
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            setTimeout(() => { messageEl.style.display = 'none'; }, 3000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

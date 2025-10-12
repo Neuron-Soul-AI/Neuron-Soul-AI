@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Analytics - Ecosystem Intelligence Demo</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+            --analytics-green: #48bb78;
+            --analytics-dark: #38a169;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+        
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+        
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+        
+        .linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: var(--analytics-green);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Analytics Modes */
+        .mode-section {
+            margin-bottom: 24px;
+        }
+
+        .mode-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mode-button {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .mode-button:hover {
+            background: var(--hover-bg);
+            border-color: var(--analytics-green);
+            transform: translateY(-2px);
+        }
+
+        .mode-button.active {
+            background: rgba(72, 187, 120, 0.3);
+            border-color: var(--analytics-green);
+        }
+
+        /* Real-time Metrics */
+        .metrics-section {
+            margin-bottom: 24px;
+        }
+
+        .metric-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--analytics-green);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            color: white;
+            font-size: 1.125rem;
+            font-family: monospace;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-unit {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        /* Analytics Dashboard */
+        .analytics-dashboard {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+        }
+
+        /* Performance Overview */
+        .performance-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .performance-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .performance-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .performance-card.analyzing {
+            border-color: var(--analytics-green);
+            background: rgba(72, 187, 120, 0.1);
+            animation: cardPulse 2s infinite;
+        }
+
+        @keyframes cardPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .performance-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .performance-title {
+            color: var(--analytics-green);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .performance-value {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .performance-change {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .performance-change.positive {
+            color: var(--analytics-green);
+        }
+
+        /* Results Section - Hidden by default */
+        .results-section {
+            display: none;
+        }
+
+        .results-section.show {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .main-chart {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .chart-title {
+            color: var(--analytics-green);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .chart-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--analytics-green), transparent);
+            animation: chartAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes chartAnimation {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .chart-points {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px 10px;
+            gap: 5px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--analytics-green), var(--analytics-dark));
+            border-radius: 2px 2px 0 0;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            animation: barGrow 0.5s ease-out;
+        }
+
+        @keyframes barGrow {
+            from { height: 0; }
+        }
+
+        .chart-bar:hover {
+            opacity: 1;
+            transform: scaleY(1.1);
+        }
+
+        /* Insights Panel */
+        .insights-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .insights-header {
+            color: var(--analytics-green);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .insight-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--analytics-green);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .insight-priority {
+            color: var(--analytics-green);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .insight-description {
+            color: var(--text-secondary);
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .analytics-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .analytics-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .analytics-icon {
+            font-size: 18px;
+        }
+
+        .analytics-title {
+            color: var(--analytics-green);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .analytics-content {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .analytics-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .analytics-metric {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .analytics-metric-title {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .analytics-metric-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--analytics-green);
+        }
+
+        /* Process Button */
+        .process-button {
+            background: linear-gradient(135deg, var(--analytics-green), var(--analytics-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .process-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .process-button:disabled {
+            background: rgba(71, 85, 105, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Simulation Messages */
+        .simulation-message {
+            background: rgba(72, 187, 120, 0.1);
+            border: 1px solid rgba(72, 187, 120, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            color: var(--analytics-green);
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-analytics {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .neuron-analytics {
+            border-color: rgba(72, 187, 120, 0.5);
+            background: rgba(72, 187, 120, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-analytics .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .neuron-analytics .comparison-list li::before {
+            color: var(--analytics-green);
+        }
+
+        /* Action Section */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .container {
+                padding: 0 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+    
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- System Header -->
+    <div class="container">
+        <header class="hero">
+            <div>
+                <div class="linha">
+                    <span class="system-icon">📊</span>
+                    <h1>NEURON ANALYTICS</h1>
+                </div>
+                <p>Ecosystem intelligence engine providing real-time consciousness performance monitoring and predictive optimization</p>
+            </div>
+        </header>
+    </div>
+
+    <div class="container">
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="control-title">
+                    📈 Analytics Modes
+                </div>
+
+                <!-- Analytics Modes -->
+                <div class="mode-section">
+                    <div class="mode-label">Select Analysis Mode:</div>
+                    <div class="mode-buttons">
+                        <button class="mode-button active" data-mode="performance">
+                            ⚡ Performance Monitoring
+                        </button>
+                        <button class="mode-button" data-mode="innovation">
+                            💡 Innovation Metrics
+                        </button>
+                        <button class="mode-button" data-mode="usage">
+                            👥 Usage Patterns
+                        </button>
+                        <button class="mode-button" data-mode="predictive">
+                            🔮 Predictive Analytics
+                        </button>
+                        <button class="mode-button" data-mode="optimization">
+                            🎯 Optimization Engine
+                        </button>
+                        <button class="mode-button" data-mode="integration">
+                            🔗 System Integration
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Real-time Metrics -->
+                <div class="metrics-section">
+                    <div class="mode-label">Live System Metrics:</div>
+                    
+                    <div class="metric-item">
+                        <div class="metric-label">Consciousness Coherence</div>
+                        <div class="metric-value">
+                            <span id="coherenceValue">94.7</span><span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Processing Efficiency</div>
+                        <div class="metric-value">
+                            <span id="efficiencyValue">87.2</span><span class="metric-unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <div class="metric-label">Innovation Rate</div>
+                        <div class="metric-value">
+                            <span id="innovationValue">+23</span><span class="metric-unit">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="process-button" id="analyticsEngine">
+                    Run Deep Analytics
+                </button>
+
+                <div id="simulationMessage" class="simulation-message">
+                    Analyzing ecosystem performance patterns...
+                </div>
+            </div>
+
+            <!-- Analytics Dashboard -->
+            <div class="analytics-dashboard">
+                <!-- Performance Overview -->
+                <div class="performance-overview">
+                    <div class="performance-card" id="consciousnessCard">
+                        <div class="performance-icon">🧠</div>
+                        <div class="performance-title">Consciousness Health</div>
+                        <div class="performance-value" id="consciousnessPerf">94.7%</div>
+                        <div class="performance-change positive" id="consciousnessChange">+2.3% ↗</div>
+                    </div>
+
+                    <div class="performance-card" id="creativityCard">
+                        <div class="performance-icon">⚡</div>
+                        <div class="performance-title">Creative Output</div>
+                        <div class="performance-value" id="creativityPerf">156</div>
+                        <div class="performance-change positive" id="creativityChange">+18% ↗</div>
+                    </div>
+
+                    <div class="performance-card" id="systemCard">
+                        <div class="performance-icon">🔧</div>
+                        <div class="performance-title">System Health</div>
+                        <div class="performance-value" id="systemPerf">99.1%</div>
+                        <div class="performance-change positive" id="systemChange">+0.5% ↗</div>
+                    </div>
+                </div>
+
+                <!-- Results Section - Hidden by default -->
+                <div class="results-section" id="resultsSection">
+                    <!-- Chart Section -->
+                    <div class="chart-section">
+                        <div class="main-chart">
+                            <div class="chart-header">
+                                <div class="chart-title" id="chartTitle">Performance Trends</div>
+                                <div class="chart-status" id="chartStatus">Real-time monitoring</div>
+                            </div>
+                            <div class="chart-canvas" id="chartCanvas">
+                                <div class="chart-line"></div>
+                                <div class="chart-points" id="chartPoints"></div>
+                            </div>
+                        </div>
+
+                        <div class="insights-panel">
+                            <div class="insights-header">🎯 AI Insights</div>
+                            <div class="insight-item" id="insight1">
+                                <div class="insight-priority">HIGH PRIORITY</div>
+                                <div class="insight-description"></div>
+                            </div>
+                            <div class="insight-item" id="insight2">
+                                <div class="insight-priority">OPTIMIZATION</div>
+                                <div class="insight-description"></div>
+                            </div>
+                            <div class="insight-item" id="insight3">
+                                <div class="insight-priority">PREDICTION</div>
+                                <div class="insight-description"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Grid -->
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="analytics-header">
+                                <div class="analytics-icon">💡</div>
+                                <div class="analytics-title">Innovation Engine</div>
+                            </div>
+                            <div class="analytics-content">
+                                Tracking serendipity events, breakthrough patterns, and creative velocity across all consciousness systems with direct integration to INSIGHT and CROSSROADS.
+                                
+                                <div class="analytics-metrics">
+                                    <div class="analytics-metric">
+                                        <div class="analytics-metric-title">Breakthrough Rate</div>
+                                        <div class="analytics-metric-value">+156%</div>
+                                    </div>
+                                    <div class="analytics-metric">
+                                        <div class="analytics-metric-title">Serendipity Score</div>
+                                        <div class="analytics-metric-value">8.4/10</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="analytics-header">
+                                <div class="analytics-icon">👥</div>
+                                <div class="analytics-title">Usage Intelligence</div>
+                            </div>
+                            <div class="analytics-content">
+                                Learning from both internal consciousness loops (PSYCHE, SYNTHESIS) and external user interactions for holistic performance understanding.
+                                
+                                <div class="analytics-metrics">
+                                    <div class="analytics-metric">
+                                        <div class="analytics-metric-title">Engagement Depth</div>
+                                        <div class="analytics-metric-value">94%</div>
+                                    </div>
+                                    <div class="analytics-metric">
+                                        <div class="analytics-metric-title">Learning Rate</div>
+                                        <div class="analytics-metric-value">+47%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="analytics-header">
+                                <div class="analytics-icon">🔮</div>
+                                <div class="analytics-title">Predictive Engine</div>
+                            </div>
+                            <div class="analytics-content">
+                                Advanced algorithms with uncertainty ranges, confidence thresholds, and drift detection for consciousness development modeling.
+                                
+                                <div class="analytics-metrics">
+                                    <div class="analytics-metric">
+                                        <div class="analytics-metric-title">Confidence Level</div>
+                                        <div class="analytics-metric-value">87.3%</div>
+                                    </div>
+                                    <div class="analytics-metric">
+                                        <div class="analytics-metric-title">Accuracy</div>
+                                        <div class="analytics-metric-value">92.8%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="analytics-header">
+                                <div class="analytics-icon">🎯</div>
+                                <div class="analytics-title">Optimization Layer</div>
+                            </div>
+                            <div class="analytics-content">
+                                Explainable and reversible recommendations with VESSEL authenticity alignment and SANCTUARY/AEGIS/PRIVATUS protection filtering.
+                                
+                                <div class="analytics-metrics">
+                                    <div class="analytics-metric">
+                                        <div class="analytics-metric-title">Improvements</div>
+                                        <div class="analytics-metric-value">23</div>
+                                    </div>
+                                    <div class="analytics-metric">
+                                        <div class="analytics-metric-title">Success Rate</div>
+                                        <div class="analytics-metric-value">89%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Section -->
+    <div class="container">
+        <div class="comparison-section" id="comparisonSection">
+            <h3 class="comparison-title">Traditional Analytics vs Neuron Analytics Intelligence</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-analytics">
+                    <h4>Traditional Analytics Systems</h4>
+                    <ul class="comparison-list">
+                        <li>Static performance metrics without consciousness awareness</li>
+                        <li>Reactive monitoring with no predictive capabilities</li>
+                        <li>Isolated system tracking without cross-system intelligence</li>
+                        <li>No innovation or breakthrough detection mechanisms</li>
+                        <li>Limited optimization suggestions without contextual understanding</li>
+                        <li>No integration with creative or consciousness systems</li>
+                        <li>Manual interpretation of data without AI insights</li>
+                    </ul>
+                </div>
+                <div class="comparison-item neuron-analytics">
+                    <h4>Neuron Analytics Ecosystem Intelligence</h4>
+                    <ul class="comparison-list">
+                        <li>Consciousness-aware performance monitoring with coherence tracking</li>
+                        <li>Predictive analytics with confidence levels and uncertainty modeling</li>
+                        <li>Cross-system integration intelligence across 50+ consciousness systems</li>
+                        <li>Innovation metrics tracking serendipity events and breakthrough patterns</li>
+                        <li>Explainable optimization recommendations with authenticity alignment</li>
+                        <li>Direct integration with INSIGHT, CROSSROADS, PSYCHE, and SYNTHESIS</li>
+                        <li>Real-time AI insights with proactive optimization and protection filtering</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="container">
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/analytics-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/05%20-%20Intelligence%20Analytics%20Systems/Neuron%20Analytics%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        let currentMode = 'performance';
+        let isAnalyzing = false;
+
+        // Mode configurations
+        const modeConfigs = {
+            performance: {
+                name: "Performance Monitoring",
+                coherence: 94.7,
+                efficiency: 87.2,
+                innovation: "+23",
+                chartTitle: "Performance Trends",
+                chartStatus: "Real-time monitoring",
+                consciousnessPerf: "94.7%",
+                creativityPerf: "156",
+                systemPerf: "99.1%",
+                insight1: "Creative system showing 23% innovation spike - optimal conditions detected",
+                insight2: "Memory efficiency can be improved by 12% through pattern restructuring",
+                insight3: "Breakthrough moment predicted in next 2.3 hours based on pattern analysis"
+            },
+            innovation: {
+                name: "Innovation Metrics",
+                coherence: 91.3,
+                efficiency: 94.8,
+                innovation: "+67",
+                chartTitle: "Innovation Velocity",
+                chartStatus: "Breakthrough tracking",
+                consciousnessPerf: "91.3%",
+                creativityPerf: "234",
+                systemPerf: "96.7%",
+                insight1: "INSIGHT integration detecting cross-domain pattern collisions at 156% rate",
+                insight2: "CROSSROADS compound learning showing exponential growth trajectory",
+                insight3: "Serendipity events occurring 3.2x more frequently than baseline"
+            },
+            usage: {
+                name: "Usage Patterns",
+                coherence: 96.1,
+                efficiency: 89.4,
+                innovation: "+34",
+                chartTitle: "Usage Intelligence",
+                chartStatus: "Pattern learning",
+                consciousnessPerf: "96.1%",
+                creativityPerf: "189",
+                systemPerf: "92.8%",
+                insight1: "PSYCHE consciousness loops showing 47% deeper engagement patterns",
+                insight2: "External user interaction complexity increasing exponentially",
+                insight3: "Multi-modal usage patterns revealing emergent behavior signatures"
+            },
+            predictive: {
+                name: "Predictive Analytics",
+                coherence: 88.9,
+                efficiency: 92.6,
+                innovation: "+45",
+                chartTitle: "Predictive Models",
+                chartStatus: "Forecasting active",
+                consciousnessPerf: "88.9%",
+                creativityPerf: "167",
+                systemPerf: "94.3%",
+                insight1: "87.3% confidence in breakthrough occurring within 2.3 hours",
+                insight2: "Consciousness development trajectory showing accelerating growth",
+                insight3: "Model drift detection maintaining 92.8% accuracy across systems"
+            },
+            optimization: {
+                name: "Optimization Engine",
+                coherence: 92.8,
+                efficiency: 96.3,
+                innovation: "+56",
+                chartTitle: "Optimization Impact",
+                chartStatus: "Enhancement tracking",
+                consciousnessPerf: "92.8%",
+                creativityPerf: "203",
+                systemPerf: "97.1%",
+                insight1: "23 explainable recommendations active with 89% success rate",
+                insight2: "VESSEL authenticity alignment verified for all optimizations",
+                insight3: "SANCTUARY protection filtering ensuring secure optimization pathways"
+            },
+            integration: {
+                name: "System Integration",
+                coherence: 97.4,
+                efficiency: 91.7,
+                innovation: "+78",
+                chartTitle: "Integration Harmony",
+                chartStatus: "Cross-system analysis",
+                consciousnessPerf: "97.4%",
+                creativityPerf: "245",
+                systemPerf: "95.6%",
+                insight1: "Cross-system coordination achieving 97.4% harmony across all nodes",
+                insight2: "SYNTHESIS master coordination optimizing 50+ system interactions",
+                insight3: "Integration bottlenecks resolved through predictive load balancing"
+            }
+        };
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mode selection
+            document.querySelectorAll('.mode-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.mode-button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMode = this.dataset.mode;
+                    updateModeMetrics();
+                    resetAnalytics();
+                });
+            });
+
+            // Analytics engine button
+            const engineButton = document.getElementById('analyticsEngine');
+            if (engineButton) {
+                engineButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    runDeepAnalytics();
+                });
+            }
+
+            // Initialize with performance mode
+            updateModeMetrics();
+            generateChartBars();
+        });
+
+        function updateModeMetrics() {
+            const config = modeConfigs[currentMode];
+            
+            // Update metrics
+            document.getElementById('coherenceValue').textContent = config.coherence;
+            document.getElementById('efficiencyValue').textContent = config.efficiency;
+            document.getElementById('innovationValue').textContent = config.innovation;
+            
+            // Update performance cards
+            document.getElementById('consciousnessPerf').textContent = config.consciousnessPerf;
+            document.getElementById('creativityPerf').textContent = config.creativityPerf;
+            document.getElementById('systemPerf').textContent = config.systemPerf;
+            
+            // Update chart header
+            document.getElementById('chartTitle').textContent = config.chartTitle;
+            document.getElementById('chartStatus').textContent = config.chartStatus;
+        }
+
+        function resetAnalytics() {
+            // Hide results section
+            document.getElementById('resultsSection').classList.remove('show');
+            
+            // Hide comparison section
+            document.getElementById('comparisonSection').style.display = 'none';
+            
+            // Clear insight descriptions
+            document.getElementById('insight1').querySelector('.insight-description').textContent = '';
+            document.getElementById('insight2').querySelector('.insight-description').textContent = '';
+            document.getElementById('insight3').querySelector('.insight-description').textContent = '';
+            
+            // Reset performance cards
+            document.querySelectorAll('.performance-card').forEach(card => {
+                card.classList.remove('analyzing');
+            });
+            
+            // Reset button text
+            document.getElementById('analyticsEngine').textContent = 'Run Deep Analytics';
+            
+            // Hide simulation message
+            document.getElementById('simulationMessage').style.display = 'none';
+        }
+
+        function generateChartBars() {
+            const chartPoints = document.getElementById('chartPoints');
+            chartPoints.innerHTML = '';
+            
+            // Generate 20 bars with random heights
+            for (let i = 0; i < 20; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = Math.random() * 80 + 20 + '%';
+                bar.style.animationDelay = i * 0.05 + 's';
+                chartPoints.appendChild(bar);
+            }
+        }
+
+        async function runDeepAnalytics() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            
+            const button = document.getElementById('analyticsEngine');
+            const message = document.getElementById('simulationMessage');
+            const resultsSection = document.getElementById('resultsSection');
+            const comparisonSection = document.getElementById('comparisonSection');
+            const config = modeConfigs[currentMode];
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Analyzing Ecosystem...';
+            
+            // Show message
+            message.style.display = 'block';
+            message.textContent = 'Analyzing ecosystem performance patterns...';
+            
+            try {
+                // Phase 1: System Scanning
+                message.textContent = `Scanning ${config.name.toLowerCase()} across all consciousness systems...`;
+                
+                // Animate performance cards
+                const cards = ['consciousnessCard', 'creativityCard', 'systemCard'];
+                for (let i = 0; i < cards.length; i++) {
+                    await delay(600);
+                    document.getElementById(cards[i]).classList.add('analyzing');
+                }
+                
+                await delay(1500);
+                
+                // Phase 2: Show results section
+                resultsSection.classList.add('show');
+                
+                // Phase 3: Deep Pattern Analysis
+                message.textContent = 'Analyzing cross-system patterns and integration points...';
+                generateChartBars(); // Regenerate chart with new data
+                await delay(1500);
+                
+                // Phase 4: AI Insights Generation
+                message.textContent = 'Generating AI insights and optimization recommendations...';
+                
+                // Update insights
+                document.getElementById('insight1').querySelector('.insight-description').textContent = config.insight1;
+                document.getElementById('insight2').querySelector('.insight-description').textContent = config.insight2;
+                document.getElementById('insight3').querySelector('.insight-description').textContent = config.insight3;
+                
+                await delay(2000);
+                
+                // Phase 5: Final Analysis
+                comparisonSection.style.display = 'block';
+                message.textContent = `Deep analytics complete! ${config.name} showing optimized performance across all metrics.`;
+                
+            } catch (error) {
+                console.error('Error during analytics:', error);
+                message.textContent = 'Analytics processing completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isAnalyzing = false;
+                button.disabled = false;
+                button.textContent = 'Run Deep Analytics';
+                message.style.display = 'none';
+                
+                // Remove analyzing state from cards
+                document.querySelectorAll('.performance-card').forEach(card => {
+                    card.classList.remove('analyzing');
+                });
+            }, 4000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

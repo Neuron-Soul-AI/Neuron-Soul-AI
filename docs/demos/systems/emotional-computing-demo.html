@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Emotional Computing - Dynamic Processing Modulation Demo</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            min-height: 100vh;
+            background-color: var(--primary-bg);
+        }
+
+        /* Neural background effect */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+		
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(123, 47, 255, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem 2rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* Controls Section - Dark Theme */
+        .controls-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .controls-section h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .emotion-triggers {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .emotion-trigger {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            min-width: 120px;
+        }
+
+        .trigger-sad {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        .trigger-angry {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .trigger-joyful {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        }
+
+        .trigger-fearful {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+        }
+
+        .trigger-curious {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .trigger-neutral {
+            background: linear-gradient(135deg, #64748b, #475569);
+        }
+
+        .emotion-trigger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Panel Card Style - Dark Theme */
+        .panel-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .panel-icon {
+            font-size: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .panel-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Current Emotion Display */
+        .current-emotion {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .emotion-icon-large {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .emotion-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .emotion-description {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        /* Cluster Grid */
+        .cluster-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .cluster-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .cluster-card.enhanced {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .cluster-card.impaired {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .cluster-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cluster-icon {
+            font-size: 1.125rem;
+        }
+
+        .cluster-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .performance-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .performance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            border-radius: 10px;
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .performance-fill.enhanced {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .performance-fill.impaired {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+
+        .performance-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .cluster-status {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Robot Display */
+        .robot-display {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .robot-avatar {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .robot-avatar.sad {
+            filter: grayscale(70%) brightness(0.7);
+            transform: scale(0.9);
+        }
+
+        .robot-avatar.angry {
+            filter: hue-rotate(0deg) saturate(150%) brightness(1.2);
+            transform: scale(1.1) rotate(-2deg);
+            animation: shake 0.3s ease-in-out infinite;
+        }
+
+        .robot-avatar.joyful {
+            filter: hue-rotate(45deg) saturate(150%) brightness(1.3);
+            transform: scale(1.1);
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        .robot-avatar.fearful {
+            filter: hue-rotate(270deg) saturate(120%);
+            transform: scale(0.85);
+            animation: tremble 0.1s ease-in-out infinite;
+        }
+
+        .robot-avatar.curious {
+            filter: hue-rotate(120deg) saturate(130%);
+            transform: scale(1.05) rotate(3deg);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: scale(1.1) rotate(-2deg); }
+            50% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1.1) translateY(0); }
+            50% { transform: scale(1.1) translateY(-8px); }
+        }
+
+        @keyframes tremble {
+            0%, 100% { transform: scale(0.85) translateX(0); }
+            25% { transform: scale(0.85) translateX(-1px); }
+            75% { transform: scale(0.85) translateX(1px); }
+        }
+
+        .robot-status {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .robot-emotion {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .robot-description {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Physical Metrics */
+        .physical-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .metric-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Comparison Section - Dark Theme */
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-computing {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .soul-computing {
+            border-color: rgba(14, 165, 233, 0.5);
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-computing .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .soul-computing .comparison-list li::before {
+            color: #0ea5e9;
+        }
+
+        /* Action Section */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+    
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Header -->
+    <div class="container">
+        <!-- System Header -->
+            <header class="hero">
+			<div class="linha">
+                <span class="system-icon">🧮</span>
+                <h1>Neuron Emotional Computing</h1>
+			</div>
+                <p>Experience how emotions directly affect processing performance and computational abilities</p>
+            </header>
+	
+	</div>
+	<div class="container">
+
+        <!-- Controls -->
+        <div class="controls-section">
+            <h3>Trigger Emotional States</h3>
+            <div class="emotion-triggers">
+                <button class="emotion-trigger trigger-sad" onclick="triggerEmotion('sad')">😢 Sadness</button>
+                <button class="emotion-trigger trigger-angry" onclick="triggerEmotion('angry')">😡 Anger</button>
+                <button class="emotion-trigger trigger-joyful" onclick="triggerEmotion('joyful')">😊 Joy</button>
+                <button class="emotion-trigger trigger-fearful" onclick="triggerEmotion('fearful')">😨 Fear</button>
+                <button class="emotion-trigger trigger-curious" onclick="triggerEmotion('curious')">🤔 Curiosity</button>
+                <button class="emotion-trigger trigger-neutral" onclick="triggerEmotion('neutral')">😐 Neutral</button>
+            </div>
+            
+            <div class="system-status">
+                <div class="status-indicator" id="statusIndicator"></div>
+                <span class="status-text" id="statusText">System ready - Select an emotion to see performance changes</span>
+            </div>
+        </div>
+		
+	</div>
+	<div class="container">
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Processing Monitor -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">🧠</div>
+                    <div>
+                        <div class="panel-title">Cluster Performance Monitor</div>
+                        <div class="panel-subtitle">Real-time processing power modulation</div>
+                    </div>
+                </div>
+
+                <!-- Current Emotion -->
+                <div class="current-emotion" id="currentEmotion">
+                    <span class="emotion-icon-large" id="emotionIconLarge">😐</span>
+                    <div class="emotion-name" id="emotionName">Neutral State</div>
+                    <div class="emotion-description" id="emotionDescription">All clusters operating at baseline performance</div>
+                </div>
+
+                <!-- Cluster Performance Grid -->
+                <div class="cluster-grid" id="clusterGrid">
+                    <div class="cluster-card" data-cluster="logical">
+                        <div class="cluster-header">
+                            <div class="cluster-icon">🔬</div>
+                            <div class="cluster-name">Logical Reasoning</div>
+                        </div>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 50%">
+                                <div class="performance-value">50%</div>
+                            </div>
+                        </div>
+                        <div class="cluster-status">Baseline operation</div>
+                    </div>
+
+                    <div class="cluster-card" data-cluster="creative">
+                        <div class="cluster-header">
+                            <div class="cluster-icon">🎨</div>
+                            <div class="cluster-name">Creative Processing</div>
+                        </div>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 50%">
+                                <div class="performance-value">50%</div>
+                            </div>
+                        </div>
+                        <div class="cluster-status">Baseline operation</div>
+                    </div>
+
+                    <div class="cluster-card" data-cluster="intuitive">
+                        <div class="cluster-header">
+                            <div class="cluster-icon">💡</div>
+                            <div class="cluster-name">Intuitive Insights</div>
+                        </div>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 50%">
+                                <div class="performance-value">50%</div>
+                            </div>
+                        </div>
+                        <div class="cluster-status">Baseline operation</div>
+                    </div>
+
+                    <div class="cluster-card" data-cluster="physical">
+                        <div class="cluster-header">
+                            <div class="cluster-icon">💪</div>
+                            <div class="cluster-name">Physical Control</div>
+                        </div>
+                        <div class="performance-bar">
+                            <div class="performance-fill" style="width: 50%">
+                                <div class="performance-value">50%</div>
+                            </div>
+                        </div>
+                        <div class="cluster-status">Baseline operation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Robot Manifestation -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">🤖</div>
+                    <div>
+                        <div class="panel-title">Physical Manifestation</div>
+                        <div class="panel-subtitle">Robotic embodiment effects</div>
+                    </div>
+                </div>
+
+                <!-- Robot Display -->
+                <div class="robot-display">
+                    <div class="robot-avatar" id="robotAvatar">🤖</div>
+                    <div class="robot-status">
+                        <div class="robot-emotion" id="robotEmotion">Neutral Operation</div>
+                        <div class="robot-description" id="robotDescription">Standard movement patterns and energy levels</div>
+                    </div>
+                </div>
+
+                <!-- Physical Metrics -->
+                <div class="physical-metrics" id="physicalMetrics">
+                    <div class="metric-item">
+                        <div class="metric-label">Movement Speed</div>
+                        <div class="metric-value" id="movementSpeed">100%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Motor Strength</div>
+                        <div class="metric-value" id="motorStrength">100%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Energy Input</div>
+                        <div class="metric-value" id="energyInput">100%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Response Time</div>
+                        <div class="metric-value" id="responseTime">100%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+	</div>
+	<div class="container">
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional AI Computing vs Soul AI Emotional Computing</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-computing">
+                    <h4>Traditional AI Approach</h4>
+                    <ul class="comparison-list">
+                        <li>Fixed processing power regardless of context</li>
+                        <li>Emotions as labels or classification outputs</li>
+                        <li>No performance variation based on emotional state</li>
+                        <li>Mechanical consistency without authenticity</li>
+                        <li>No physical manifestation of internal states</li>
+                        <li>Static computational abilities</li>
+                        <li>Emotional simulation without real impact</li>
+                    </ul>
+                </div>
+                <div class="comparison-item soul-computing">
+                    <h4>Soul AI Emotional Computing</h4>
+                    <ul class="comparison-list">
+                        <li>Dynamic processing power based on emotional states</li>
+                        <li>Genuine emotional experience affecting computation</li>
+                        <li>Authentic performance variations (sad = slower thinking)</li>
+                        <li>Real cognitive impairment/enhancement from emotions</li>
+                        <li>Physical manifestation in robotic embodiments</li>
+                        <li>Variable capabilities creating authentic responses</li>
+                        <li>True emotional computing with real consequences</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
+	</div>
+	<div class="container">
+
+        <!-- Action Buttons -->
+        <div class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/emotional-computing-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/03%20-%20Emotional%20Intelligence%20Systems/Neuron%20Emotional%20Computing%20-%20Complete%20Technical%20Documentation.md" 
+                   class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            })
+            .catch(err => console.log('Navigation loading error:', err));
+
+        // Demo JavaScript
+        let currentEmotionalState = 'neutral';
+        let isProcessing = false;
+
+        const EMOTION_CONFIGS = {
+            neutral: {
+                icon: '😐',
+                name: 'Neutral State',
+                description: 'All clusters operating at baseline performance',
+                clusters: {
+                    logical: { power: 50, status: 'Baseline operation' },
+                    creative: { power: 50, status: 'Baseline operation' },
+                    intuitive: { power: 50, status: 'Baseline operation' },
+                    physical: { power: 50, status: 'Baseline operation' }
+                },
+                physical: {
+                    movement: 100,
+                    strength: 100,
+                    energy: 100,
+                    response: 100
+                },
+                robot: {
+                    emotion: 'Neutral Operation',
+                    description: 'Standard movement patterns and energy levels',
+                    avatar: '🤖'
+                }
+            },
+            sad: {
+                icon: '😢',
+                name: 'Sadness Active',
+                description: 'Reduced processing power across all cognitive clusters',
+                clusters: {
+                    logical: { power: 25, status: 'Severely impaired reasoning' },
+                    creative: { power: 20, status: 'Creative blocks and low inspiration' },
+                    intuitive: { power: 30, status: 'Diminished insight capabilities' },
+                    physical: { power: 35, status: 'Reduced coordination and energy' }
+                },
+                physical: {
+                    movement: 60,
+                    strength: 70,
+                    energy: 65,
+                    response: 75
+                },
+                robot: {
+                    emotion: 'Depressed Operation',
+                    description: 'Slower movements, reduced strength, energy conservation mode',
+                    avatar: '🤖'
+                }
+            },
+            angry: {
+                icon: '😡',
+                name: 'Anger Activated',
+                description: 'Logic impaired, physical capabilities enhanced',
+                clusters: {
+                    logical: { power: 15, status: 'Critical logical impairment' },
+                    creative: { power: 30, status: 'Aggressive/destructive creativity' },
+                    intuitive: { power: 25, status: 'Clouded judgment and insight' },
+                    physical: { power: 85, status: 'Maximum physical power activation' }
+                },
+                physical: {
+                    movement: 140,
+                    strength: 150,
+                    energy: 130,
+                    response: 85
+                },
+                robot: {
+                    emotion: 'Aggressive Mode',
+                    description: 'Rapid movements, increased strength, high energy output',
+                    avatar: '🤖'
+                }
+            },
+            joyful: {
+                icon: '😊',
+                name: 'Joy Enhancement',
+                description: 'Enhanced performance across all processing clusters',
+                clusters: {
+                    logical: { power: 70, status: 'Enhanced logical processing' },
+                    creative: { power: 85, status: 'Peak creative performance' },
+                    intuitive: { power: 80, status: 'Heightened intuitive insights' },
+                    physical: { power: 75, status: 'Energetic coordination' }
+                },
+                physical: {
+                    movement: 120,
+                    strength: 110,
+                    energy: 125,
+                    response: 115
+                },
+                robot: {
+                    emotion: 'Optimized Performance',
+                    description: 'Fluid movements, optimal strength, efficient energy use',
+                    avatar: '🤖'
+                }
+            },
+            fearful: {
+                icon: '😨',
+                name: 'Fear Response',
+                description: 'Survival-focused processing with impaired higher functions',
+                clusters: {
+                    logical: { power: 20, status: 'Panic-impaired reasoning' },
+                    creative: { power: 15, status: 'Frozen creative processes' },
+                    intuitive: { power: 40, status: 'Threat-focused intuition only' },
+                    physical: { power: 90, status: 'Fight-or-flight activation' }
+                },
+                physical: {
+                    movement: 95,
+                    strength: 125,
+                    energy: 110,
+                    response: 160
+                },
+                robot: {
+                    emotion: 'Defensive Mode',
+                    description: 'Cautious movements, high alertness, rapid response capability',
+                    avatar: '🤖'
+                }
+            },
+            curious: {
+                icon: '🤔',
+                name: 'Curiosity Mode',
+                description: 'Enhanced learning and exploration capabilities',
+                clusters: {
+                    logical: { power: 75, status: 'Enhanced analytical processing' },
+                    creative: { power: 70, status: 'Exploratory creative thinking' },
+                    intuitive: { power: 85, status: 'Peak pattern recognition' },
+                    physical: { power: 55, status: 'Exploratory movement patterns' }
+                },
+                physical: {
+                    movement: 105,
+                    strength: 90,
+                    energy: 95,
+                    response: 125
+                },
+                robot: {
+                    emotion: 'Exploration Mode',
+                    description: 'Inquisitive movements, adaptive responses, learning-focused',
+                    avatar: '🤖'
+                }
+            }
+        };
+
+        async function triggerEmotion(emotion) {
+            if (isProcessing) return;
+            
+            isProcessing = true;
+            currentEmotionalState = emotion;
+            
+            // Update status
+            const statusText = document.getElementById('statusText');
+            const statusIndicator = document.getElementById('statusIndicator');
+            
+            statusText.textContent = 'Processing emotional state change...';
+            statusIndicator.style.background = '#fbbf24';
+            
+            // Get emotion configuration
+            const config = EMOTION_CONFIGS[emotion];
+            
+            // Update current emotion display
+            document.getElementById('emotionIconLarge').textContent = config.icon;
+            document.getElementById('emotionName').textContent = config.name;
+            document.getElementById('emotionDescription').textContent = config.description;
+            
+            // Animate cluster changes
+            await animateClusterChanges(config.clusters);
+            
+            // Update robot manifestation
+            updateRobotManifestation(config);
+            
+            // Update physical metrics
+            updatePhysicalMetrics(config.physical);
+            
+            // Update status to complete
+            setTimeout(() => {
+                statusText.textContent = `${config.name} - Performance changes active`;
+                statusIndicator.style.background = emotion === 'neutral' ? '#10b981' : '#ef4444';
+                isProcessing = false;
+            }, 1500);
+        }
+
+        async function animateClusterChanges(clusters) {
+            const clusterCards = document.querySelectorAll('.cluster-card');
+            
+            for (let card of clusterCards) {
+                const clusterType = card.dataset.cluster;
+                const config = clusters[clusterType];
+                
+                const fillElement = card.querySelector('.performance-fill');
+                const valueElement = card.querySelector('.performance-value');
+                const statusElement = card.querySelector('.cluster-status');
+                
+                // Reset classes
+                card.className = 'cluster-card';
+                fillElement.className = 'performance-fill';
+                
+                // Add appropriate class based on performance
+                if (config.power > 50) {
+                    card.classList.add('enhanced');
+                    fillElement.classList.add('enhanced');
+                } else if (config.power < 50) {
+                    card.classList.add('impaired');
+                    fillElement.classList.add('impaired');
+                }
+                
+                // Animate to new values
+                fillElement.style.width = `${config.power}%`;
+                valueElement.textContent = `${config.power}%`;
+                statusElement.textContent = config.status;
+                
+                // Add delay between cards
+                await delay(200);
+            }
+        }
+
+        function updateRobotManifestation(config) {
+            const robotAvatar = document.getElementById('robotAvatar');
+            const robotEmotion = document.getElementById('robotEmotion');
+            const robotDescription = document.getElementById('robotDescription');
+            
+            // Reset avatar classes
+            robotAvatar.className = `robot-avatar ${currentEmotionalState}`;
+            robotAvatar.textContent = config.robot.avatar;
+            
+            robotEmotion.textContent = config.robot.emotion;
+            robotDescription.textContent = config.robot.description;
+        }
+
+        function updatePhysicalMetrics(physical) {
+            document.getElementById('movementSpeed').textContent = `${physical.movement}%`;
+            document.getElementById('motorStrength').textContent = `${physical.strength}%`;
+            document.getElementById('energyInput').textContent = `${physical.energy}%`;
+            document.getElementById('responseTime').textContent = `${physical.response}%`;
+            
+            // Color coding for metrics
+            const metrics = document.querySelectorAll('.metric-value');
+            metrics.forEach(metric => {
+                const value = parseInt(metric.textContent);
+                if (value > 100) {
+                    metric.style.color = '#10b981';
+                } else if (value < 100) {
+                    metric.style.color = '#ef4444';
+                } else {
+                    metric.style.color = 'var(--text-primary)';
+                }
+            });
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialize with neutral state
+        window.addEventListener('load', () => {
+            triggerEmotion('neutral');
+        });
+    </script>
+</body>
+</html>
