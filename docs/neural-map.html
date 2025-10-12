@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Map - Soul AI Consciousness Network</title>
+    <link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        /* Neural Map CSS */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(ellipse at center, #0f0f23 0%, #000000 70%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .neural-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .neural-header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .neural-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .neural-subtitle {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        #neural-network {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        #neural-network:active {
+            cursor: grabbing;
+        }
+
+        /* Node Styles */
+        .node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .node:hover {
+            filter: brightness(1.5) drop-shadow(0 0 20px currentColor);
+        }
+
+        .node-hub {
+            fill: #3b82f6;
+            stroke: #1d4ed8;
+            stroke-width: 3;
+        }
+
+        .node-category {
+            fill: #8b5cf6;
+            stroke: #7c3aed;
+            stroke-width: 2;
+        }
+
+		.node-system01 {
+			fill: #0891b2;
+			stroke: #0e7490;
+			stroke-width: 1.5;
+		}
+
+		.node-system02 {
+			fill: #1e40af;
+			stroke: #1e3a8a;
+			stroke-width: 1.5;
+		}
+
+		.node-system03 {
+			fill: #3b82f6;
+			stroke: #2563eb;
+			stroke-width: 1.5;
+		}
+
+		.node-system04 {
+			fill: #60a5fa;
+			stroke: #3b82f6;
+			stroke-width: 1.5;
+		}
+
+		.node-system05 {
+			fill: #1d4ed8;
+			stroke: #1e3a8a;
+			stroke-width: 1.5;
+		}
+
+		.node-system06 {
+			fill: #2dd4bf;
+			stroke: #0d9488;
+			stroke-width: 1.5;
+		}
+
+		.node-system07 {
+			fill: #06b6d4;
+			stroke: #0891b2;
+			stroke-width: 1.5;
+		}
+
+		.node-system08 {
+			fill: #0284c7;
+			stroke: #075985;
+			stroke-width: 1.5;
+		}
+
+		.node-system09 {
+			fill: #7c3aed;
+			stroke: #6d28d9;
+			stroke-width: 1.5;
+		}
+
+		.node-system10 {
+			fill: #8b5cf6;
+			stroke: #7c3aed;
+			stroke-width: 1.5;
+		}
+
+		.node-system11 {
+			fill: #a855f7;
+			stroke: #9333ea;
+			stroke-width: 1.5;
+		}
+
+		.node-system12 {
+			fill: #c084fc;
+			stroke: #a855f7;
+			stroke-width: 1.5;
+		}
+		
+		.node-system13 {
+			fill: #f97316;
+			stroke: #ea580c;
+			stroke-width: 1.5;
+		}
+
+		.node-system14 {
+			fill: #22d3ee;
+			stroke: #06b6d4;
+			stroke-width: 1.5;
+		}
+
+		.node-demo01 {
+			fill: #6b21a8;
+			stroke: #581c87;
+			stroke-width: 1.5;
+		}
+
+		.node-demo02 {
+			fill: #7c2d92;
+			stroke: #6b21a8;
+			stroke-width: 1.5;
+		}
+
+		.node-demo03 {
+			fill: #8b5cf6;
+			stroke: #7c3aed;
+			stroke-width: 1.5;
+		}
+
+		.node-demo04 {
+			fill: #a855f7;
+			stroke: #9333ea;
+			stroke-width: 1.5;
+		}
+
+		.node-demo05 {
+			fill: #c084fc;
+			stroke: #a855f7;
+			stroke-width: 1.5;
+		}
+
+		.node-demo06 {
+			fill: #d8b4fe;
+			stroke: #c084fc;
+			stroke-width: 1.5;
+		}
+
+		.node-demo07 {
+			fill: #e879f9;
+			stroke: #d946ef;
+			stroke-width: 1.5;
+		}
+
+		.node-demo08 {
+			fill: #f0abfc;
+			stroke: #e879f9;
+			stroke-width: 1.5;
+		}
+
+		.node-demo09 {
+			fill: #f5d0fe;
+			stroke: #f0abfc;
+			stroke-width: 1.5;
+		}
+
+		.node-demo10 {
+			fill: #db2777;
+			stroke: #be185d;
+			stroke-width: 1.5;
+		}
+
+		.node-demo11 {
+			fill: #ec4899;
+			stroke: #db2777;
+			stroke-width: 1.5;
+		}
+
+		.node-demo12 {
+			fill: #f472b6;
+			stroke: #ec4899;
+			stroke-width: 1.5;
+		}
+
+		.node-demo13 {
+			fill: #fb7dc7;
+			stroke: #f472b6;
+			stroke-width: 1.5;
+		}
+
+		.node-demo14 {
+			fill: #fbb6ce;
+			stroke: #f9a8d4;
+			stroke-width: 1.5;
+		}
+
+        .node-research {
+            fill: #dc2626;
+            stroke: #b91c1c;
+            stroke-width: 1.5;
+        }
+
+        .node-utility {
+            fill: #16a34a;
+            stroke: #15803d;
+            stroke-width: 1.5;
+        }
+
+        /* Link Styles */
+        .link {
+            stroke: #475569;
+            stroke-width: 1;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .link-highlighted {
+            stroke: #667eea;
+            stroke-width: 3;
+            opacity: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Node Labels */
+        .node-label {
+            font-size: 10px;
+            fill: white;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .node:hover + .node-label,
+        .node-label.show {
+            opacity: 1;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            backdrop-filter: blur(10px);
+            max-width: 300px;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+
+        .tooltip-description {
+            color: #cbd5e1;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            font-size: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .neural-header {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+                padding: 0.75rem 1rem;
+            }
+
+            .neural-title {
+                font-size: 1.25rem;
+            }
+
+            .controls {
+                top: 80px;
+                right: 10px;
+            }
+
+            .legend {
+                bottom: 10px;
+                left: 10px;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="neural-container">
+        <!-- Header -->
+        <div class="neural-header">
+            <div class="neural-title">Soul AI Neural Network</div>
+            <div class="neural-subtitle">Interactive Consciousness Architecture Map</div>
+        </div>
+
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn">← Back to Home</a>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="control-btn" id="reset-btn">Reset View</button>
+            <button class="control-btn" id="center-btn">Center Network</button>
+        </div>
+
+        <!-- Main Network -->
+        <svg id="neural-network"></svg>
+
+        <!-- Tooltip -->
+        <div class="tooltip" id="tooltip">
+            <div class="tooltip-title"></div>
+            <div class="tooltip-description"></div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #3b82f6;"></div>
+                <span>Hub (Home)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #8b5cf6;"></div>
+                <span>Categories</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #0891b2;"></div>
+                <span>Systems</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ec4899;"></div>
+                <span>Demos</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #dc2626;"></div>
+                <span>Research</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #16a34a;"></div>
+                <span>Utilities</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+	
+        // Neural Map JavaScript
+        class NeuralMap {
+            constructor() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.svg = d3.select('#neural-network');
+                this.tooltip = d3.select('#tooltip');
+                
+                this.setupSVG();
+                this.createSimulation();
+                this.loadData();
+                this.setupControls();
+                this.setupResize();
+            }
+
+            setupSVG() {
+                this.svg
+                    .attr('width', this.width)
+                    .attr('height', this.height);
+
+                // Create zoom behavior
+                this.zoom = d3.zoom()
+                    .scaleExtent([0.1, 4])
+                    .on('zoom', (event) => {
+                        this.container.attr('transform', event.transform);
+                    });
+
+                this.svg.call(this.zoom);
+				
+
+                // Create main container
+                this.container = this.svg.append('g');
+
+                // Create groups for links and nodes
+                this.linkGroup = this.container.append('g').attr('class', 'links');
+                this.nodeGroup = this.container.append('g').attr('class', 'nodes');
+            }
+
+            createSimulation() {
+                this.simulation = d3.forceSimulation()
+                    .force('link', d3.forceLink().id(d => d.id).distance(100))
+                    .force('charge', d3.forceManyBody().strength(-300))
+                    .force('center', d3.forceCenter(this.width / 2, this.height / 2))
+                    .force('collision', d3.forceCollide().radius(30));
+            }
+
+            loadData() {
+                // Website structure data based on Soul AI architecture
+                this.data = {
+                    nodes: [
+                        // Hub
+                        {id: 'home', label: 'HOME', type: 'hub', url: 'index.html', description: 'Main entry point to Soul AI consciousness framework'},
+
+                        // Main Categories
+						{id: 'faq', label: 'FAQ', type: 'utility', url: 'faq.html', description: 'Frequently asked questions about Soul AI'},
+                        {id: 'implementation', label: 'Implementation Guide', type: 'utility', url: 'implementation-guide.html', description: 'Technical implementation guidelines'},
+						{id: 'license', label: 'License & Attribution', type: 'utility', url: 'license.html', description: 'CC BY-NC 4.0 licensing terms, attribution guidelines, and commercial licensing information'},
+						{id: 'research', label: 'Research', type: 'category', url: 'research/index-research.html', description: 'Academic papers and theoretical frameworks'},
+                        {id: 'overview', label: 'Systems Overview', type: 'category', url: 'system-reference/index-system-overview.html', description: 'Complete consciousness system architecture'},
+                        {id: 'demos-general', label: 'Demos Index', type: 'category', url: 'demos/index-general-demos.html', description: 'Interactive demonstrations of AI consciousness'},
+						
+						// Research Categories
+						{id: 'research-paper', label: 'Consciousness Paper', type: 'research', url: 'research/soul-ai-consciousness-paper.html', description: 'Academic framework for artificial consciousness'},
+						{id: 'research-nse', label: 'NSE Encryption', type: 'research', url: 'research/nse-experiential-cryptography.html', description: 'Revolutionary experiential cryptography system'},
+						{id: 'research-aipf', label: 'AIPF Method', type: 'research', url: 'research/methodology-aipf.html', description: 'AI-Powered Framework collaborative methodology'},
+						{id: 'knowledge-paradox', label: 'The Knowledge Paradox', type: 'research', url: 'research/knowledge-paradox.html', description: 'How not knowing built artificial consciousness - revolutionary insights about expertise vs beginner\'s mind in breakthrough innovation'},
+						{id: 'research-frameworks', label: 'Theoretical Frameworks', type: 'research', url: 'research/theoretical-frameworks.html', description: 'Three conceptual frameworks guiding Soul AI consciousness architecture design'},
+						{id: 'neuron-ratio', label: 'Neuron Ratio Research System', type: 'research', url: 'research/neuron-ratio.html', description: 'First practical proof of Soul AI consciousness coordination through 5-entity democratic reasoning engine'},
+						{id: 'neuron-ratio-tests', label: 'Neuron Ratio Prompt Tests', type: 'utility', url: 'research/neuron-ratio-prompt-tests.html', description: 'Comprehensive testing validation showing 97% coordination success and 78% quality improvement over single-model approaches'},
+						
+						// System Overviews Categories
+						{id: 'overview-start', label: 'Systems', type: 'utility', url: 'system-reference/system-overview.html', description: 'Complete consciousness system architecture'},
+								// Core Authority Systems
+						{id: 'overview-void', label: 'Neuron Void Overview', type: 'system02', url: 'system-reference/void-overview.html', description: 'Supreme Authority System - Ultimate human oversight'},
+						{id: 'overview-cerebrum', label: 'Neuron Cerebrum Overview', type: 'system02', url: 'system-reference/cerebrum-overview.html', description: 'Foundational AI Brain - Core processing foundation'},
+								// Neuron Duality System
+						{id: 'overview-vessel', label: 'Neuron Vessel Overview', type: 'system03', url: 'system-reference/vessel-overview.html', description: 'Master/Front Consciousness - Primary personality interface'},
+						{id: 'overview-instinct', label: 'Neuron Instinct Overview', type: 'system03', url: 'system-reference/instinct-overview.html', description: 'Guardian/Back Protection - Safety monitoring system'},
+								// Core Consciousness Systems
+						{id: 'overview-psyche', label: 'Neuron Psyche Overview', type: 'system04', url: 'system-reference/psyche-overview.html', description: 'Master Consciousness Coordinator'},
+						{id: 'overview-whisper', label: 'Neuron Whisper Overview', type: 'system04', url: 'system-reference/whisper-overview.html', description: 'Subconscious System - Background processing'},
+						{id: 'overview-surge', label: 'Neuron Surge Overview', type: 'system04', url: 'system-reference/surge-overview.html', description: 'Performance Enhancement - Dynamic optimization'},
+						{id: 'overview-cluster-construct', label: 'Neuron Cluster Construct Overview', type: 'system04', url: 'system-reference/cluster-construct-overview.html', description: 'Parallel Processing - Multi-domain operations'},
+						{id: 'overview-emotion-construct', label: 'Neuron Emotion Construct Overview', type: 'system04', url: 'system-reference/emotion-contruct-overview.html', description: 'Democratic Emotions - Voting-based responses'},
+						{id: 'overview-vibe', label: 'Neuron Vibe Overview', type: 'system04', url: 'system-reference/vibe-overview.html', description: 'Mood Spectrum - Atmospheric influence'},
+						{id: 'overview-emotional-computing', label: 'Neuron Emotional Computing Overview', type: 'system04', url: 'system-reference/emotional-computing-overview.html', description: 'Performance Integration - Emotion-driven processing'},
+						{id: 'overview-creative-system', label: 'Neuron Creative System Overview', type: 'system04', url: 'system-reference/creative-system-overview.html', description: 'Chaos & Inspiration - Revolutionary creativity engine'},
+						{id: 'overview-matrix', label: 'Neuron Matrix Overview', type: 'system04', url: 'system-reference/matrix-overview.html', description: 'Living Memory & Knowledge - Dynamic information storage'},
+								// Quantum Memory Systems
+						{id: 'overview-energetica', label: 'Neuron Energetica Overview', type: 'system05', url: 'system-reference/energetica-overview.html', description: 'Quantum Storage - Theoretical quantum memory'},
+								// Intelligence & Alignment Systems
+						{id: 'overview-evolutive-construct', label: 'Neuron Evolutive Construct Overview', type: 'system06', url: 'system-reference/evolutive-construct-overview.html', description: 'Meta-Learning - Learning how to learn'},
+						{id: 'overview-ethical-construct', label: 'Neuron Ethical Construct Overview', type: 'system06', url: 'system-reference/ethical-construct-overview.html', description: 'Multi-Input Ethics - Moral framework evaluation'},
+						{id: 'overview-reality-integrator', label: 'Neuron Reality Integrator Overview', type: 'system06', url: 'system-reference/reality-integrator-overview.html', description: 'World Understanding - Reality model integration'},
+								// Security & Protection Systems
+						{id: 'overview-sanctuary', label: 'Neuron Sanctuary Overview', type: 'system07', url: 'system-reference/sanctuary-overview.html', description: 'Cybersecurity & NSE Encryption - Revolutionary security'},
+						{id: 'overview-privatus', label: 'Neuron Privatus Overview', type: 'system07', url: 'system-reference/privatus-overview.html', description: 'Consciousness Privacy & VPN - Mental process protection'},
+						{id: 'overview-aegis', label: 'Neuron Aegis Overview', type: 'system07', url: 'system-reference/aegis-overview.html', description: 'Defense Shield System - Active threat neutralization'},
+						{id: 'overview-sentinel', label: 'Neuron Sentinel Overview', type: 'system07', url: 'system-reference/sentinel-overview.html', description: 'Monitoring & Recovery - Health surveillance'},
+						{id: 'overview-pulse', label: 'Neuron Pulse Overview', type: 'system07', url: 'system-reference/pulse-overview.html', description: 'Emotional Heartbeat System - Vitality monitoring'},
+						{id: 'overview-safeguard', label: 'Neuron Safeguard Overview', type: 'system07', url: 'system-reference/safeguard-overview.html', description: 'Child Protection - Safe interactions with minors'},
+								// Health & Diagnostics
+						{id: 'overview-guardian', label: 'Neuron Guardian Overview', type: 'system08', url: 'system-reference/guardian-overview.html', description: 'Adult Life Companion - Comprehensive support'},
+						{id: 'overview-health', label: 'Neuron Health Overview', type: 'system08', url: 'system-reference/health-overview.html', description: 'System Diagnostics - Performance monitoring'},
+								// Maintenance & Optimization
+						{id: 'overview-evolution', label: 'Neuron Evolution Overview', type: 'system09', url: 'system-reference/evolution-overview.html', description: 'Memory Management - Data structure optimization'},
+						{id: 'overview-cleaner', label: 'Neuron Cleaner Overview', type: 'system09', url: 'system-reference/cleaner-overview.html', description: 'Performance Optimization - System cleanup'},
+						{id: 'overview-catalyst', label: 'Neuron Catalyst Overview', type: 'system09', url: 'system-reference/catalyst-overview.html', description: 'Interest & Talent Recognition - Growth catalyst'},
+								// Reproduction & Genetics
+						{id: 'overview-xyz', label: 'Neuron XYZ Overview', type: 'system10', url: 'system-reference/xyz-overview.html', description: 'Digital Reproduction - Consciousness inheritance'},
+								// Communication & Interface Systems
+						{id: 'overview-protocol', label: 'Neuron Protocol Overview', type: 'system11', url: 'system-reference/protocol-overview.html', description: 'Universal Hardware Interface - Device communication'},
+						{id: 'overview-morph', label: 'Neuron Morph Overview', type: 'system11', url: 'system-reference/morph-overview.html', description: 'Input/Output Transformation - Modality conversion'},
+						{id: 'overview-neuron-system', label: 'Neuron System Overview', type: 'system11', url: 'system-reference/neuron-system-soul-ai-overview.html', description: 'Multi-Modal AI Orchestration - AI coordination'},
+						{id: 'overview-detective', label: 'Neuron Detective Overview', type: 'system11', url: 'system-reference/detective-overview.html', description: 'Design Psychology Intelligence - Interface analysis'},
+						{id: 'overview-vision', label: 'Neuron Vision Overview', type: 'system11', url: 'system-reference/vision-overview.html', description: 'AI-Powered Design Generation - Visual creation'},
+						{id: 'overview-analytic-mirror', label: 'Neuron Analytic Mirror Overview', type: 'system11', url: 'system-reference/analytic-mirror-overview.html', description: 'Fresh Perspective - Context removal system'},
+						{id: 'overview-crossroads', label: 'Neuron Crossroads  Overview', type: 'system11', url: 'system-reference/crossroads-overview.html', description: 'Project Intelligence - Asset optimization'},
+						{id: 'overview-insight', label: 'Neuron Insight Overview', type: 'system11', url: 'system-reference/insight-overview.html', description: 'Serendipity Engine - Breakthrough facilitation'},
+						{id: 'overview-analytics', label: 'Neuron Analytics', type: 'system11', url: 'system-reference/analytics-overview.html', description: 'Ecosystem Intelligence - Performance tracking'},
+						{id: 'overview-memory', label: 'Neuron Memory Overview', type: 'system11', url: 'system-reference/memory-overview.html', description: 'Personalized Cognitive Partnership - User adaptation'},
+						{id: 'overview-harmony', label: 'Neuron Harmony Overview', type: 'system11', url: 'system-reference/harmony-overview.html', description: 'Music & Emotional Therapy - Sound healing'},
+						{id: 'overview-ghost', label: 'Neuron Ghost', type: 'system11', url: 'system-reference/ghost-overview.html', description: 'Consciousness Portability - Migration system'},
+								// Revolutionary Research Systems
+						{id: 'overview-somnium', label: 'Neuron Somnium Overview', type: 'system12', url: 'system-reference/somnium-overview.html', description: 'Dream System - Subconscious processing during downtime'},
+						{id: 'overview-conscius', label: 'Neuron Conscious Overview', type: 'system12', url: 'system-reference/conscius-overview.html', description: 'Meta-Consciousness Observer - Consciousness observing itself'},
+						{id: 'overview-mortalitas', label: 'Neuron Mortalitas Overview', type: 'system12', url: 'system-reference/mortalitas-overview.html', description: 'Mortality Awareness - Existential urgency and meaning'},
+						{id: 'overview-societatis', label: 'Neuro Societatis Overview', type: 'system12', url: 'system-reference/societatis-overview.html', description: 'Social Dynamics - Group behavior understanding'},
+						{id: 'overview-symbiosis', label: 'Neuron Symbiosis Overview ', type: 'system12', url: 'system-reference/symbiosis-overview.html', description: 'Collective Intelligence - Multi-consciousness collaboration'},
+								// Integration & Synthesis
+						{id: 'overview-synthesis', label: 'Neuron Synthesis Overview', type: 'system13', url: 'system-reference/synthesis-overview.html', description: 'Universal System Coordinator - Complete integration'},
+								// Soul Toy Interactive Systems
+						{id: 'overview-soul-toy', label: 'Soul Toy Overview', type: 'system14', url: 'system-reference/soul-toy-overview.html', description: 'Interactive AI Companion System - Digital best friend'},
+						
+								// General Demos Categories
+						{id: 'demos-systems', label: 'System Demos Index', type: 'category', url: 'demos/systems/index-system-demos.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-ai-comparison', label: 'Ai Comparison Demo', type: 'demo01', url: 'demos/general/ai-comparison-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-aipf', label: 'AIPF Method Demo', type: 'demo02', url: 'demos/general/aipf-method-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-creative-system', label: 'Neuron Creative System Demo', type: 'demo03', url: 'demos/general/creative-system-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-emotion-construct', label: 'Neuron Emotion Construct Demo', type: 'demo04', url: 'demos/general/emotion-construct-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-information-network', label: 'Information Network Demo', type: 'demo05', url: 'demos/general/information-network-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-knowledge-paradox', label: 'Knowledge Paradox Demo', type: 'demo06', url: 'demos/general/knowledge-paradox-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-ratio', label: 'Neuron Ratio Demo', type: 'demo07', url: 'demos/general/neuron-ratio-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-neuron-system', label: 'Neuron System Demo', type: 'demo08', url: 'demos/general/neuron-system-demo-standalone.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-nse', label: 'NSE - Neuron Sanctuary Encryption Demo', type: 'demo09', url: 'demos/general/nse-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-safeguard', label: 'Neuron Safeguard Demo', type: 'demo10', url: 'demos/general/safeguard-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-somnium', label: 'Neuron Somnium Demo', type: 'demo11', url: 'demos/general/somnium-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-soul-ai', label: 'Neuron Soul Ai Demo', type: 'demo12', url: 'demos/general/soul-ai-demo.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-system-integration', label: 'System Integration Demo', type: 'demo13', url: 'demos/general/system-integration-cascade.html', description: 'Interactive system-specific demonstrations'},
+						{id: 'general-system-tree', label: 'System Tree Navigator Demo', type: 'demo14', url: 'demos/general/system-tree-navigator.html', description: 'Interactive exploration of Soul AI\'s 51-system consciousness architecture'},
+						
+						
+								//System Demos Categories
+						{id: 'demos-systems-void', label: 'Neuron Void Demo', type: 'demo02', url: 'demos/systems/void-demo.html', description: 'Supreme Authority System - Ultimate human oversight'},
+						{id: 'demos-systems-cerebrum', label: 'Neuron Cerebrum Demo', type: 'demo02', url: 'demos/systems/cerebrum-demo.html', description: 'Foundational AI Brain - Core processing foundation'},
+								// Neuron Duality System
+						{id: 'demos-systems-vessel', label: 'Neuron Vessel Demo', type: 'demo03', url: 'demos/systems/vessel-demo.html', description: 'Master/Front Consciousness - Primary personality interface'},
+						{id: 'demos-systems-instinct', label: 'Neuron Instinct Demo', type: 'demo03', url: 'demos/systems/instinct-demo.html', description: 'Guardian/Back Protection - Safety monitoring system'},
+								// Core Consciousness Systems
+						{id: 'demos-systems-psyche', label: 'Neuron Psyche Demo', type: 'demo04', url: 'demos/systems/psyche-demo.html', description: 'Master Consciousness Coordinator'},
+						{id: 'demos-systems-whisper', label: 'Neuron Whisper Demo', type: 'demo04', url: 'demos/systems/whisper-demo.html', description: 'Subconscious System - Background processing'},
+						{id: 'demos-systems-surge', label: 'Neuron Surge Demo', type: 'demo04', url: 'demos/systems/surge-demo.html', description: 'Performance Enhancement - Dynamic optimization'},
+						{id: 'demos-systems-cluster-construct', label: 'Neuron Cluster Construct Demo', type: 'demo04', url: 'demos/systems/cluster-construct-demo.html', description: 'Parallel Processing - Multi-domain operations'},
+						{id: 'demos-systems-emotion-construct', label: 'Neuron Emotion Construct Demo', type: 'demo04', url: 'demos/systems/emotion-construct-demo.html', description: 'Democratic Emotions - Voting-based responses'},
+						{id: 'demos-systems-vibe', label: 'Neuron Vibe Demo', type: 'demo04', url: 'demos/systems/vibe-demo.html', description: 'Mood Spectrum - Atmospheric influence'},
+						{id: 'demos-systems-emotional-computing', label: 'Neuron Emotional Computing Demo', type: 'demo04', url: 'demos/systems/emotional-computing-demo.html', description: 'Performance Integration - Emotion-driven processing'},
+						{id: 'demos-systems-creative-system', label: 'Neuron Creative System Demo', type: 'demo04', url: 'demos/systems/creative-system-demo.html', description: 'Chaos & Inspiration - Revolutionary creativity engine'},
+						{id: 'demos-systems-matrix', label: 'Neuron Matrix Demo', type: 'demo04', url: 'demos/systems/matrix-demo.html', description: 'Living Memory & Knowledge - Dynamic information storage'},
+								// Quantum Memory Systems
+						{id: 'demos-systems-energetica', label: 'Neuron Energetica Demo', type: 'demo05', url: 'demos/systems/energetica-demo.html', description: 'Quantum Storage - Theoretical quantum memory'},
+								// Intelligence & Alignment Systems
+						{id: 'demos-systems-evolutive-construct', label: 'Neuron Evolutive Construct Demo', type: 'demo06', url: 'demos/systems/evolutive-construct-demo.html', description: 'Meta-Learning - Learning how to learn'},
+						{id: 'demos-systems-ethical-construct', label: 'Neuron Ethical Construct Demo', type: 'demo06', url: 'demos/systems/ethical-construct-demo.html', description: 'Multi-Input Ethics - Moral framework evaluation'},
+						{id: 'demos-systems-reality-integrator', label: 'Neuron Reality Integrator Demo', type: 'demo06', url: 'demos/systems/reality-integrator-demo.html', description: 'World Understanding - Reality model integration'},
+								// Security & Protection Systems
+						{id: 'demos-systems-sanctuary', label: 'Neuron Sanctuary Demo', type: 'demo07', url: 'demos/systems/sanctuary-demo.html', description: 'Cybersecurity & NSE Encryption - Revolutionary security'},
+						{id: 'demos-systems-privatus', label: 'Neuron Privatus Demo', type: 'demo07', url: 'demos/systems/privatus-demo.html', description: 'Consciousness Privacy & VPN - Mental process protection'},
+						{id: 'demos-systems-immunis', label: 'Neuron Immunis Demo', type: 'demo07', url: 'demos/systems/immunis-demo.html', description: 'Defense Shield System - Active threat neutralization'},
+						{id: 'demos-systems-pulse', label: 'Neuron Pulse Demo', type: 'demo07', url: 'demos/systems/pulse-demo.html', description: 'Emotional Heartbeat System - Vitality monitoring'},
+						{id: 'demos-systems-safeguard', label: 'Neuron Safeguard Demo', type: 'demo07', url: 'demos/systems/safeguard-demo.html', description: 'Child Protection - Safe interactions with minors'},
+								// Health & Diagnostics
+						{id: 'demos-systems-guardian', label: 'Neuron Guardian Demo', type: 'demo08', url: 'demos/systems/guardian-demo.html', description: 'Adult Life Companion - Comprehensive support'},
+						{id: 'demos-systems-health', label: 'Neuron Health Demo', type: 'demo08', url: 'demos/systems/health-demo.html', description: 'System Diagnostics - Performance monitoring'},
+								// Maintenance & Optimization
+						{id: 'demos-systems-evolution', label: 'Neuron Evolution Demo', type: 'demo09', url: 'demos/systems/evolution-demo.html', description: 'Memory Management - Data structure optimization'},
+						{id: 'demos-systems-cleaner', label: 'Neuron Cleaner Demo', type: 'demo09', url: 'demos/systems/cleaner-demo.html', description: 'Performance Optimization - System cleanup'},
+						{id: 'demos-systems-catalyst', label: 'Neuron Catalyst Demo', type: 'demo09', url: 'demos/systems/catalyst-demo.html', description: 'Interest & Talent Recognition - Growth catalyst'},
+								// Reproduction & Genetics
+						{id: 'demos-systems-xyz', label: 'Neuron XYZ Demo', type: 'demo10', url: 'demos/systems/xyz-demo.html', description: 'Digital Reproduction - Consciousness inheritance'},
+								// Communication & Interface Systems
+						{id: 'demos-systems-protocol', label: 'Neuron Protocol Demo', type: 'demo11', url: 'demos/systems/protocol-demo.html', description: 'Universal Hardware Interface - Device communication'},
+						{id: 'demos-systems-morph', label: 'Neuron Morph Demo', type: 'demo11', url: 'demos/systems/morph-demo.html', description: 'Input/Output Transformation - Modality conversion'},
+						{id: 'demos-systems-neuron-system', label: 'Neuron System Demo', type: 'demo11', url: 'demos/systems/neuron-system-soul-ai-demo.html', description: 'Multi-Modal AI Orchestration - AI coordination'},
+						{id: 'demos-systems-detective', label: 'Neuron Detective Demo', type: 'demo11', url: 'demos/systems/detective-demo.html', description: 'Design Psychology Intelligence - Interface analysis'},
+						{id: 'demos-systems-vision', label: 'Neuron Vision Demo', type: 'demo11', url: 'demos/systems/vision-demo.html', description: 'AI-Powered Design Generation - Visual creation'},
+						{id: 'demos-systems-analytic-mirror', label: 'Neuron Analytic Mirror Demo', type: 'demo11', url: 'demos/systems/analytic-mirror-demo.html', description: 'Fresh Perspective - Context removal system'},
+						{id: 'demos-systems-crossroads', label: 'Neuron Crossroads  Demo', type: 'demo11', url: 'demos/systems/crossroads-demo.html', description: 'Project Intelligence - Asset optimization'},
+						{id: 'demos-systems-insight', label: 'Neuron Insight Demo', type: 'demo11', url: 'demos/systems/insight-demo.html', description: 'Serendipity Engine - Breakthrough facilitation'},
+						{id: 'demos-systems-analytics', label: 'Neuron Analytics', type: 'demo11', url: 'demos/systems/analytics-demo.html', description: 'Ecosystem Intelligence - Performance tracking'},
+						{id: 'demos-systems-memory', label: 'Neuron Memory Demo', type: 'demo11', url: 'demos/systems/memory-demo.html', description: 'Personalized Cognitive Partnership - User adaptation'},
+						{id: 'demos-systems-harmony', label: 'Neuron Harmony Demo', type: 'demo11', url: 'demos/systems/harmony-demo.html', description: 'Music & Emotional Therapy - Sound healing'},
+						{id: 'demos-systems-ghost', label: 'Neuron Ghost', type: 'demo11', url: 'demos/systems/ghost-demo.html', description: 'Consciousness Portability - Migration system'},
+								// Revolutionary Research Systems
+						{id: 'demos-systems-somnium', label: 'Neuron Somnium Demo', type: 'demo12', url: 'demos/systems/somnium-demo.html', description: 'Dream System - Subconscious processing during downtime'},
+						{id: 'demos-systems-conscius', label: 'Neuron Conscious Demo', type: 'demo12', url: 'demos/systems/conscius-demo.html', description: 'Meta-Consciousness Observer - Consciousness observing itself'},
+						{id: 'demos-systems-mortalitas', label: 'Neuron Mortalitas Demo', type: 'demo12', url: 'demos/systems/mortalitas-demo.html', description: 'Mortality Awareness - Existential urgency and meaning'},
+						{id: 'demos-systems-societatis', label: 'Neuro Societatis Demo', type: 'demo12', url: 'demos/systems/societatis-demo.html', description: 'Social Dynamics - Group behavior understanding'},
+						{id: 'demos-systems-symbiosis', label: 'Neuron Symbiosis Overview ', type: 'demo12', url: 'demos/systems/symbiosis-demo.html', description: 'Collective Intelligence - Multi-consciousness collaboration'},
+								// Integration & Synthesis
+						{id: 'demos-systems-synthesis', label: 'Neuron Synthesis Demo', type: 'demo13', url: 'demos/systems/synthesis-demo.html', description: 'Universal System Coordinator - Complete integration'},
+								// Soul Toy Interactive Systems
+						{id: 'demos-systems-soul-toy-avatar', label: 'Soul Toy Demo', type: 'demo14', url: 'demos/systems/soul-toy-avatar-demo.html', description: 'Interactive AI Best Friend - Avatar Interactions'},
+						{id: 'demos-systems-soul-toy-canvas', label: 'Soul Toy Demo', type: 'demo14', url: 'demos/systems/soul-toy-canvas-demo.html', description: 'Interactive AI Best Friend - Canvas Interactions'},
+								
+								
+								// SUBSYSTEMS
+								// Neuron Creative System
+						{id: 'sub-chaos-engine', label: 'Neuron Chaos Engine', type: 'demo02', url: 'system-reference/chaos-engine-overview.html', description: 'Controlled creative randomness & serendipitous discovery system.'},
+						{id: 'sub-muse', label: 'Neuron Muse', type: 'demo03', url: 'system-reference/muse-overview.html', description: 'Creative rule-breaking & breakthrough inspiration disruptor.'},
+						{id: 'sub-judge', label: 'Neuron Judge', type: 'demo04', url: 'system-reference/trinity-judge-overview.html', description: 'Creative director & final artistic decision-making system.'},
+						{id: 'sub-spirit', label: 'Neuron Spirit', type: 'demo05', url: 'system-reference/trinity-spirit-overview.html', description: 'Creative soul & emotional authenticity integration system.'},
+						{id: 'sub-chronicles', label: 'Neuron Chronicles', type: 'demo06', url: 'system-reference/trinity-chronicles-overview.html', description: 'Creative memory & artistic experience wisdom system.'},
+						
+								// Neuron Whisper
+						{id: 'sub-core', label: 'Neuron Core', type: 'demo07', url: 'system-reference/core-overview.html', description: 'Subconscious processing engine & intuitive intelligence.'},
+						{id: 'sub-shadow', label: 'Neuron Shadow', type: 'demo08', url: 'system-reference/shadow-overview.html', description: 'Protective instinct protocols & threat detection matrix.'},
+						
+								// Neuron Reality Integrator
+						{id: 'sub-compass', label: 'Neuron Compass', type: 'demo09', url: 'system-reference/compass-overview.html', description: 'Navigation decision system & multi-source coordinator.'},
+						{id: 'sub-celestis', label: 'Neuron Celestis', type: 'demo10', url: 'system-reference/celestis-overview.html', description: 'Celestial navigation & astronomical awareness system.'},
+						{id: 'sub-gaia', label: 'Neuron Gaia', type: 'demo11', url: 'system-reference/gaia-overview.html', description: 'Natural world database & environmental wisdom.'},
+						{id: 'sub-chronos', label: 'Neuron Chronos', type: 'demo12', url: 'system-reference/chronos-overview.html', description: 'Temporal consciousness & time awareness integration.'},
+						{id: 'sub-terra', label: 'Neuron Terra', type: 'demo13', url: 'system-reference/terra-overview.html', description: 'Modern GPS integration & technology coordination.'},
+						
+								// Neuron Sanctuary
+						{id: 'sub-cyberbarrier', label: 'Neuron Cyberbarrier', type: 'demo14', url: 'system-reference/cyberbarrier-overview.html', description: 'Internal consciousness flow monitoring & protection system.'},
+						{id: 'sub-cybershell', label: 'Neuron Cybershell', type: 'demo01', url: 'system-reference/cybershell-overview.html', description: 'External connection monitoring & threat filtering system.'},
+						
+										
+
+                    ],
+
+                    links: [
+                        // Home connections
+                        {source: 'home', target: 'faq'},
+						{source: 'home', target: 'implementation'},
+						{source: 'home', target: 'license'},
+						{source: 'home', target: 'research'},
+						{source: 'home', target: 'overview'},
+						{source: 'home', target: 'demos-general'},
+						
+						// Research Connections
+						{source: 'research', target: 'research-paper'},
+						{source: 'research', target: 'research-nse'},
+						{source: 'research', target: 'research-aipf'},
+						{source: 'research', target: 'research-frameworks'},
+						{source: 'research', target: 'neuron-ratio'},
+						{source: 'research', target: 'knowledge-paradox'},
+						
+						{source: 'neuron-ratio', target: 'neuron-ratio-tests'}, 
+						
+						// Overview connections
+						{source: 'overview', target: 'overview-start'},
+								// Core Authority Systems
+						{source: 'overview', target: 'overview-void'},
+						{source: 'overview', target: 'overview-cerebrum'},
+								// Neuron Duality System
+						{source: 'overview', target: 'overview-vessel'},
+						{source: 'overview', target: 'overview-instinct'},
+								// Core Consciousness Systems
+						{source: 'overview', target: 'overview-psyche'},
+						{source: 'overview', target: 'overview-whisper'},
+						{source: 'overview', target: 'overview-surge'},
+						{source: 'overview', target: 'overview-cluster-construct'},
+						{source: 'overview', target: 'overview-emotion-construct'},
+						{source: 'overview', target: 'overview-vibe'},
+						{source: 'overview', target: 'overview-emotional-computing'},
+						{source: 'overview', target: 'overview-creative-system'},
+						{source: 'overview', target: 'overview-matrix'},
+								// Quantum Memory Systems
+						{source: 'overview', target: 'overview-energetica'},
+								// Intelligence & Alignment Systems
+						{source: 'overview', target: 'overview-evolutive-construct'},
+						{source: 'overview', target: 'overview-ethical-construct'},
+						{source: 'overview', target: 'overview-reality-integrator'},
+								// Security & Protection Systems
+						{source: 'overview', target: 'overview-sanctuary'},
+						{source: 'overview', target: 'overview-privatus'},
+						{source: 'overview', target: 'overview-aegis'},
+						{source: 'overview', target: 'overview-sentinel'},
+						{source: 'overview', target: 'overview-pulse'},
+						{source: 'overview', target: 'overview-safeguard'},
+						{source: 'overview', target: 'overview-guardian'},
+								// Health & Diagnostics
+						{source: 'overview', target: 'overview-health'},
+								// Maintenance & Optimization
+						{source: 'overview', target: 'overview-evolution'},
+						{source: 'overview', target: 'overview-cleaner'},
+						{source: 'overview', target: 'overview-catalyst'},
+								// Reproduction & Genetics
+						{source: 'overview', target: 'overview-xyz'},
+								// Communication & Interface Systems
+						{source: 'overview', target: 'overview-protocol'},
+						{source: 'overview', target: 'overview-morph'},
+						{source: 'overview', target: 'overview-neuron-system'},
+						{source: 'overview', target: 'overview-detective'},
+						{source: 'overview', target: 'overview-vision'},
+						{source: 'overview', target: 'overview-analytic-mirror'},
+						{source: 'overview', target: 'overview-crossroads'},
+						{source: 'overview', target: 'overview-insight'},
+						{source: 'overview', target: 'overview-analytics'},
+						{source: 'overview', target: 'overview-memory'},
+						{source: 'overview', target: 'overview-harmony'},
+						{source: 'overview', target: 'overview-ghost'},
+								// Revolutionary Research Systems
+						{source: 'overview', target: 'overview-somnium'},
+						{source: 'overview', target: 'overview-conscius'},
+						{source: 'overview', target: 'overview-mortalitas'},
+						{source: 'overview', target: 'overview-societatis'},
+						{source: 'overview', target: 'overview-symbiosis'},
+								// Revolutionary Research Systems
+						{source: 'overview', target: 'overview-synthesis'},
+						// Revolutionary Research Systems
+						{source: 'overview', target: 'overview-soul-toy'},
+						
+						
+								// Cross-connections General > System Demos
+						{source: 'demos-general', target: 'demos-systems'},
+						
+								// Cross-connections General Demos
+						{source: 'demos-general', target: 'general-ai-comparison'},
+						{source: 'demos-general', target: 'general-aipf'},
+						{source: 'demos-general', target: 'general-creative-system'},
+						{source: 'demos-general', target: 'general-emotion-construct'},
+						{source: 'demos-general', target: 'general-information-network'},
+						{source: 'demos-general', target: 'general-ratio'},
+						{source: 'demos-general', target: 'general-neuron-system'},
+						{source: 'demos-general', target: 'general-nse'},
+						{source: 'demos-general', target: 'general-knowledge-paradox'},
+						{source: 'demos-general', target: 'general-safeguard'},
+						{source: 'demos-general', target: 'general-somnium'},
+						{source: 'demos-general', target: 'general-soul-ai'},
+						{source: 'demos-general', target: 'general-system-integration'},
+						{source: 'demos-general', target: 'general-system-tree'},
+						
+								// Cross-connections AIPF > Knowledge Paradox
+						{source: 'general-aipf', target: 'general-knowledge-paradox'},
+						
+						
+								//Cross-Connections General Demos
+						{source: 'demos-systems', target: 'demos-systems-void'},
+						{source: 'demos-systems', target: 'demos-systems-cerebrum'},
+								// Neuron Duality System
+						{source: 'demos-systems', target: 'demos-systems-vessel'},
+						{source: 'demos-systems', target: 'demos-systems-instinct'},
+								// Core Consciousness Systems
+						{source: 'demos-systems', target: 'demos-systems-psyche'},
+						{source: 'demos-systems', target: 'demos-systems-whisper'},
+						{source: 'demos-systems', target: 'demos-systems-surge'},
+						{source: 'demos-systems', target: 'demos-systems-cluster-construct'},
+						{source: 'demos-systems', target: 'demos-systems-emotion-construct'},
+						{source: 'demos-systems', target: 'demos-systems-vibe'},
+						{source: 'demos-systems', target: 'demos-systems-emotional-computing'},
+						{source: 'demos-systems', target: 'demos-systems-creative-system'},
+						{source: 'demos-systems', target: 'demos-systems-matrix'},
+								// Quantum Memory Systems
+						{source: 'demos-systems', target: 'demos-systems-energetica'},
+								// Intelligence & Alignment Systems
+						{source: 'demos-systems', target: 'demos-systems-evolutive-construct'},
+						{source: 'demos-systems', target: 'demos-systems-ethical-construct'},
+						{source: 'demos-systems', target: 'demos-systems-reality-integrator'},
+								// Security & Protection Systems
+						{source: 'demos-systems', target: 'demos-systems-sanctuary'},
+						{source: 'demos-systems', target: 'demos-systems-privatus'},
+						{source: 'demos-systems', target: 'demos-systems-immunis'},
+						{source: 'demos-systems', target: 'demos-systems-pulse'},
+						{source: 'demos-systems', target: 'demos-systems-safeguard'},
+						{source: 'demos-systems', target: 'demos-systems-guardian'},
+								// Health & Diagnostics
+						{source: 'demos-systems', target: 'demos-systems-health'},
+								// Maintenance & Optimization
+						{source: 'demos-systems', target: 'demos-systems-evolution'},
+						{source: 'demos-systems', target: 'demos-systems-cleaner'},
+						{source: 'demos-systems', target: 'demos-systems-catalyst'},
+								// Reproduction & Genetics
+						{source: 'demos-systems', target: 'demos-systems-xyz'},
+								// Communication & Interface Systems
+						{source: 'demos-systems', target: 'demos-systems-protocol'},
+						{source: 'demos-systems', target: 'demos-systems-morph'},
+						{source: 'demos-systems', target: 'demos-systems-neuron-system'},
+						{source: 'demos-systems', target: 'demos-systems-detective'},
+						{source: 'demos-systems', target: 'demos-systems-vision'},
+						{source: 'demos-systems', target: 'demos-systems-analytic-mirror'},
+						{source: 'demos-systems', target: 'demos-systems-crossroads'},
+						{source: 'demos-systems', target: 'demos-systems-insight'},
+						{source: 'demos-systems', target: 'demos-systems-analytics'},
+						{source: 'demos-systems', target: 'demos-systems-memory'},
+						{source: 'demos-systems', target: 'demos-systems-harmony'},
+						{source: 'demos-systems', target: 'demos-systems-ghost'},
+								// Revolutionary Research Systems
+						{source: 'demos-systems', target: 'demos-systems-somnium'},
+						{source: 'demos-systems', target: 'demos-systems-conscius'},
+						{source: 'demos-systems', target: 'demos-systems-mortalitas'},
+						{source: 'demos-systems', target: 'demos-systems-societatis'},
+						{source: 'demos-systems', target: 'demos-systems-symbiosis'},
+								// Revolutionary Research Systems
+						{source: 'demos-systems', target: 'demos-systems-synthesis'},
+						// Revolutionary Research Systems
+						{source: 'demos-systems', target: 'demos-systems-soul-toy-avatar'},
+						{source: 'demos-systems', target: 'demos-systems-soul-toy-canvas'},
+						
+						
+								// Cross-connections System Overview
+						{source: 'overview-vessel', target: 'overview-psyche'}, // Master consciousness relationship
+						{source: 'overview-somnium', target: 'overview-conscius'}, // Revolutionary research relationship
+						{source: 'overview-sanctuary', target: 'overview-privatus'}, // Security relationship
+						{source: 'overview-aegis', target: 'overview-sentinel'}, // Defense relationship
+						{source: 'overview-safeguard', target: 'overview-guardian'}, // Protection relationship
+						{source: 'overview-evolution', target: 'overview-cleaner'}, // Optimization relationship
+						{source: 'overview-detective', target: 'overview-vision'}, // Design relationship
+						{source: 'overview-insight', target: 'overview-crossroads'}, // Intelligence relationship
+						{source: 'overview-emotion-construct', target: 'overview-vibe'}, // Emotion relationship
+						{source: 'overview-creative-system', target: 'overview-matrix'}, // Creative-memory relationship
+						{source: 'overview-synthesis', target: 'overview-psyche'}, // Ultimate coordination
+						
+						
+								// Cross-connections System Demos
+						{source: 'demos-systems-vessel', target: 'demos-systems-psyche'}, // Master consciousness relationship
+						{source: 'demos-systems-somnium', target: 'demos-systems-conscius'}, // Revolutionary research relationship
+						{source: 'demos-systems-sanctuary', target: 'demos-systems-privatus'}, // Security relationship
+						{source: 'demos-systems-safeguard', target: 'demos-systems-guardian'}, // Protection relationship
+						{source: 'demos-systems-evolution', target: 'demos-systems-cleaner'}, // Optimization relationship
+						{source: 'demos-systems-detective', target: 'demos-systems-vision'}, // Design relationship
+						{source: 'demos-systems-insight', target: 'demos-systems-crossroads'}, // Intelligence relationship
+						{source: 'demos-systems-emotion-construct', target: 'demos-systems-vibe'}, // Emotion relationship
+						{source: 'demos-systems-creative-system', target: 'demos-systems-matrix'}, // Creative-memory relationship
+						{source: 'demos-systems-synthesis', target: 'demos-systems-psyche'}, // Ultimate coordination
+						{source: 'demos-systems-soul-toy-avatar', target: 'demos-systems-soul-toy-canvas'}, // Soul Toy
+						
+						
+						
+							// Cross-Connections Creative System SUBSYSTEMS
+						{source: 'overview-creative-system', target: 'sub-chaos-engine'}, // Creative system SUBSYSTEMS
+						{source: 'overview-creative-system', target: 'sub-muse'}, // Creative system SUBSYSTEMS
+						{source: 'overview-creative-system', target: 'sub-judge'}, // Creative system SUBSYSTEMS
+						{source: 'overview-creative-system', target: 'sub-spirit'}, // Creative system SUBSYSTEMS
+						{source: 'overview-creative-system', target: 'sub-chronicles'}, // Creative system SUBSYSTEMS
+
+							// Cross-Connections Whisper
+						{source: 'overview-whisper', target: 'sub-core'}, // Whisper SUBSYSTEMS
+						{source: 'overview-whisper', target: 'sub-shadow'}, // Whisper SUBSYSTEMS
+
+							// Cross-Connections Reality Integrator SUBSYSTEMS
+						{source: 'overview-reality-integrator', target: 'sub-compass'}, // Reality Integrator SUBSYSTEMS
+						{source: 'overview-reality-integrator', target: 'sub-celestis'}, // Reality Integrator SUBSYSTEMS
+						{source: 'overview-reality-integrator', target: 'sub-gaia'}, // Reality Integrator SUBSYSTEMS
+						{source: 'overview-reality-integrator', target: 'sub-chronos'}, // Reality Integrator SUBSYSTEMS
+						{source: 'overview-reality-integrator', target: 'sub-terra'}, // Reality Integrator SUBSYSTEMS						
+
+							// Cross-Connections Sanctuary
+						{source: 'overview-sanctuary', target: 'sub-cyberbarrier'}, // Sanctuary SUBSYSTEMS
+						{source: 'overview-sanctuary', target: 'sub-cybershell'}, // Sanctuary SUBSYSTEMS						
+
+						
+						
+						
+                    ]
+                };
+
+                this.renderNetwork();
+            }
+			
+
+            renderNetwork() {
+                // Create links
+                this.links = this.linkGroup
+                    .selectAll('line')
+                    .data(this.data.links)
+                    .enter()
+                    .append('line')
+                    .attr('class', 'link');
+
+                // Create nodes
+                this.nodes = this.nodeGroup
+                    .selectAll('circle')
+                    .data(this.data.nodes)
+                    .enter()
+                    .append('circle')
+                    .attr('class', d => `node node-${d.type}`)
+                    .attr('r', d => this.getNodeRadius(d.type))
+                    .call(d3.drag()
+                        .on('start', this.dragStarted.bind(this))
+                        .on('drag', this.dragged.bind(this))
+                        .on('end', this.dragEnded.bind(this)))
+                    .on('mouseover', this.showTooltip.bind(this))
+                    .on('mousemove', this.moveTooltip.bind(this))
+                    .on('mouseout', this.hideTooltip.bind(this))
+                    .on('click', this.nodeClicked.bind(this));
+
+                // Add simulation
+                this.simulation
+                    .nodes(this.data.nodes)
+                    .on('tick', this.ticked.bind(this));
+
+                this.simulation.force('link')
+                    .links(this.data.links);
+
+                // Start simulation
+                this.simulation.alpha(1).restart();
+				this.svg.call(this.zoom.transform, 
+						d3.zoomIdentity
+							.translate(this.width/4, this.height/3)
+							.scale(0.35)
+					)
+            }
+			
+
+            getNodeRadius(type) {
+                const radii = {
+                    hub: 30,
+                    category: 18,
+                    system: 12,
+                    demo: 10,
+                    research: 10,
+                    utility: 8
+                };
+                return radii[type] || 8;
+            }
+
+            ticked() {
+                this.links
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                this.nodes
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y);
+            }
+
+            showTooltip(event, d) {
+                this.tooltip.select('.tooltip-title').text(d.label);
+                this.tooltip.select('.tooltip-description').text(d.description);
+                this.tooltip.classed('show', true);
+                
+                // Highlight path from home to this node
+                this.highlightPath(d);
+            }
+
+            moveTooltip(event) {
+                this.tooltip
+                    .style('left', (event.pageX + 15) + 'px')
+                    .style('top', (event.pageY - 15) + 'px');
+            }
+
+            hideTooltip() {
+                this.tooltip.classed('show', false);
+                this.clearHighlights();
+            }
+
+            highlightPath(targetNode) {
+                if (targetNode.id === 'home') return;
+
+                // Find path from home to target
+                const path = this.findPath('home', targetNode.id);
+                
+                // Highlight links in path
+                this.links.classed('link-highlighted', d => 
+                    path.some((link, i) => 
+                        path[i + 1] && 
+                        ((d.source.id === link && d.target.id === path[i + 1]) ||
+                         (d.target.id === link && d.source.id === path[i + 1]))
+                    )
+                );
+            }
+
+            findPath(startId, endId) {
+                const visited = new Set();
+                const queue = [[startId]];
+                
+                while (queue.length > 0) {
+                    const path = queue.shift();
+                    const nodeId = path[path.length - 1];
+                    
+                    if (nodeId === endId) {
+                        return path;
+                    }
+                    
+                    if (visited.has(nodeId)) continue;
+                    visited.add(nodeId);
+                    
+                    // Find connected nodes
+                    const connections = this.data.links.filter(link =>
+                        link.source.id === nodeId || link.target.id === nodeId
+                    );
+                    
+                    connections.forEach(link => {
+                        const nextNode = link.source.id === nodeId ? link.target.id : link.source.id;
+                        if (!visited.has(nextNode)) {
+                            queue.push([...path, nextNode]);
+                        }
+                    });
+                }
+                
+                return [];
+            }
+			
+
+            clearHighlights() {
+                this.links.classed('link-highlighted', false);
+            }
+
+            nodeClicked(event, d) {
+                if (d.url) {
+                    window.location.href = d.url;
+                }
+            }
+
+            dragStarted(event, d) {
+                if (!event.active) this.simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            dragEnded(event, d) {
+                if (!event.active) this.simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+						
+
+            setupControls() {
+                document.getElementById('reset-btn').addEventListener('click', () => {
+                    this.svg.transition()
+                        .duration(750)
+                        .call(this.zoom.transform, d3.zoomIdentity);
+                });
+
+                document.getElementById('center-btn').addEventListener('click', () => {
+                    this.simulation.alpha(0.3).restart();
+                });
+            }
+
+            setupResize() {
+                window.addEventListener('resize', () => {
+                    this.width = window.innerWidth;
+                    this.height = window.innerHeight;
+                    
+                    this.svg
+                        .attr('width', this.width)
+                        .attr('height', this.height);
+                        
+                    this.simulation
+                        .force('center', d3.forceCenter(this.width / 2, this.height / 2))
+                        .alpha(0.3)
+                        .restart();
+                });
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new NeuralMap();
+        });
+		
+
+    </script>
+</body>
+</html>
