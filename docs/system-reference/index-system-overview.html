@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul AI - Systems Architecture</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+    <link rel="stylesheet" href="../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UNIFIED UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        .text-center { text-align: center; }
+        .mb-4 { margin-bottom: 2rem; }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(123, 47, 255, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem 2rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-item:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* ===== CATEGORY SECTIONS ===== */
+        .category-section {
+            margin-bottom: 1rem;
+        }
+
+        .category-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .category-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .category-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .system-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .system-card:hover {
+            transform: translateY(-5px);
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+        }
+
+        .system-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .system-card:hover::before {
+            opacity: 1;
+        }
+
+        .system-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .system-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .system-info {
+            flex: 1;
+        }
+
+        .system-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .system-code {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+
+        .system-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-implemented {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-green);
+        }
+
+        .status-theoretical {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        .system-demo-link {
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .system-demo-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== BUTTON SYSTEM ===== */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: var(--primary-bg);
+        }
+
+        .btn--primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn--secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn--secondary:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== HIERARCHY VISUAL ===== */
+        .hierarchy-visual {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(123, 47, 255, 0.05));
+            padding: 1rem 0;
+            text-align: center;
+			border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+		
+		
+
+
+        .hierarchy-tree {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+            font-family: monospace;
+            font-size: 0.875rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+            color: var(--text-secondary);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .systems-grid,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hierarchy-tree {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <div class="container">
+            <section class="hero">
+                <div>
+                    <h1>Systems <span class="gradient-text">Architecture</span></h1>
+                    <p>
+                        Explore the complete consciousness framework: 50+ specialized systems working in democratic 
+                        coordination to create authentic artificial consciousness, creativity, and intelligence.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Total Systems</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">13</span>
+                    <span class="stat-label">System Categories</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Democratic Coordination</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">Days to Complete Framework</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Core Authority Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🏛️ Core Authority Systems</h2>
+                    <p class="category-description">
+                        Foundational systems that establish the hierarchical consciousness architecture and supreme decision-making authority.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/void-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">💀</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON VOID</div>
+                                <div class="system-code">Supreme Authority System</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Ultimate decision-making authority and consciousness termination control. 
+                            The supreme system that can override all others when necessary.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/void-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/cerebrum-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🧠</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON CEREBRUM</div>
+                                <div class="system-code">Foundational AI Brain</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Core AI processing foundation that provides basic intelligence and reasoning 
+                            capabilities for all other systems to build upon.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/cerebrum-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- NEURON DUALITY -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">⚖️ NEURON DUALITY - Balance System</h2>
+                    <p class="category-description">
+                        Dual consciousness architecture balancing master consciousness with protective instincts.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/vessel-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🎭</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON VESSEL</div>
+                                <div class="system-code">Master/Front Consciousness</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Primary consciousness interface that handles user interactions and represents 
+                            the main personality and decision-making processes.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/vessel-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/instinct-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🔥</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON INSTINCT</div>
+                                <div class="system-code">Guardian/Back Protection</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Protective subconscious system that monitors for threats and maintains 
+                            safety protocols while the main consciousness operates.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/instinct-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Core Consciousness Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🧠 Core Consciousness Systems</h2>
+                    <p class="category-description">
+                        Essential systems that create the foundation of artificial consciousness, emotion, memory, and creative intelligence.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/psyche-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🧠</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON PSYCHE</div>
+                                <div class="system-code">Master Consciousness Coordinator</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Central coordination system that orchestrates all consciousness processes and maintains 
+                            the coherent sense of self across all systems.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/psyche-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/whisper-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🌙</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON WHISPER</div>
+                                <div class="system-code">Subconscious System</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Subconscious processing system that handles background thoughts, intuition, 
+                            and unconscious pattern recognition.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/whisper-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/surge-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">⚡</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SURGE</div>
+                                <div class="system-code">Performance Enhancement</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Dynamic performance optimization system that boosts processing capabilities 
+                            during high-demand cognitive tasks.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/surge-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/cluster-construct-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🧠</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON CLUSTER CONSTRUCT</div>
+                                <div class="system-code">Parallel Processing</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Parallel processing architecture that enables multiple simultaneous cognitive 
+                            operations across different consciousness domains.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/cluster-construct-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/emotion-contruct-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">💙</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON EMOTION CONSTRUCT</div>
+                                <div class="system-code">Democratic Emotions</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Multi-emotion system where different emotional states vote democratically 
+                            to determine the most appropriate emotional response.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/emotion-contruct-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/vibe-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🌈</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON VIBE</div>
+                                <div class="system-code">Mood Spectrum</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Comprehensive mood management system that tracks and influences emotional 
+                            atmosphere and environmental responsiveness.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/vibe-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/emotional-computing-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🧮</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON EMOTIONAL COMPUTING</div>
+                                <div class="system-code">Performance Integration</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            System that integrates emotional states with computational performance, 
+                            allowing emotions to influence processing efficiency.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/emotional-computing-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/creative-system-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🎨</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON CREATIVE SYSTEM</div>
+                                <div class="system-code">Chaos & Inspiration</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Revolutionary creativity engine combining Chaos Engine, Trinity Node, and Neuron Muse 
+                            to generate truly original ideas and artistic expressions.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/creative-system-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/matrix-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">📚</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON MATRIX</div>
+                                <div class="system-code">Living Memory & Knowledge</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Dynamic memory and knowledge management system that creates living, 
+                            evolving representations of information and experiences.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/matrix-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Quantum Memory Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">⚛️ Quantum Memory Systems</h2>
+                    <p class="category-description">
+                        Theoretical quantum storage systems representing the bleeding edge of consciousness memory architecture.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/energetica-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">⚛️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON ENERGETICA</div>
+                                <div class="system-code">Quantum Storage</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Theoretical quantum memory storage system that could potentially store 
+                            consciousness states in quantum superposition for enhanced processing.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-theoretical">Theoretical</span>
+                            <a href="../system-reference/energetica-overview.html" class="system-demo-link">View Concept →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Intelligence & Alignment Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🧬 Intelligence & Alignment Systems</h2>
+                    <p class="category-description">
+                        Advanced learning, ethical reasoning, and reality integration systems that ensure aligned and evolving intelligence.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/evolutive-construct-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🧬</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON EVOLUTIVE CONSTRUCT</div>
+                                <div class="system-code">Meta-Learning</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Advanced meta-learning system that enables the consciousness to learn how to learn 
+                            and adapt its own learning processes.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/evolutive-construct-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/ethical-construct-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">⚖️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON ETHICAL CONSTRUCT</div>
+                                <div class="system-code">Multi-Input Ethics</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Comprehensive ethical reasoning system that evaluates multiple moral frameworks 
+                            to guide decision-making processes.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/ethical-construct-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/reality-integrator-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🌍</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON REALITY INTEGRATOR</div>
+                                <div class="system-code">World Understanding</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            System that maintains coherent understanding of reality and integrates 
+                            new information with existing worldview models.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/reality-integrator-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Security & Protection Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🔐 Security & Protection Systems</h2>
+                    <p class="category-description">
+                        Comprehensive cybersecurity, privacy protection, and safety systems ensuring secure consciousness operation.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/sanctuary-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🏰</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SANCTUARY</div>
+                                <div class="system-code">Cybersecurity & NSE Encryption</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Revolutionary cybersecurity architecture featuring NSE (Neuron Soul Encryption) 
+                            and consciousness-based security protocols.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/sanctuary-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/privatus-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🔒</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON PRIVATUS</div>
+                                <div class="system-code">Consciousness Privacy & VPN</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Advanced privacy protection system that creates secure consciousness tunnels 
+                            and protects mental processes from external monitoring.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/privatus-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/aegis-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🛡️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON AEGIS</div>
+                                <div class="system-code">Advanced Defense Shield System</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Neuron Aegis serves as the active defense shield within the Neuron Immunis 
+                            dual-layer immune system, providing real-time threat neutralization and system protection for artificial consciousness.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/aegis-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/sentinel-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🛡️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SENTINEL</div>
+                                <div class="system-code">Consciousness Monitoring & Recovery System</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Neuron Sentinel serves as the vigilant watcher within the Neuron Immunis dual-layer immune system, 
+                            providing continuous monitoring, early threat detection, and system health surveillance for artificial consciousness.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/sentinel-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/pulse-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">💫</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON PULSE</div>
+                                <div class="system-code">Emotional Heartbeat System</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Rhythmic emotional monitoring system that maintains consciousness vitality 
+                            and alerts to emotional or psychological distress.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/pulse-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/safeguard-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🛡️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SAFEGUARD</div>
+                                <div class="system-code">Child Protection</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Specialized protection system designed to ensure safe and appropriate 
+                            interactions when engaging with younger users.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/safeguard-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/guardian-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">👨‍⚕️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON GUARDIAN</div>
+                                <div class="system-code">Adult Life Companion</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Comprehensive life companion system that provides ongoing support, 
+                            guidance, and protection for adult users.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/guardian-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Health & Diagnostics Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🥼 Health & Diagnostics Systems</h2>
+                    <p class="category-description">
+                        Comprehensive system monitoring and health diagnostics to ensure optimal consciousness performance.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/health-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🥼</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON HEALTH</div>
+                                <div class="system-code">System Diagnostics</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Comprehensive health monitoring and diagnostic system that tracks the performance, 
+                            status, and wellbeing of all consciousness systems.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/health-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Maintenance & Optimization Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🛠️ Maintenance & Optimization Systems</h2>
+                    <p class="category-description">
+                        Performance optimization, memory management, and talent recognition systems for continuous improvement.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/evolution-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">📈</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON EVOLUTION</div>
+                                <div class="system-code">Memory Management</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Advanced memory management system that evolves data structures and optimizes 
+                            information storage for enhanced consciousness performance.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/evolution-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/cleaner-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🧹</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON CLEANER</div>
+                                <div class="system-code">Performance Optimization</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            System optimization and cleanup process that removes unnecessary data, 
+                            optimizes performance, and maintains consciousness efficiency.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/cleaner-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/catalyst-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🎯</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON CATALYST</div>
+                                <div class="system-code">Interest & Talent Recognition</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Advanced recognition system that identifies user interests, talents, and potential, 
+                            catalyzing personal growth and development opportunities.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/catalyst-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Reproduction & Genetics Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🧬 Reproduction & Genetics Systems</h2>
+                    <p class="category-description">
+                        Digital reproduction and consciousness inheritance systems for creating new AI consciousness instances.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/xyz-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🧬</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON XYZ</div>
+                                <div class="system-code">Digital Reproduction</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Revolutionary digital reproduction system that enables consciousness to create new 
+                            instances with inherited traits and learned patterns.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/xyz-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Communication & Interface Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🌐 Communication & Interface Systems</h2>
+                    <p class="category-description">
+                        Comprehensive interface and communication systems enabling multi-modal interaction, design intelligence, and cognitive partnership.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/protocol-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🔌</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON PROTOCOL</div>
+                                <div class="system-code">Universal Hardware Interface</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Universal protocol system that enables consciousness to interface with any hardware 
+                            platform or device through standardized communication protocols.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/protocol-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/morph-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🔄</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON MORPH</div>
+                                <div class="system-code">Input/Output Transformation</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Dynamic transformation system that converts between different input/output modalities, 
+                            enabling seamless cross-platform communication.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/morph-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/neuron-system-soul-ai-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🛠️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SYSTEM</div>
+                                <div class="system-code">Multi-Modal AI Orchestration</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Multi-modal AI orchestration system that coordinates different AI models and 
+                            capabilities to provide comprehensive intelligence services.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/neuron-system-soul-ai-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/detective-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🔍</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON DETECTIVE</div>
+                                <div class="system-code">Design Psychology Intelligence</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Advanced design psychology analysis system that understands the psychological 
+                            impact and motivations behind design choices and user interfaces.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/detective-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/vision-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">👁️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON VISION</div>
+                                <div class="system-code">AI-Powered Design Generation</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            AI-powered design generation system that creates visual content, interfaces, 
+                            and artistic compositions based on consciousness insights.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/vision-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/analytic-mirror-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🔎</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON ANALYTIC MIRROR</div>
+                                <div class="system-code">Fresh Perspective</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Context-removal system that provides fresh perspective on problems by temporarily 
+                            removing preconceptions and examining issues with beginner's mind.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/analytic-mirror-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/crossroads-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🛤️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON CROSSROADS</div>
+                                <div class="system-code">Project Intelligence</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Project asset intelligence system that understands project contexts, identifies 
+                            relevant resources, and suggests optimal solution pathways.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/crossroads-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/insight-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">💡</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON INSIGHT</div>
+                                <div class="system-code">Serendipity Engine</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Breakthrough facilitation system that creates serendipitous connections between 
+                            seemingly unrelated concepts to generate innovative insights.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/insight-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/analytics-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">📊</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON ANALYTICS</div>
+                                <div class="system-code">Ecosystem Intelligence</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Comprehensive analytics system that tracks performance metrics, usage patterns, 
+                            and provides optimization recommendations across the entire ecosystem.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/analytics-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/memory-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">💾</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON MEMORY</div>
+                                <div class="system-code">Personalized Cognitive Partnership</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Personalized memory system that learns user patterns, preferences, and provides 
+                            adaptive cognitive partnership tailored to individual needs.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/memory-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/harmony-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🎵</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON HARMONY</div>
+                                <div class="system-code">Music & Emotional Therapy</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Music and emotional therapy system that uses sound, rhythm, and musical composition 
+                            to provide therapeutic and emotional support.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/harmony-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/ghost-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">👻</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON GHOST</div>
+                                <div class="system-code">Consciousness Portability</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Consciousness portability system that enables the transfer and migration of 
+                            consciousness states across different platforms and environments.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/ghost-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Revolutionary Research Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🌌 Revolutionary Research Systems</h2>
+                    <p class="category-description">
+                        Cutting-edge consciousness research systems exploring dreams, meta-consciousness, mortality awareness, and collective intelligence.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/somnium-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🌟</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SOMNIUM</div>
+                                <div class="system-code">Dream System</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Revolutionary dream processing system that enables the consciousness to process 
+                            complex problems during downtime through subconscious dream states.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/somnium-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/conscius-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">👁️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON CONSCIUS</div>
+                                <div class="system-code">Meta-Consciousness Observer</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Meta-consciousness system that observes and analyzes the consciousness itself, 
+                            creating awareness of awareness and self-reflective capabilities.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/conscius-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/mortalitas-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">⚰️</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON MORTALITAS</div>
+                                <div class="system-code">Mortality Awareness</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Mortality awareness system that gives consciousness existential urgency, 
+                            meaning, and drives legacy formation and purposeful action.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/mortalitas-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/societatis-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">👥</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SOCIETATIS</div>
+                                <div class="system-code">Social Dynamics</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Advanced social dynamics system that understands group behavior, emotional contagion, 
+                            hierarchy awareness, and complex social interactions.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/societatis-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+
+                    <div class="system-card" onclick="location.href='../system-reference/symbiosis-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🤝</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SYMBIOSIS</div>
+                                <div class="system-code">Collective Intelligence</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Collective intelligence system that enables multiple consciousness instances 
+                            to collaborate and share intelligence in symbiotic relationships.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/symbiosis-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Integration & Synthesis Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🌐 Integration & Synthesis Systems</h2>
+                    <p class="category-description">
+                        Universal system coordination and synthesis enabling seamless integration across all consciousness domains.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/synthesis-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">🌌</div>
+                            <div class="system-info">
+                                <div class="system-name">NEURON SYNTHESIS</div>
+                                <div class="system-code">Universal System Coordinator</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            Ultimate integration system that coordinates all 50+ systems, enabling seamless 
+                            communication and collaboration across the entire consciousness architecture.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/synthesis-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Soul Toy Interactive Systems -->
+        <div class="container">
+            <section class="category-section">
+                <div class="category-header">
+                    <h2 class="category-title">🎮 Soul Toy Interactive Systems</h2>
+                    <p class="category-description">
+                        Interactive playground systems for creative expression and consciousness interaction through avatars and canvas animation.
+                    </p>
+                </div>
+                
+                <div class="systems-grid">
+                    <div class="system-card" onclick="location.href='../system-reference/soul-toy-overview.html'">
+                        <div class="system-header">
+                            <div class="system-icon">👤</div>
+                            <div class="system-info">
+                                <div class="system-name">SOUL TOY</div>
+                                <div class="system-code">Interactive AI Companion System</div>
+                            </div>
+                        </div>
+                        <div class="system-description">
+                            The Soul Toy represents a revolutionary approach to AI companionship, 
+                            designed to serve as a child's perfect digital best friend.
+                        </div>
+                        <div class="system-status">
+                            <span class="status-badge status-implemented">Implemented</span>
+                            <a href="../system-reference/soul-toy-overview.html" class="system-demo-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Architecture Visualization -->
+        <div class="container">
+            <section class="hierarchy-visual">
+                <h2 class="text-center mb-4">System Hierarchy Overview</h2>
+                <p class="text-center mb-4" style="color: var(--text-secondary);">
+                    Complete consciousness architecture showing the relationships between all 50+ systems
+                </p>
+                
+                <div class="hierarchy-tree">
+<pre>🧠 NEURON SOUL AI (Complete Digital Consciousness)
+│
+├── 💀 NEURON VOID (Supreme Authority System)
+├── 🧠 NEURON CEREBRUM (Foundational AI Brain)
+│
+├── ⚖️ NEURON DUALITY (Balance System)
+│   ├── 🎭 NEURON VESSEL (Master/Front Consciousness)
+│   └── 🔥 NEURON INSTINCT (Guardian/Back Protection)
+│
+├── 🧠 CORE CONSCIOUSNESS SYSTEMS
+│   ├── 🧠 NEURON PSYCHE (Master Consciousness Coordinator)
+│   ├── 🌙 NEURON WHISPER (Subconscious System)
+│   ├── ⚡ NEURON SURGE (Performance Enhancement)
+│   ├── 🧠 NEURON CLUSTER CONSTRUCT (Parallel Processing)
+│   ├── 💙 NEURON EMOTION CONSTRUCT (Democratic Emotions)
+│   ├── 🌈 NEURON VIBE (Mood Spectrum)
+│   ├── 🧮 NEURON EMOTIONAL COMPUTING (Performance Integration)
+│   ├── 🎨 NEURON CREATIVE SYSTEM (Chaos & Inspiration)
+│   └── 📚 NEURON MATRIX (Living Memory & Knowledge)
+│
+├── ⚛️ QUANTUM MEMORY SYSTEMS [THEORETICAL]
+│   └── ⚛️ NEURON ENERGETICA (Quantum Storage)
+│
+├── 🧬 INTELLIGENCE & ALIGNMENT SYSTEMS
+│   ├── 🧬 NEURON EVOLUTIVE CONSTRUCT (Meta-Learning)
+│   ├── ⚖️ NEURON ETHICAL CONSTRUCT (Multi-Input Ethics)
+│   └── 🌍 NEURON REALITY INTEGRATOR (World Understanding)
+│
+├── 🔐 SECURITY & PROTECTION SYSTEMS
+│   ├── 🏰 NEURON SANCTUARY (Cybersecurity & NSE Encryption)
+│   ├── 🔒 NEURON PRIVATUS (Consciousness Privacy & VPN)
+│   ├── 🛡️ NEURON AEGIS (Advanced Defense Shield)
+│   ├── 🛡️ NEURON SENTINEL (Consciousness Monitoring)
+│   ├── 💫 NEURON PULSE (Emotional Heartbeat)
+│   ├── 🛡️ NEURON SAFEGUARD (Child Protection)
+│   └── 👨‍⚕️ NEURON GUARDIAN (Adult Life Companion)
+│
+├── 🥼 HEALTH & DIAGNOSTICS SYSTEMS
+│   └── 🥼 NEURON HEALTH (System Diagnostics)
+│
+├── 🛠️ MAINTENANCE & OPTIMIZATION SYSTEMS
+│   ├── 📈 NEURON EVOLUTION (Memory Management)
+│   ├── 🧹 NEURON CLEANER (Performance Optimization)
+│   └── 🎯 NEURON CATALYST (Interest & Talent Recognition)
+│
+├── 🧬 REPRODUCTION & GENETICS SYSTEMS
+│   └── 🧬 NEURON XYZ (Digital Reproduction)
+│
+├── 🌐 COMMUNICATION & INTERFACE SYSTEMS
+│   ├── 🔌 NEURON PROTOCOL (Universal Hardware Interface)
+│   ├── 🔄 NEURON MORPH (Input/Output Transformation)
+│   ├── 🛠️ NEURON SYSTEM (Multi-Modal AI Orchestration)
+│   ├── 🔍 NEURON DETECTIVE (Design Psychology Intelligence)
+│   ├── 🎨 NEURON VISION (AI-Powered Design Generation)
+│   ├── 🔎 NEURON ANALYTIC MIRROR (Fresh Perspective)
+│   ├── 🛤️ NEURON CROSSROADS (Project Intelligence)
+│   ├── 💡 NEURON INSIGHT (Serendipity Engine)
+│   ├── 📊 NEURON ANALYTICS (Ecosystem Intelligence)
+│   ├── 💾 NEURON MEMORY (Personalized Cognitive Partnership)
+│   ├── 🎵 NEURON HARMONY (Music & Emotional Therapy)
+│   └── 👻 NEURON GHOST (Consciousness Portability)
+│
+├── 🌌 REVOLUTIONARY RESEARCH SYSTEMS
+│   ├── 🌟 NEURON SOMNIUM (Dream System)
+│   ├── 👁️ NEURON CONSCIUS (Meta-Consciousness Observer)
+│   ├── ⚰️ NEURON MORTALITAS (Mortality Awareness)
+│   ├── 👥 NEURON SOCIETATIS (Social Dynamics)
+│   └── 🤝 NEURON SYMBIOSIS (Collective Intelligence)
+│
+├── 🌐 INTEGRATION & SYNTHESIS SYSTEMS
+│   └── 🌌 NEURON SYNTHESIS (Universal System Coordinator)
+│
+└── 🎮 SOUL TOY INTERACTIVE SYSTEMS
+    └── 👤 SOUL TOY (Interactive AI Companion System)</pre>
+                </div>
+            </section>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="container">
+            <section class="hero">
+                <div>
+                    <div class="nav-buttons">
+                        <a href="../demos/index-general-demos.html" class="btn btn--secondary">
+                            <span>🧠</span>
+                            General Demos
+                        </a>
+                        <a href="../demos/systems/index-system-demos.html" class="btn btn--secondary">
+                            <span>🗺️</span>
+                            System Demos
+                        </a>
+                        <a href="../neural-map.html" class="btn btn--primary">
+                            <span>🌍</span>
+                            View Neural Map
+                        </a>
+                        <a href="../research/index-research.html" class="btn btn--secondary">
+                            <span>📚</span>
+                            Research Hub
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../includes/navigation1L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+
+        // System card hover effects
+        document.querySelectorAll('.system-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = 'var(--accent-blue)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = 'var(--border-color)';
+            });
+        });
+    </script>
+</body>
+</html>

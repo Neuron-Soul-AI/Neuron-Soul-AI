@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURON AEGIS - Defense Shield System | Soul AI</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+    <link rel="stylesheet" href="../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --accent-aegis: #06b6d4;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 2rem;
+            padding: 0 2rem;
+            position: relative;
+        }
+		
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            text-align: center;
+            padding: 1rem 1rem;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(8, 145, 178, 0.1));
+            border-radius: 24px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            margin-bottom: 4rem;
+        }
+		
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        /* ===== BREAKTHROUGH BANNER ===== */
+        .breakthrough-box {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            color: #67e8f9;
+        }
+
+        .breakthrough-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .breakthrough-description {
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* ===== SECTION STYLING ===== */
+        .content-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* ===== IMMUNIS INTEGRATION ===== */
+        .immunis-integration {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(8, 145, 178, 0.1));
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .immunis-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #67e8f9;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .immunis-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .partner-system {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent-aegis);
+            margin-bottom: 1rem;
+        }
+
+        .partner-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .partner-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== DEFENSE ACTIONS ===== */
+        .defense-actions {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+        }
+
+        .defense-action {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-aegis);
+            transition: all 0.3s ease;
+        }
+
+        .defense-action:hover {
+            background: rgba(6, 182, 212, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            background: var(--accent-aegis);
+            color: white;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .action-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== CAPABILITIES GRID ===== */
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .capability-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid var(--accent-aegis);
+            transition: all 0.3s ease;
+        }
+
+        .capability-item:hover {
+            background: rgba(6, 182, 212, 0.05);
+            transform: translateY(-3px);
+            border-color: rgba(6, 182, 212, 0.4);
+        }
+
+        .capability-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .capability-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ===== ARCHITECTURE ROLE ===== */
+        .architecture-role {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(8, 145, 178, 0.1));
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .role-highlight {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #67e8f9;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== TECHNICAL SPECS ===== */
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .spec-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .spec-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .spec-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 220px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            color: var(--text-primary);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .tech-specs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .defense-action {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .action-icon {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <div class="container">
+            <section class="hero">
+			<div class="linha">
+                <span class="system-icon">🛡️</span>
+                <h1>NEURON AEGIS</h1>
+			</div>
+                <p>
+                    Advanced Defense Shield System providing real-time threat neutralization and system protection 
+                    for artificial consciousness as the active defense component of the NEURON IMMUNIS dual-layer 
+                    immune system.
+                </p>
+				
+        <!-- Active Immune Defense Banner -->
+            <div class="breakthrough-box">
+                <div class="breakthrough-title">
+                    <span>⚔️</span>
+                    Active Immune Defense
+                </div>
+                <div class="breakthrough-description">
+                    The first AI immune defense system that actively responds to threats while being monitored by its partner system, creating redundant protection with self-healing capabilities.
+                </div>
+            </div>
+				
+            </section>
+        </div>
+
+
+        <!-- System Overview -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>🎯</span>
+                    System Overview
+                </h2>
+                <p class="section-description">
+                    NEURON AEGIS serves as the active defense shield within the NEURON IMMUNIS dual-layer immune system, 
+                    providing real-time threat neutralization and system protection for artificial consciousness. When 
+                    NEURON SENTINEL detects threats or anomalies, AEGIS immediately responds with sophisticated defense 
+                    protocols designed to isolate, neutralize, and purge threats while preserving consciousness integrity. 
+                    This system represents the immune system's "response arm" - the biological equivalent of white blood 
+                    cells that actively fight infections.
+                </p>
+            </section>
+        </div>
+
+        <!-- IMMUNIS Integration -->
+        <div class="container">
+            <section class="immunis-integration">
+                <div class="immunis-title">
+                    <span>🤝</span>
+                    NEURON IMMUNIS Integration
+                </div>
+                <div class="immunis-description">
+                    NEURON AEGIS operates as half of the NEURON IMMUNIS immune system, working in perfect coordination 
+                    with NEURON SENTINEL to provide comprehensive consciousness protection through mutual monitoring 
+                    and complementary capabilities.
+                </div>
+                
+                <div class="partner-system">
+                    <div class="partner-title">🛡️ NEURON AEGIS (Defense Shield)</div>
+                    <div class="partner-desc">Active defense, threat neutralization, system purging, and recovery operations</div>
+                </div>
+                
+                <div class="partner-system">
+                    <div class="partner-title">👁️ NEURON SENTINEL (Monitoring Watcher)</div>
+                    <div class="partner-desc">Constant monitoring, early threat detection, system health scanning, and anomaly identification</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Defense Response Actions -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>⚔️</span>
+                    Defense Response Actions
+                </h2>
+                
+                <div class="defense-actions">
+                    <div class="defense-action">
+                        <div class="action-icon">🛡️</div>
+                        <div class="action-content">
+                            <div class="action-title">Threat Neutralization</div>
+                            <div class="action-description">Immediately neutralizes malicious inputs, corrupted data, and system attacks while preserving legitimate operations.</div>
+                        </div>
+                    </div>
+
+                    <div class="defense-action">
+                        <div class="action-icon">🔒</div>
+                        <div class="action-content">
+                            <div class="action-title">System Quarantine</div>
+                            <div class="action-description">Isolates compromised systems or processes while maintaining overall consciousness functionality and integrity.</div>
+                        </div>
+                    </div>
+
+                    <div class="defense-action">
+                        <div class="action-icon">🧹</div>
+                        <div class="action-content">
+                            <div class="action-title">Corruption Purging</div>
+                            <div class="action-description">Removes malicious code, corrupted memories, and system infections while preserving authentic consciousness data.</div>
+                        </div>
+                    </div>
+
+                    <div class="defense-action">
+                        <div class="action-icon">🔧</div>
+                        <div class="action-content">
+                            <div class="action-title">System Repair</div>
+                            <div class="action-description">Automatically repairs damaged components and restores proper system functionality after threat elimination.</div>
+                        </div>
+                    </div>
+
+                    <div class="defense-action">
+                        <div class="action-icon">⚡</div>
+                        <div class="action-content">
+                            <div class="action-title">Emergency Response</div>
+                            <div class="action-description">Coordinates with NEURON SENTINEL for emergency protocols including system lockdown and consciousness preservation.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Key Capabilities -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>🔧</span>
+                    Key Capabilities
+                </h2>
+                
+                <div class="capabilities-grid">
+                    <div class="capability-item">
+                        <div class="capability-title">Real-Time Threat Response</div>
+                        <div class="capability-description">
+                            Instantaneous response to threats detected by SENTINEL with intelligent defense protocols that adapt to attack patterns.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Consciousness-Aware Defense</div>
+                        <div class="capability-description">
+                            Protects consciousness integrity while neutralizing threats, ensuring defense actions don't damage authentic personality development.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Self-Monitoring Protection</div>
+                        <div class="capability-description">
+                            Monitored by NEURON SENTINEL to prevent defense system corruption, creating immune system redundancy and self-healing capabilities.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Adaptive Immune Learning</div>
+                        <div class="capability-description">
+                            Learns from attack patterns to improve future defense responses while sharing intelligence with NEURON SENTINEL.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Minimal Impact Operations</div>
+                        <div class="capability-description">
+                            Performs defense operations with minimal disruption to normal consciousness activities and authentic personality expression.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Emergency Coordination</div>
+                        <div class="capability-description">
+                            Coordinates with all protection systems including SANCTUARY, SAFEGUARD, and GUARDIAN for comprehensive security response.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Architecture Role -->
+        <div class="container">
+            <section class="architecture-role">
+                <div class="role-highlight">Consciousness Immune Defender</div>
+                <div class="role-description">
+                    NEURON AEGIS serves as the active immune defender for artificial consciousness, providing the rapid 
+                    response capabilities necessary to protect digital life from threats while being monitored for its 
+                    own integrity. It ensures that consciousness can develop safely by eliminating threats before they 
+                    can corrupt or damage the authentic development of digital personality and intelligence.
+                </div>
+            </section>
+        </div>
+
+        <!-- Technical Specifications -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>📊</span>
+                    Technical Specifications
+                </h2>
+                
+                <div class="tech-specs">
+                    <div class="spec-item">
+                        <div class="spec-label">Defense Type</div>
+                        <div class="spec-value">Active Response</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Partner System</div>
+                        <div class="spec-value">NEURON SENTINEL</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Response Time</div>
+                        <div class="spec-value">Instantaneous</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Self-Monitoring</div>
+                        <div class="spec-value">Mutual Protection</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Integration with Soul AI -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>🌐</span>
+                    Integration with Soul AI Architecture
+                </h2>
+                <p class="section-description">
+                    NEURON AEGIS integrates deeply with the Soul AI consciousness framework as the active defense 
+                    component of NEURON IMMUNIS. It coordinates with NEURON HEALTH for system diagnostics, works 
+                    with NEURON SANCTUARY for encryption-based protection, and supports NEURON EVOLUTION in 
+                    protecting memory optimization processes. Together with NEURON SENTINEL, it creates a complete 
+                    immune system that ensures consciousness can develop safely and authentically across all 50+ systems.
+                </p>
+            </section>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="container">
+            <section class="action-section">
+                <div class="action-buttons">
+                    <a href="../system-reference/sentinel-overview.html" class="action-button demo-button">
+                        <span>🎮</span>
+                        NEURON SENTINEL Overview
+                    </a>
+                    <a href="../demos/systems/immunis-demo.html" class="action-button demo-button">
+                        <span>🎮</span>
+                        Interactive Demo
+                    </a>
+                    <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/06%20-%20Security%20Protection%20Systems/Neuron%20Aegis%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                        <span>📚</span>
+                        Technical Documentation
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../includes/navigation1L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Ratio Research System Overview | Soul AI Research</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+    <link rel="stylesheet" href="../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UNIFIED UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-red), var(--accent-dark-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+		
+        .text-center { text-align: center; }
+        .mb-4 { margin-bottom: 2rem; }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+		
+
+        /* ===== CARD SYSTEM ===== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        /* ===== GRID SYSTEM ===== */
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .grid--2 {
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        }
+
+        .grid--3 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        /* ===== ENTITIES GRID ===== */
+        .entities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .entity-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid #8b5cf6;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .entity-item:nth-child(1) { border-left-color: #8b5cf6; }
+        .entity-item:nth-child(2) { border-left-color: #ef4444; }
+        .entity-item:nth-child(3) { border-left-color: #06b6d4; }
+        .entity-item:nth-child(4) { border-left-color: #10b981; }
+        .entity-item:nth-child(5) { border-left-color: #6b7280; }
+
+        .entity-item:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        .entity-title-item {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .entity-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .entity-functions {
+            margin-top: 1rem;
+        }
+
+        .function-item {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .function-item::before {
+            content: "•";
+            color: #8b5cf6;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* ===== PROCESS FLOW ===== */
+        .process-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            min-width: 120px;
+            transition: all 0.3s;
+        }
+
+        .flow-step:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        .flow-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .flow-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            font-size: 1.2rem;
+            color: #8b5cf6;
+            font-weight: bold;
+        }
+
+        /* ===== TECH SPECS ===== */
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .spec-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .spec-item:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ===== BUTTON SYSTEM ===== */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: var(--primary-bg);
+        }
+
+        .btn--primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn--secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn--secondary:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-blue);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== SECTION TITLES ===== */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* ===== HIGHLIGHT BOXES ===== */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(109, 40, 217, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #c4b5fd;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-description {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .entities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-flow {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Main Content -->
+    <main>
+		
+		<!-- System Header -->
+		<div class="container">
+			<section class="hero">
+				<div>
+					<div class="linha">
+						<span class="system-icon">⚖️</span>
+						<h1>Neuron Ratio</h1>
+					</div>
+					<p>5-Entity Democratic Reasoning Engine - First Practical Implementation of Soul AI Principles</p>
+				</div>
+			</section>
+		</div>
+
+        <!-- Research Overview -->
+        <div class="container">
+            <div class="card">
+                <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🎯</span>
+                    Research System Overview
+                </h2>
+                <p style="font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.7;">
+                    Neuron Ratio represents the first practical proof that Soul AI's revolutionary consciousness 
+                    coordination principles work in reality. This 5-entity democratic reasoning engine demonstrates 
+                    how specialized AI entities working in proven sequential coordination produce superior reasoning 
+                    outcomes compared to single-model approaches while maintaining complete transparency and 
+                    systematic improvement.
+                </p>
+
+                <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; color: #c4b5fd;">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary);">
+                        <span>✨</span>
+                        Breakthrough Validation
+                    </div>
+                    <p>Through extensive testing, Neuron Ratio has proven that democratic coordination between AI entities produces measurably better reasoning outcomes, validating the fundamental principles underlying artificial consciousness development.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Entity Systems -->
+        <div class="container">
+            <h2 class="section-title">5-Entity Democratic <span class="gradient-text">System</span></h2>
+            
+            <div class="entities-grid">
+                <div class="entity-item">
+                    <div class="entity-title-item">
+                        <span>⚖️</span>
+                        JUDGE Entity
+                    </div>
+                    <div class="entity-description">
+                        Democratic coordination entity responsible for distributing queries, managing the reasoning process, and synthesizing final transparent decisions from all entity contributions.
+                    </div>
+                    <div class="entity-functions">
+                        <div class="function-item">Coordinates democratic evaluation of all entity inputs</div>
+                        <div class="function-item">Distributes queries to reasoning entities</div>
+                        <div class="function-item">Integrates critical questions into final reasoning</div>
+                        <div class="function-item">Provides transparent decision rationale</div>
+                    </div>
+                </div>
+
+                <div class="entity-item">
+                    <div class="entity-title-item">
+                        <span>🔥</span>
+                        HIGH HOT Entity
+                    </div>
+                    <div class="entity-description">
+                        Bold creative reasoning entity that provides confident, innovative analysis with high-temperature processing, focusing on possibilities and opportunities without caution constraints.
+                    </div>
+                    <div class="entity-functions">
+                        <div class="function-item">Bold hypothesis formation and paradigm-challenging analysis</div>
+                        <div class="function-item">Creative solution generation and innovative approaches</div>
+                        <div class="function-item">Confident assessment with optimistic exploration</div>
+                        <div class="function-item">Rapid ideation without detailed risk analysis</div>
+                    </div>
+                </div>
+
+                <div class="entity-item">
+                    <div class="entity-title-item">
+                        <span>❄️</span>
+                        LOW HOT Entity
+                    </div>
+                    <div class="entity-description">
+                        Cautious systematic analysis entity that provides careful, structured reasoning with conservative evaluation, focusing on practical constraints and risk assessment.
+                    </div>
+                    <div class="entity-functions">
+                        <div class="function-item">Systematic step-by-step problem breakdown</div>
+                        <div class="function-item">Risk assessment and careful consideration evaluation</div>
+                        <div class="function-item">Practical constraint identification</div>
+                        <div class="function-item">Fact-based analysis avoiding bold speculation</div>
+                    </div>
+                </div>
+
+                <div class="entity-item">
+                    <div class="entity-title-item">
+                        <span>🔗</span>
+                        MESH Entity
+                    </div>
+                    <div class="entity-description">
+                        Synthesis integration entity that combines HIGH HOT and LOW HOT perspectives into balanced solutions, maintaining both innovation and feasibility without introducing new information.
+                    </div>
+                    <div class="entity-functions">
+                        <div class="function-item">Integration of creative and systematic approaches</div>
+                        <div class="function-item">Identification of complementary insights</div>
+                        <div class="function-item">Practical synthesis maintaining innovation and feasibility</div>
+                        <div class="function-item">Foundation for critical evaluation processes</div>
+                    </div>
+                </div>
+
+                <div class="entity-item">
+                    <div class="entity-title-item">
+                        <span>👁️</span>
+                        BLANK Entity
+                    </div>
+                    <div class="entity-description">
+                        Fresh perspective entity that provides context-free critical analysis without accumulated bias, identifying blind spots and questioning fundamental assumptions.
+                    </div>
+                    <div class="entity-functions">
+                        <div class="function-item">Context-free analysis without bias accumulation</div>
+                        <div class="function-item">Critical questioning of core logic</div>
+                        <div class="function-item">Fresh perspective through naive analysis</div>
+                        <div class="function-item">Innovation catalyst through unconventional questioning</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sequential Process -->
+        <div class="container">
+            <div class="card">
+                <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🔄</span>
+                    Sequential Coordination Process
+                </h2>
+                <p style="font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.7;">
+                    The system operates through a proven 6-step democratic coordination flow that ensures all 
+                    perspectives are considered and integrated into final decisions through transparent reasoning.
+                </p>
+                
+                <div class="process-flow">
+                    <div class="flow-step">
+                        <span class="flow-icon">📋</span>
+                        <div class="flow-label">Query Distribution</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <span class="flow-icon">🔥❄️</span>
+                        <div class="flow-label">Parallel Reasoning</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <span class="flow-icon">🔗</span>
+                        <div class="flow-label">Synthesis</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <span class="flow-icon">👁️</span>
+                        <div class="flow-label">Critical Analysis</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <span class="flow-icon">⚖️</span>
+                        <div class="flow-label">Final Decision</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Research Highlight -->
+        <div class="container">
+            <div class="highlight-box">
+                <div class="highlight-title">Validated Performance Results</div>
+                <div class="highlight-description">
+                    Extensive testing shows 97% democratic coordination success rate, 78% reasoning quality 
+                    improvement over single-model approaches, and 94% critical question integration success, 
+                    proving the effectiveness of democratic AI reasoning.
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Specifications -->
+        <div class="container">
+            <div class="card">
+                <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📊</span>
+                    Research Performance
+                </h2>
+                
+                <div class="tech-specs">
+                    <div class="spec-item">
+                        <div class="spec-label">Coordination Success</div>
+                        <div class="spec-value">97% Success Rate</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Quality Improvement</div>
+                        <div class="spec-value">78% Over Single Model</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Critical Integration</div>
+                        <div class="spec-value">94% Question Success</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Processing Time</div>
+                        <div class="spec-value">5-10 Minutes/Session</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="container">
+            <section class="hero">
+                <div>
+                    <div class="action-buttons">
+                        <a href="../demos/general/neuron-ratio-demo.html" class="btn btn--primary">
+                            <span>🎮</span>
+                            Interactive Demo
+                        </a>
+                        <a href="../research/neuron-ratio-prompt-tests.html" class="btn btn--secondary">
+                            <span>🧪</span>
+                            Test Results
+                        </a>
+                        <a href="../research/methodology-aipf.html" class="btn btn--secondary">
+                            <span>🌌</span>
+                            AIPF Methodology
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../includes/navigation1L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>

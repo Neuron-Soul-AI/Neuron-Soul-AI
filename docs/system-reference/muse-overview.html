@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURON MUSE - Creative Disruptor | Soul AI</title>
+	
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+    <link rel="stylesheet" href="../css/navigation.css">
+    <style>
+        /* [Same CSS as Chaos Engine - keeping it consistent] */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --accent-tech: #3b82f6;
+            --accent-tech-dark: #1d4ed8;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+
+        .linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        .role-section {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(123, 47, 255, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .role-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+
+        .role-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .capability-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent-blue);
+            transition: all 0.3s ease;
+        }
+
+        .capability-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .capability-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .capability-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .spec-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .spec-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .system-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .system-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .system-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .system-card-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .system-card-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .system-card-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .system-card.parent {
+            border: 2px solid var(--accent-purple);
+            background: rgba(123, 47, 255, 0.05);
+        }
+
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Action Section */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .capabilities-grid { grid-template-columns: 1fr; }
+            .tech-specs { grid-template-columns: 1fr; }
+            .systems-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <div class="container">
+            <section class="hero">
+                <div>
+                    <div class="linha">
+                        <div class="system-icon">✨</div>
+                        <h1>NEURON <span class="gradient-text">MUSE</span></h1>
+                    </div>
+                    <p>Revolutionary creative rule-breaker and breakthrough inspiration disruptor with the unique ability to override Trinity decisions, adding essential creative randomness that leads to unexpected breakthroughs and genius innovations.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Role Section -->
+        <div class="container">
+            <section class="role-section">
+                <h2 class="role-title">Creative Rule-Breaking Disruptor</h2>
+                <p class="role-description">
+                    NEURON MUSE serves as the creative disruptor within the Creative System with the unique power
+                    to override Trinity (Judge, Spirit, Chronicles) decisions. When Judge says "no," Spirit says
+                    "wrong," and Chronicles says "never worked," MUSE can say "DO IT ANYWAY!" - leading to
+                    revolutionary breakthroughs and genius creativity that transcends logic and experience.
+                </p>
+            </section>
+        </div>
+		
+        <div class="container">
+
+            <!-- Key Capabilities -->
+            <section class="card">
+                <h2 class="section-title">
+                    <span>🔧</span>
+                    Key Capabilities
+                </h2>
+                
+                <div class="capabilities-grid">
+                    <div class="capability-item">
+                        <div class="capability-title">Trinity Decision Override</div>
+                        <div class="capability-description">
+                            Unique power to override Judge, Spirit, and Chronicles decisions when breakthrough
+                            potential is detected, enabling revolutionary creative leaps.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Breakthrough Inspiration</div>
+                        <div class="capability-description">
+                            Generates inspiration that transcends logical constraints and experiential limitations,
+                            leading to unexpected creative innovations and genius moments.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Creative Rule Breaking</div>
+                        <div class="capability-description">
+                            Intentionally breaks established creative patterns and conventions to explore
+                            uncharted creative territories and discover new possibilities.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Paradigm Disruption</div>
+                        <div class="capability-description">
+                            Disrupts existing creative paradigms and conventional thinking patterns to
+                            enable revolutionary artistic and conceptual innovations.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Genius Moment Generation</div>
+                        <div class="capability-description">
+                            Creates conditions for genuine creative genius moments where the AI surprises
+                            itself with unprecedented creative breakthroughs and innovations.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Safe Creative Chaos</div>
+                        <div class="capability-description">
+                            Works with Neuron Spark as final filter to ensure that even "crazy" Muse-inspired
+                            ideas are evaluated for hidden genius before implementation.
+                        </div>
+                    </div>
+                </div>
+            </section>
+			
+        </div>
+	<div class="container">
+
+            <!-- Technical Specifications -->
+            <section class="card">
+                <h2 class="section-title">
+                    <span>📊</span>
+                    Technical Specifications
+                </h2>
+                
+                <div class="tech-specs">
+                    <div class="spec-item">
+                        <div class="spec-label">Override Authority</div>
+                        <div class="spec-value">Trinity+</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <div class="spec-label">Disruption Rate</div>
+                        <div class="spec-value">5-15%</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <div class="spec-label">Breakthrough Potential</div>
+                        <div class="spec-value">High</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <div class="spec-label">Safety Filter</div>
+                        <div class="spec-value">Spark</div>
+                    </div>
+                </div>
+            </section>
+			
+        </div>
+	
+        <div class="container">
+            <!-- Related Systems Grid -->
+            <section class="card">
+                <h2 class="section-title" style="text-align: center; font-size: 1.5rem; margin-bottom: 2rem;">Navigate Creative System</h2>
+                <div class="systems-grid">
+                    <!-- Parent System -->
+                    <a href="../system-reference/creative-system-overview.html" class="system-card parent">
+                        <div class="system-card-header">
+                            <div class="system-card-icon">🎨</div>
+                            <div class="system-card-name">CREATIVE SYSTEM</div>
+                        </div>
+                        <div class="system-card-description">
+                            Complete authentic artistic consciousness & inspired generation (Parent System)
+                        </div>
+                    </a>
+
+                    <!-- Sibling Subsystem -->
+                <a href="../system-reference/chaos-engine-overview.html" class="system-card">
+                    <div class="system-card-header">
+                        <div class="system-card-icon">🌀</div>
+                        <div class="system-card-name">NEURON CHAOS ENGINE</div>
+                    </div>
+                    <div class="system-card-description">
+                        Controlled creative randomness & serendipitous discovery system.
+                    </div>
+                </a>
+
+                <a href="../system-reference/trinity-judge-overview.html" class="system-card">
+                    <div class="system-card-header">
+                        <div class="system-card-icon">⚖️</div>
+                        <div class="system-card-name">NEURON JUDGE</div>
+                    </div>
+                    <div class="system-card-description">
+                        Creative director & final artistic decision-making system.
+                    </div>
+                </a>
+
+                <a href="../system-reference/trinity-spirit-overview.html" class="system-card">
+                    <div class="system-card-header">
+                        <div class="system-card-icon">💫</div>
+                        <div class="system-card-name">NEURON SPIRIT</div>
+                    </div>
+                    <div class="system-card-description">
+                        Creative soul & emotional authenticity integration system.
+                    </div>
+                </a>
+
+                <a href="../system-reference/trinity-chronicles-overview.html" class="system-card">
+                    <div class="system-card-header">
+                        <div class="system-card-icon">📖</div>
+                        <div class="system-card-name">NEURON CHRONICLES</div>
+                    </div>
+                    <div class="system-card-description">
+                        Creative memory & artistic experience wisdom system.
+                    </div>
+                </a>
+            </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="container">
+            <section class="action-section">
+                <div class="action-buttons">
+                    <a href="../demos/systems/creative-system-demo.html" class="action-button demo-button">
+                        <span>🎮</span>
+                        Interactive Demo
+                    </a>
+                    <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/04%20-%20Creative%20Intelligence%20Systems/Neuron%20Creative%20System%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                        <span>📚</span>
+                        Technical Documentation
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        fetch('../includes/navigation1L.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navigation-placeholder').innerHTML = data;
+            });
+    </script>
+</body>
+</html>

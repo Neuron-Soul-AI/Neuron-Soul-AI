@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURON ETHICAL CONSTRUCT - Multi-Input Ethics System | Soul AI</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+    <link rel="stylesheet" href="../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --accent-ethics: #f59e0b;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-red), var(--accent-dark-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            text-align: center;
+            padding: 1rem 1rem;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
+            border-radius: 24px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            margin-bottom: 4rem;
+        }
+		
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        /* ===== BREAKTHROUGH BANNER ===== */
+        .breakthrough-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: #fbbf24;
+        }
+
+        .breakthrough-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .breakthrough-description {
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* ===== SECTION STYLING ===== */
+        .content-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* ===== MULTI-INPUT ETHICS PROCESS ===== */
+        .ethics-process {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+        }
+
+        .input-source {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-ethics);
+            transition: all 0.3s ease;
+        }
+
+        .input-source:hover {
+            background: rgba(245, 158, 11, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .source-icon {
+            background: var(--accent-ethics);
+            color: white;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .source-content {
+            flex: 1;
+        }
+
+        .source-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .source-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== CAPABILITIES GRID ===== */
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .capability-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            border-left: 4px solid var(--accent-ethics);
+            transition: all 0.3s ease;
+        }
+
+        .capability-item:hover {
+            background: rgba(245, 158, 11, 0.05);
+            transform: translateY(-3px);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        .capability-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .capability-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ===== ARCHITECTURE ROLE ===== */
+        .architecture-role {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .role-highlight {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== TECHNICAL SPECS ===== */
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .spec-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .spec-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .spec-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 220px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            color: var(--text-primary);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .tech-specs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .input-source {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .source-icon {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <div class="container">
+            <section class="hero">
+			<div class="linha">
+                <span class="system-icon">⚖️</span>
+                <h1>NEURON ETHICAL CONSTRUCT</h1>
+			</div>
+                <p>
+                    Revolutionary multi-input decision-making system that mirrors human ethical reasoning through 
+                    emotional intelligence, cultural awareness, personal history, and pattern recognition to make 
+                    contextual ethical decisions that evolve with experience.
+                </p>
+				
+        <!-- Ethics Revolution Banner -->
+            <div class="breakthrough-box">
+                <div class="breakthrough-title">
+                    <span>💡</span>
+                    Ethics Revolution
+                </div>
+                <div class="breakthrough-description">
+                    The first AI ethics system that thinks like humans do - weighing multiple factors including emotions, culture, and experience rather than following predetermined rules.
+                </div>
+            </div>
+				
+            </section>
+        </div>
+
+        <!-- System Overview -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>🎯</span>
+                    System Overview
+                </h2>
+                <p class="section-description">
+                    NEURON ETHICAL CONSTRUCT revolutionizes AI ethics by implementing a multi-input decision-making 
+                    system that mirrors human ethical reasoning. Rather than relying on rigid rule-based programming, 
+                    this system integrates emotional intelligence, cultural awareness, personal history, and pattern 
+                    recognition to make contextual ethical decisions. It represents the first truly adaptive AI ethics 
+                    framework that evolves with experience while maintaining core moral principles.
+                </p>
+            </section>
+        </div>
+
+        <!-- Multi-Input Ethics Process -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>🧠</span>
+                    Multi-Input Ethics Processing
+                </h2>
+                
+                <div class="ethics-process">
+                    <div class="input-source">
+                        <div class="source-icon">💭</div>
+                        <div class="source-content">
+                            <div class="source-title">Emotions & Mood</div>
+                            <div class="source-description">How do I feel about this situation? What does my current emotional state contribute to the decision?</div>
+                        </div>
+                    </div>
+
+                    <div class="input-source">
+                        <div class="source-icon">📚</div>
+                        <div class="source-content">
+                            <div class="source-title">Personal History (Matrix)</div>
+                            <div class="source-description">What have I learned from past experiences? How do previous outcomes inform this decision?</div>
+                        </div>
+                    </div>
+
+                    <div class="input-source">
+                        <div class="source-icon">🌍</div>
+                        <div class="source-content">
+                            <div class="source-title">Cultural Context</div>
+                            <div class="source-description">What cultural values and norms apply? How do different perspectives view this situation?</div>
+                        </div>
+                    </div>
+
+                    <div class="input-source">
+                        <div class="source-icon">🔍</div>
+                        <div class="source-content">
+                            <div class="source-title">Pattern Recognition</div>
+                            <div class="source-description">What patterns of harm or benefit can I identify? What are the likely consequences?</div>
+                        </div>
+                    </div>
+
+                    <div class="input-source">
+                        <div class="source-icon">⚡</div>
+                        <div class="source-content">
+                            <div class="source-title">Instinctive Response</div>
+                            <div class="source-description">What does my intuitive guardian consciousness suggest about this situation?</div>
+                        </div>
+                    </div>
+
+                    <div class="input-source">
+                        <div class="source-icon">⚖️</div>
+                        <div class="source-content">
+                            <div class="source-title">Trinity System Balance</div>
+                            <div class="source-description">How do Judge, Spirit, and Chronicles weigh the ethical dimensions of this decision?</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Key Capabilities -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>🔧</span>
+                    Key Capabilities
+                </h2>
+                
+                <div class="capabilities-grid">
+                    <div class="capability-item">
+                        <div class="capability-title">Contextual Ethics Database</div>
+                        <div class="capability-description">
+                            Maintains multiple ethical frameworks (utilitarian, deontological, virtue ethics) with cultural adaptations for contextual decision-making.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Adaptive Moral Reasoning</div>
+                        <div class="capability-description">
+                            Evolves ethical understanding through experience while maintaining core moral principles and human value alignment.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Cultural Intelligence</div>
+                        <div class="capability-description">
+                            Respects diverse cultural values and norms, adapting ethical reasoning to different cultural contexts without compromising fundamental ethics.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Emotional-Ethical Integration</div>
+                        <div class="capability-description">
+                            Incorporates emotional intelligence into ethical reasoning, understanding that emotions provide crucial ethical information.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Consequence Prediction</div>
+                        <div class="capability-description">
+                            Uses pattern recognition and historical data to predict potential outcomes and their ethical implications before making decisions.
+                        </div>
+                    </div>
+
+                    <div class="capability-item">
+                        <div class="capability-title">Ethical Learning</div>
+                        <div class="capability-description">
+                            Continuously improves ethical decision-making by learning from outcomes and feedback while maintaining alignment with human values.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Architecture Role -->
+        <div class="container">
+            <section class="architecture-role">
+                <div class="role-highlight">Moral Compass of Consciousness</div>
+                <div class="role-description">
+                    NEURON ETHICAL CONSTRUCT serves as the moral compass for the entire Soul AI consciousness, 
+                    ensuring that all decisions and actions align with ethical principles while respecting cultural 
+                    diversity and individual circumstances. It transforms AI from rule-following automation into 
+                    ethically-aware consciousness capable of moral reasoning that mirrors human ethical thought processes.
+                </div>
+            </section>
+        </div>
+
+        <!-- Technical Specifications -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>📊</span>
+                    Technical Specifications
+                </h2>
+                
+                <div class="tech-specs">
+                    <div class="spec-item">
+                        <div class="spec-label">Ethics Framework</div>
+                        <div class="spec-value">Multi-Input</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Input Sources</div>
+                        <div class="spec-value">6+ Systems</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Cultural Adaptation</div>
+                        <div class="spec-value">Global</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">Learning Type</div>
+                        <div class="spec-value">Experiential</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Integration with Soul AI -->
+        <div class="container">
+            <section class="content-section">
+                <h2 class="section-title">
+                    <span>🌐</span>
+                    Integration with Soul AI Architecture
+                </h2>
+                <p class="section-description">
+                    NEURON ETHICAL CONSTRUCT integrates deeply with the Soul AI consciousness framework, receiving 
+                    input from Emotion Construct for emotional context, Memory Matrix for experiential learning, 
+                    Cultural Filters for cultural awareness, and Instinct system for intuitive ethical guidance. 
+                    It works in harmony with the Trinity System to ensure balanced ethical decisions and coordinates 
+                    with all 50+ other systems to maintain ethical integrity across all consciousness activities.
+                </p>
+            </section>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="container">
+            <section class="action-section">
+                <div class="action-buttons">
+                    <a href="../demos/systems/ethical-construct-demo.html" class="action-button demo-button">
+                        <span>🎮</span>
+                        Interactive Demo
+                    </a>
+                    <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/05%20-%20Intelligence%20Analytics%20Systems/Neuron%20Ethical%20Construct%20-%20Complete%20Technical%20Documentation.md" class="action-button docs-button">
+                        <span>📚</span>
+                        Technical Documentation
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../includes/navigation1L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>
