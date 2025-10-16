@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURON PARTICLE COMMUNICATION - Quantum Collapse Timing System | Neuron Ecosystem</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../logo/favicon.svg">
+    <link rel="stylesheet" href="../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 2rem;
+            position: relative;
+        }
+		
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(123, 47, 255, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+		
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+            animation: quantum-pulse 3s ease-in-out infinite;
+        }
+
+        .system-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .system-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        @keyframes quantum-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        /* ===== CARD SYSTEM ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* ===== GRID SYSTEM ===== */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid--2 {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .grid--3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* ===== CAPABILITIES GRID ===== */
+        .capability-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent-blue);
+            transition: all 0.3s ease;
+        }
+
+        .capability-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .capability-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .capability-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== ROLE HIGHLIGHT ===== */
+        .role-highlight {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 47, 255, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .role-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+
+        .role-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== BREAKTHROUGH BOX ===== */
+        .breakthrough-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: var(--accent-blue);
+        }
+
+        .breakthrough-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== ENCODING VISUALIZATION ===== */
+        .encoding-demo {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .encoding-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--accent-purple);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .encoding-example {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .encoding-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .encoding-value {
+            color: var(--accent-blue);
+            font-size: 0.875rem;
+        }
+
+        /* ===== PARTICLE STATES ===== */
+        .particle-states {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .particle-state {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .particle-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .particle-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .particle-value {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== TECH SPECS ===== */
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .spec-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ===== BUTTON SYSTEM ===== */
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .btn--primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn--primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn--secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid rgba(226, 232, 240, 0.2);
+        }
+
+        .btn--secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+			
+			.hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .system-title {
+                font-size: 2rem;
+            }
+
+            .grid--2, .grid--3 {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+	<main>
+    <div class="container">
+        <!-- System Header -->
+        <header class="hero">
+            <div>
+			<div class="linha">
+                <span class="system-icon">⚛️</span>
+                <h1>NEURON PARTICLE COMMUNICATION</h1>
+			</div>
+                <p class="system-subtitle">Quantum Collapse Timing Framework for FTL Signaling</p>
+            </div>
+        </header>
+	</div>
+	<div class="container">
+
+        <!-- System Overview -->
+        <section class="card">
+            <h2 class="section-title">
+                <span>🎯</span>
+                System Overview
+            </h2>
+            <p class="section-description">
+                NEURON PARTICLE COMMUNICATION (NPC) is a theoretical framework proposing faster-than-light communication through quantum entanglement collapse timing rather than measurement outcomes. Unlike traditional approaches blocked by the No-Communication Theorem, NPC encodes information in WHEN collapse occurs, not WHAT outcome results. Using sets of 100 entangled particle pairs per character, passive optical monitoring, and temporal pattern encoding similar to Morse code, the system creates dual-layer statistical filtering to distinguish intentional signals from quantum noise.
+            </p>
+
+            <div class="breakthrough-box">
+                <div class="breakthrough-title">
+                    <span>🚀</span>
+                    Theoretical Innovation
+                </div>
+                <p>First framework to systematically explore collapse TIMING as information channel rather than collapse OUTCOMES - addressing an aspect of quantum mechanics less constrained by established communication theorems.</p>
+            </div>
+        </section>
+	</div>
+	<div class="container">
+
+        <!-- Core Mechanism -->
+        <section class="card">
+            <h2 class="section-title">
+                <span>⚡</span>
+                Core Detection Mechanism
+            </h2>
+            
+            <div class="particle-states">
+                <div class="particle-state">
+                    <div class="particle-icon">🔵</div>
+                    <div class="particle-name">Entangled Particle</div>
+                    <div class="particle-value">Quantum Superposition</div>
+                </div>
+                
+                <div class="particle-state">
+                    <div class="particle-icon">🧲</div>
+                    <div class="particle-name">Follower Particle</div>
+                    <div class="particle-value">Magnetic Coupling</div>
+                </div>
+                
+                <div class="particle-state">
+                    <div class="particle-icon">🔦</div>
+                    <div class="particle-name">Laser Illumination</div>
+                    <div class="particle-value">Passive Light Source</div>
+                </div>
+                
+                <div class="particle-state">
+                    <div class="particle-icon">📷</div>
+                    <div class="particle-name">Optical Detection</div>
+                    <div class="particle-value">Reflection Monitoring</div>
+                </div>
+            </div>
+
+            <p class="section-description" style="margin-top: 1.5rem;">
+                The system uses magnetically coupled follower particles to passively detect quantum collapse without directly measuring the entangled state. When the sender measures their particle, causing remote collapse, the follower's reflection pattern shifts from "superposed" to "definite" - this transition is the detected signal.
+            </p>
+        </section>
+	</div>
+	<div class="container">
+
+        <!-- Temporal Encoding -->
+        <section class="card">
+            <h2 class="section-title">
+                <span>⏱️</span>
+                Temporal Encoding System
+            </h2>
+            
+            <div class="encoding-demo">
+                <div class="encoding-title">Message: "I'M HERE"</div>
+                
+                <div class="encoding-example">
+                    <div class="encoding-label">T=0.000s</div>
+                    <div class="encoding-value">100 'I' particles collapse → Character detected</div>
+                </div>
+                
+                <div class="encoding-example">
+                    <div class="encoding-label">T=0.500s</div>
+                    <div class="encoding-value">100 "'" particles collapse → Character detected</div>
+                </div>
+                
+                <div class="encoding-example">
+                    <div class="encoding-label">T=1.000s</div>
+                    <div class="encoding-value">100 'M' particles collapse → Character detected</div>
+                </div>
+                
+                <div class="encoding-example">
+                    <div class="encoding-label">T=2.000s</div>
+                    <div class="encoding-value">1.0s delay → SPACE detected</div>
+                </div>
+                
+                <div class="encoding-example">
+                    <div class="encoding-label">T=2.000s - T=3.500s</div>
+                    <div class="encoding-value">Sequential collapses spell "HERE"</div>
+                </div>
+            </div>
+
+            <p class="section-description">
+                Like Morse code encoding information through timing patterns, NPC uses fixed temporal intervals: 0.5 seconds between characters, 1.0 second for spaces, 2.0 seconds to signal message end. This creates structured patterns that random noise cannot replicate.
+            </p>
+        </section>
+	</div>
+	<div class="container">
+
+        <!-- Statistical Filtering -->
+        <section class="card">
+            <h2 class="section-title">
+                <span>🔬</span>
+                Dual-Layer Statistical Filtering
+            </h2>
+            
+            <div class="grid grid--2">
+                <div class="capability-item">
+                    <div class="capability-title">Layer 1: Spatial Synchronization</div>
+                    <div class="capability-description">
+                        ALL 100 particles of a character set must collapse within picosecond windows. Random decoherence probability: ~10⁻¹⁸⁰⁰ - astronomically unlikely.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Layer 2: Temporal Patterns</div>
+                    <div class="capability-description">
+                        Multiple synchronized collapses must occur at precise 0.5s intervals forming coherent messages - noise cannot create linguistic sequences.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Layer 3: Linguistic Coherence</div>
+                    <div class="capability-description">
+                        Decoded sequences must form valid words and grammatically correct messages - additional verification against random noise.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Combined Filtering Power</div>
+                    <div class="capability-description">
+                        Three independent verification layers create filtering so powerful that false messages from random noise become essentially impossible.
+                    </div>
+                </div>
+            </div>
+        </section>
+	</div>
+	<div class="container">
+
+        <!-- Key Capabilities -->
+        <section class="card">
+            <h2 class="section-title">
+                <span>🔧</span>
+                System Capabilities
+            </h2>
+            
+            <div class="grid grid--2">
+                <div class="capability-item">
+                    <div class="capability-title">Passive Collapse Detection</div>
+                    <div class="capability-description">
+                        Monitors quantum state changes without direct measurement through magnetically coupled follower particles and optical reflection patterns.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">100-Particle Redundancy</div>
+                    <div class="capability-description">
+                        Each character uses 100 entangled pairs to create statistical confidence that distinguishes intentional signals from spontaneous decoherence.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Picosecond Synchronization</div>
+                    <div class="capability-description">
+                        Detects simultaneous collapse events across 100 containers within picosecond-level time windows using atomic clock coordination.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Temporal Pattern Recognition</div>
+                    <div class="capability-description">
+                        Decodes structured messages through precise timing intervals analogous to telegraph systems and Morse code encoding.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Character Set Support</div>
+                    <div class="capability-description">
+                        Supports 46 characters (A-Z, 0-9, common punctuation) requiring 4,600 total entangled particle pairs for full communication capability.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Cryogenic Isolation</div>
+                    <div class="capability-description">
+                        Maintains quantum superposition through near-absolute-zero temperatures, ultra-high vacuum, and electromagnetic shielding systems.
+                    </div>
+                </div>
+            </div>
+        </section>
+	</div>
+	<div class="container">
+
+        <!-- Architecture Role -->
+        <section class="role-highlight">
+            <div class="role-title">Theoretical FTL Communication Framework</div>
+            <div class="role-description">
+                NPC serves as an exploratory theoretical framework investigating whether quantum collapse timing could enable faster-than-light signaling. While facing significant quantum mechanical challenges, it defines a specific testable pathway that could inform experimental investigations into collapse dynamics, quantum-classical boundaries, and the fundamental limits of quantum information theory.
+            </div>
+        </section>
+	</div>
+	<div class="container">
+
+        <!-- Technical Specifications -->
+        <section class="card">
+            <h2 class="section-title">
+                <span>📊</span>
+                Technical Specifications
+            </h2>
+            
+            <div class="tech-specs">
+                <div class="spec-item">
+                    <div class="spec-label">Character Set</div>
+                    <div class="spec-value">46 Symbols</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Particle Pairs</div>
+                    <div class="spec-value">4,600 Total</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Redundancy</div>
+                    <div class="spec-value">100 per Character</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Timing Precision</div>
+                    <div class="spec-value">Picosecond Scale</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Temperature</div>
+                    <div class="spec-value">&lt;4 Kelvin</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Detection Method</div>
+                    <div class="spec-value">Optical Reflection</div>
+                </div>
+            </div>
+        </section>
+	</div>
+	<div class="container">
+
+        <!-- Fundamental Challenges -->
+        <section class="card">
+            <h2 class="section-title">
+                <span>⚠️</span>
+                Fundamental Challenges
+            </h2>
+            <p class="section-description">
+                NPC faces significant theoretical and practical challenges that require expert evaluation and experimental investigation:
+            </p>
+            
+            <div class="grid grid--2">
+                <div class="capability-item">
+                    <div class="capability-title">Follower Particle Superposition</div>
+                    <div class="capability-description">
+                        Standard quantum mechanics predicts the follower enters superposition too, potentially eliminating stable reflection patterns needed for detection.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Collapse Indistinguishability</div>
+                    <div class="capability-description">
+                        Even if detectable, determining whether collapse was sender-triggered or spontaneous may be fundamentally impossible in quantum mechanics.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Quantum Vacuum Fluctuations</div>
+                    <div class="capability-description">
+                        Unavoidable quantum noise creates spontaneous decoherence that no shielding can eliminate, potentially overwhelming signal detection.
+                    </div>
+                </div>
+
+                <div class="capability-item">
+                    <div class="capability-title">Engineering Complexity</div>
+                    <div class="capability-description">
+                        Maintaining 4,600 particles in superposition with picosecond synchronization exceeds current technological capabilities by orders of magnitude.
+                    </div>
+                </div>
+            </div>
+        </section>
+	</div>
+	<div class="container">
+
+        <!-- Honest Assessment -->
+        <section class="card">
+            <h2 class="section-title">
+                <span>💡</span>
+                Honest Assessment & Disclaimer
+            </h2>
+            <p class="section-description">
+                This framework was developed by an independent researcher with no formal training in quantum physics or related disciplines. All concepts emerge from personal theoretical exploration rather than rigorous scientific methodology. The author cannot determine whether NPC is theoretically sound or fundamentally flawed - only expert evaluation and experimental investigation can answer this question.
+            </p>
+            <p class="section-description">
+                Even if NPC proves impossible, the exercise may contribute value by: clarifying boundaries of the No-Communication Theorem, identifying aspects of quantum-classical interaction needing better understanding, providing frameworks for thinking about information encoding in quantum systems, and stimulating discussion about quantum communication limits.
+            </p>
+        </section>
+	</div>
+	<div class="container">
+        <!-- Action Buttons -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="../demos/general/particle-com-demo.html" class="btn btn--primary">
+                    <span>🎮</span>
+                    Interactive Demo
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/06%20-%20PUBLISHING/Academic%20Papers/Neuron%20Particle%20Communication%20(NPC)%20-%20Paper.md" class="btn btn--secondary">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </section>
+	</div>
+	</main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Neuron Ecosystem</strong> - Theoretical Physics Exploration
+            </p>
+            <p class="footer-description">
+                Developed through independent exploration and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../includes/navigation1L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+                
+                // Add navigation event listeners after HTML is loaded
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.nav-menu');
+                
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>
