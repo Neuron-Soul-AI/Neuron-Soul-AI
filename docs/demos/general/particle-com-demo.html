@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Particle Communication - Interactive Demo</title>
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #00FF88;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+            --quantum-primary: #00D4FF;
+            --quantum-secondary: #7B2FFF;
+            --quantum-accent: #00FF88;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+		
+		/* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+		
+		/* ===== UTILITY CLASSES ===== */
+		.gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1100px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+            animation: quantum-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes quantum-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* ===== DEMO LAYOUT ===== */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== CONTROL PANEL ===== */
+        .control-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            height: fit-content;
+        }
+
+        .control-title {
+            color: var(--quantum-primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== MESSAGE INPUT ===== */
+        .message-section {
+            margin-bottom: 2rem;
+        }
+
+        .message-label {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .message-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-family: monospace;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .char-count {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* ===== TRANSMISSION METRICS ===== */
+        .metrics-section {
+            margin-bottom: 2rem;
+        }
+
+        .metric-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--quantum-primary);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .metric-unit {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-left: 0.25rem;
+        }
+
+        /* ===== QUANTUM DISPLAY ===== */
+        .quantum-display {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            position: relative;
+        }
+
+        /* ===== ENTANGLEMENT VISUALIZATION ===== */
+        .entanglement-visual {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .particle-container {
+            text-align: center;
+        }
+
+        .particle-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 200px;
+            margin: 1rem auto;
+        }
+
+        .particle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--quantum-primary);
+            box-shadow: 0 0 10px var(--quantum-primary);
+            animation: particle-float 3s ease-in-out infinite;
+        }
+
+        @keyframes particle-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .particle.superposition {
+            animation: superposition-shimmer 1s ease-in-out infinite;
+        }
+
+        @keyframes superposition-shimmer {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--quantum-primary); }
+            50% { opacity: 0.5; box-shadow: 0 0 20px var(--quantum-primary); }
+        }
+
+        .particle.collapsed {
+            background: var(--quantum-accent);
+            box-shadow: 0 0 15px var(--quantum-accent);
+            animation: collapse-pulse 0.5s ease-out;
+        }
+
+        @keyframes collapse-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+
+        .entanglement-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--quantum-primary), var(--quantum-purple), var(--quantum-primary));
+            opacity: 0.5;
+        }
+
+        .particle-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .particle-status {
+            font-size: 0.75rem;
+            color: var(--quantum-primary);
+            margin-top: 0.5rem;
+        }
+
+        /* ===== TRANSMISSION STATUS ===== */
+        .transmission-status {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--quantum-primary);
+        }
+
+        .status-header {
+            color: var(--quantum-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-content {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            font-family: monospace;
+            display: none;
+        }
+
+        .status-content.show-content {
+            display: block;
+        }
+
+        .timeline-display {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .timeline-display.show-content {
+            display: block;
+        }
+
+        .timeline-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-left: 2px solid var(--quantum-accent);
+            padding-left: 1rem;
+        }
+
+        .timeline-time {
+            color: var(--quantum-accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .timeline-event {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        /* ===== PROCESS BUTTON ===== */
+        .process-button {
+            background: linear-gradient(135deg, var(--quantum-primary), #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .process-button:disabled {
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== SIMULATION MESSAGES ===== */
+        .simulation-message {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            color: var(--quantum-primary);
+            font-size: 0.875rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* ===== STATISTICS GRID ===== */
+        .statistics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--quantum-primary);
+        }
+
+        /* ===== COMPARISON SECTION ===== */
+        .comparison-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .comparison-section.show-content {
+            display: block;
+        }
+
+        .comparison-title {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid;
+        }
+
+        .traditional-system {
+            border-color: #ef4444;
+        }
+
+        .npc-system {
+            border-color: var(--quantum-primary);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-system .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .npc-system .comparison-list li::before {
+            color: var(--quantum-primary);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-button:hover {
+            background: var(--hover-bg);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FOOTER SYSTEM ===== */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- System Header -->
+        <div class="container">
+            <header class="hero">
+			<div class="linha">
+                <span class="system-icon">⚛️</span>
+                <h1>NEURON PARTICLE COMMUNICATION</h1>
+			</div>
+                <p>Quantum collapse timing system encoding information in WHEN events occur, not WHAT outcomes result</p>
+            </header>
+        </div>
+		<div class="container">
+
+            <!-- Main Demo Layout -->
+            <div class="demo-layout">
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <div class="control-title">
+                        📡 Transmission Control
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="message-section">
+                        <div class="message-label">Enter Message:</div>
+                        <input 
+                            type="text" 
+                            class="message-input" 
+                            id="messageInput"
+                            placeholder="Type message here..."
+                            maxlength="50"
+                        >
+                        <div class="char-count" id="charCount">0/50 characters</div>
+                    </div>
+
+                    <!-- Transmission Metrics -->
+                    <div class="metrics-section">
+                        <div class="message-label">Transmission Metrics:</div>
+                        
+                        <div class="metric-item">
+                            <div class="metric-label">Particle Pairs</div>
+                            <div class="metric-value" id="particlePairs">
+                                0<span class="metric-unit">pairs</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-label">Transmission Time</div>
+                            <div class="metric-value" id="transmissionTime">
+                                0.0<span class="metric-unit">seconds</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-label">False Positive Probability</div>
+                            <div class="metric-value" id="falsePositive">
+                                ~10⁻¹⁸⁰⁰<span class="metric-unit"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="process-button" id="transmitButton">
+                        Simulate Transmission
+                    </button>
+
+                    <div id="simulationMessage" class="simulation-message">
+                        Preparing quantum entanglement...
+                    </div>
+                </div>
+
+                <!-- Quantum Display -->
+                <div class="quantum-display">
+                    <!-- Entanglement Visualization -->
+                    <div class="entanglement-visual" id="entanglementVisual">
+                        <div class="particle-container">
+                            <div class="particle-label">SENDER (100 Particles)</div>
+                            <div class="particle-group" id="senderParticles">
+                                <!-- Particles will be generated by JavaScript -->
+                            </div>
+                            <div class="particle-status" id="senderStatus">Superposition State</div>
+                        </div>
+
+                        <div class="entanglement-line"></div>
+
+                        <div class="particle-container">
+                            <div class="particle-label">RECEIVER (100 Particles)</div>
+                            <div class="particle-group" id="receiverParticles">
+                                <!-- Particles will be generated by JavaScript -->
+                            </div>
+                            <div class="particle-status" id="receiverStatus">Monitoring Collapse</div>
+                        </div>
+                    </div>
+
+                    <!-- Transmission Status -->
+                    <div class="transmission-status">
+                        <div class="status-header">
+                            📊 Transmission Timeline
+                        </div>
+                        <div class="status-content" id="statusContent">
+                            Awaiting transmission command...
+                        </div>
+                        <div class="timeline-display" id="timelineDisplay">
+                            <!-- Timeline items will be generated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Statistics Grid -->
+                    <div class="statistics-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Characters Sent</div>
+                            <div class="stat-value" id="charsSent">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Total Collapses</div>
+                            <div class="stat-value" id="totalCollapses">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Sync Accuracy</div>
+                            <div class="stat-value" id="syncAccuracy">100%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<div class="container">
+            <!-- Comparison Section -->
+            <div class="comparison-section" id="comparisonSection">
+                <h3 class="comparison-title">Traditional Quantum Communication vs NPC System</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-item traditional-system">
+                        <h4>Traditional Quantum Communication</h4>
+                        <ul class="comparison-list">
+                            <li>Attempts to encode in measurement outcomes</li>
+                            <li>Blocked by No-Communication Theorem (random results)</li>
+                            <li>Cannot distinguish sender's measurement from noise</li>
+                            <li>Focuses on WHAT outcome occurs (↑ or ↓)</li>
+                            <li>Limited to quantum key distribution (QKD)</li>
+                            <li>Respects light-speed barrier</li>
+                            <li>Single particle measurements without redundancy</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-item npc-system">
+                        <h4>Neuron Particle Communication (NPC)</h4>
+                        <ul class="comparison-list">
+                            <li>Encodes in collapse TIMING, not outcomes</li>
+                            <li>100-particle redundancy per character (~10⁻¹⁸⁰⁰ false positive rate)</li>
+                            <li>Temporal patterns create structured messages</li>
+                            <li>Focuses on WHEN collapse occurs (timing)</li>
+                            <li>Passive detection via follower particles</li>
+                            <li>Proposes FTL signaling if collapse is instantaneous</li>
+                            <li>Multi-layer statistical filtering (spatial + temporal + linguistic)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<div class="container">
+
+            <!-- Action Buttons -->
+            <section class="action-section">
+                <div class="action-buttons">
+                    <a href="../../research/particle-com.html" class="action-button demo-button">
+                        <span>🎮</span>
+                        System Overview
+                    </a>
+                    <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/06%20-%20PUBLISHING/Academic%20Papers/Neuron%20Particle%20Communication%20(NPC)%20-%20Paper.md" class="action-button docs-button">
+                        <span>📚</span>
+                        Technical Documentation
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Neuron Ecosystem</strong> - Theoretical Physics Exploration
+            </p>
+            <p class="footer-description">
+                Developed through independent exploration and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        let isTransmitting = false;
+        let currentMessage = '';
+
+        // Initialize particles
+        function initializeParticles() {
+            const senderContainer = document.getElementById('senderParticles');
+            const receiverContainer = document.getElementById('receiverParticles');
+            
+            senderContainer.innerHTML = '';
+            receiverContainer.innerHTML = '';
+            
+            for (let i = 0; i < 100; i++) {
+                const senderParticle = document.createElement('div');
+                senderParticle.className = 'particle superposition';
+                senderContainer.appendChild(senderParticle);
+                
+                const receiverParticle = document.createElement('div');
+                receiverParticle.className = 'particle superposition';
+                receiverContainer.appendChild(receiverParticle);
+            }
+        }
+
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            });
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeParticles();
+            
+            // Message input
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.addEventListener('input', function() {
+                    currentMessage = this.value.toUpperCase();
+                    updateMetrics();
+                });
+            }
+
+            // Transmit button
+            const transmitButton = document.getElementById('transmitButton');
+            if (transmitButton) {
+                transmitButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (currentMessage.length > 0) {
+                        simulateTransmission();
+                    }
+                });
+            }
+        });
+
+        function updateMetrics() {
+            const charCount = document.getElementById('charCount');
+            const particlePairs = document.getElementById('particlePairs');
+            const transmissionTime = document.getElementById('transmissionTime');
+            
+            const length = currentMessage.length;
+            charCount.textContent = `${length}/50 characters`;
+            
+            // Each character needs 100 particles
+            const totalPairs = length * 100;
+            particlePairs.innerHTML = `${totalPairs}<span class="metric-unit">pairs</span>`;
+            
+            // Calculate transmission time (0.5s per char + 1s for spaces)
+            let time = 0;
+            for (let i = 0; i < length; i++) {
+                if (currentMessage[i] === ' ') {
+                    time += 1.0;
+                } else {
+                    time += 0.5;
+                }
+            }
+            transmissionTime.innerHTML = `${time.toFixed(1)}<span class="metric-unit">seconds</span>`;
+        }
+
+        async function simulateTransmission() {
+            if (isTransmitting || currentMessage.length === 0) return;
+            
+            isTransmitting = true;
+            
+            const button = document.getElementById('transmitButton');
+            const message = document.getElementById('simulationMessage');
+            const statusContent = document.getElementById('statusContent');
+            const timelineDisplay = document.getElementById('timelineDisplay');
+            const comparisonSection = document.getElementById('comparisonSection');
+            
+            // Update button
+            button.disabled = true;
+            button.textContent = 'Transmitting...';
+            
+            // Show message
+            message.style.display = 'block';
+            message.textContent = 'Initializing quantum entanglement...';
+            
+            try {
+                // Phase 1: Initialization
+                message.textContent = 'Establishing entanglement across 4,600 particle pairs...';
+                await delay(1500);
+                
+                // Phase 2: Superposition verification
+                message.textContent = 'Verifying superposition states in cryogenic containers...';
+                await delay(1500);
+                
+                // Phase 3: Character-by-character transmission
+                message.textContent = 'Beginning temporal collapse sequence...';
+                await delay(1000);
+                
+                statusContent.classList.add('show-content');
+                timelineDisplay.classList.add('show-content');
+                timelineDisplay.innerHTML = '';
+                
+                let currentTime = 0;
+                let charCount = 0;
+                let collapseCount = 0;
+                
+                for (let i = 0; i < currentMessage.length; i++) {
+                    const char = currentMessage[i];
+                    
+                    // Collapse animation
+                    await collapseParticles();
+                    
+                    // Add timeline item
+                    const timelineItem = document.createElement('div');
+                    timelineItem.className = 'timeline-item';
+                    
+                    if (char === ' ') {
+                        timelineItem.innerHTML = `
+                            <div class="timeline-time">T=${currentTime.toFixed(3)}s</div>
+                            <div class="timeline-event">1.0s delay → SPACE detected</div>
+                        `;
+                        currentTime += 1.0;
+                    } else {
+                        timelineItem.innerHTML = `
+                            <div class="timeline-time">T=${currentTime.toFixed(3)}s</div>
+                            <div class="timeline-event">100 '${char}' particles collapse → Character detected</div>
+                        `;
+                        currentTime += 0.5;
+                        collapseCount += 100;
+                    }
+                    
+                    timelineDisplay.appendChild(timelineItem);
+                    charCount++;
+                    
+                    // Update statistics
+                    document.getElementById('charsSent').textContent = charCount;
+                    document.getElementById('totalCollapses').textContent = collapseCount;
+                    
+                    // Update status
+                    statusContent.textContent = `Transmitting character ${charCount}/${currentMessage.length}: "${char}"`;
+                    
+                    // Reset particles for next character
+                    await delay(300);
+                    resetParticles();
+                    await delay(200);
+                }
+                
+                // Phase 4: Completion
+                message.textContent = `Transmission complete! Message "${currentMessage}" sent via ${collapseCount} synchronized collapse events.`;
+                statusContent.textContent = `✓ Transmission successful! All ${charCount} characters transmitted with 100% synchronization accuracy.`;
+                
+                // Show comparison section
+                comparisonSection.classList.add('show-content');
+                
+                // Highlight statistics
+                document.querySelectorAll('.stat-box').forEach(box => {
+                    box.style.borderColor = 'rgba(0, 212, 255, 0.8)';
+                    box.style.background = 'rgba(0, 212, 255, 0.1)';
+                });
+                
+                setTimeout(() => {
+                    document.querySelectorAll('.stat-box').forEach(box => {
+                        box.style.borderColor = 'rgba(0, 212, 255, 0.2)';
+                        box.style.background = 'rgba(0, 0, 0, 0.3)';
+                    });
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error during transmission:', error);
+                message.textContent = 'Transmission simulation completed.';
+            }
+            
+            // Reset after delay
+            setTimeout(() => {
+                isTransmitting = false;
+                button.disabled = false;
+                button.textContent = 'Simulate Transmission';
+                message.style.display = 'none';
+                document.getElementById('senderStatus').textContent = 'Superposition State';
+                document.getElementById('receiverStatus').textContent = 'Monitoring Collapse';
+            }, 4000);
+        }
+
+        async function collapseParticles() {
+            const senderParticles = document.querySelectorAll('#senderParticles .particle');
+            const receiverParticles = document.querySelectorAll('#receiverParticles .particle');
+            
+            // Update status
+            document.getElementById('senderStatus').textContent = 'Measuring...';
+            document.getElementById('receiverStatus').textContent = 'Collapse Detected!';
+            
+            // Collapse all particles simultaneously
+            senderParticles.forEach(particle => {
+                particle.classList.remove('superposition');
+                particle.classList.add('collapsed');
+            });
+            
+            // Small delay to simulate instantaneous propagation
+            await delay(50);
+            
+            receiverParticles.forEach(particle => {
+                particle.classList.remove('superposition');
+                particle.classList.add('collapsed');
+            });
+            
+            await delay(500);
+        }
+
+        function resetParticles() {
+            const senderParticles = document.querySelectorAll('#senderParticles .particle');
+            const receiverParticles = document.querySelectorAll('#receiverParticles .particle');
+            
+            senderParticles.forEach(particle => {
+                particle.classList.remove('collapsed');
+                particle.classList.add('superposition');
+            });
+            
+            receiverParticles.forEach(particle => {
+                particle.classList.remove('collapsed');
+                particle.classList.add('superposition');
+            });
+            
+            document.getElementById('senderStatus').textContent = 'Superposition State';
+            document.getElementById('receiverStatus').textContent = 'Monitoring Collapse';
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
