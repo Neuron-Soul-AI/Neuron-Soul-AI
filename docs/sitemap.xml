@@ -60,6 +60,10 @@
     <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/research/theoretical-frameworks.html</loc>
     <priority>0.7</priority>
   </url>
+    <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/research/particle-com.html</loc>
+    <priority>0.9</priority>
+  </url>
 
   <!-- System Reference - Main Pages -->
   <url>
@@ -340,6 +344,31 @@
     <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/index-general-demos.html</loc>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/general/soul-ai-demo.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/general/ai-comparison-demo.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/general/system-integration-cascade.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/general/information-network-demo.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/general/system-tree-navigator.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/general/particle-com-demo.html</loc>
+    <priority>0.8</priority>
+  </url>
+  
   <url>
     <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/systems/index-system-demos.html</loc>
     <priority>0.9</priority>
