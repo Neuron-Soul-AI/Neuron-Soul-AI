@@ -10,11 +10,12 @@
 
 ## DISCLAIMER
 
-This paper presents a theoretical framework developed through independent exploration and iterative dialogue with artificial intelligence systems. **The author has no formal training in quantum physics, engineering, or related scientific disciplines.** All concepts presented emerge from personal theoretical exploration rather than formal research methodology or experimental validation.
+This paper presents a theoretical framework developed through independent exploration and iterative dialogue with artificial intelligence systems. The author has no formal training in quantum physics, engineering, or related scientific disciplines. All concepts presented emerge from personal theoretical exploration rather than formal research methodology or experimental validation.
+
+The development of this framework and document would not have been possible without AI assistance. The core ideas originated from the author's independent thinking, but the articulation, structure, and refinement of these concepts were achieved through sustained collaboration with AI systems (particularly Claude by Anthropic and Gemini by Google). These AI tools served as educational resources, conceptual sounding boards, and helped translate intuitive ideas into more formal frameworks. For someone with zero knowledge in science, AI assistance was essential to developing and communicating these theoretical concepts.
 
 The terminology, assumptions, and interpretations of quantum mechanical principles may be imprecise, incomplete, or inconsistent with established physics. This work does not claim scientific accuracy or experimental feasibility. Rather, it offers a conceptual framework for consideration, critique, and potential refinement by experts in quantum mechanics, experimental physics, and related fields.
-
-**The intent is not to claim a solution to faster-than-light communication, but to propose a theoretical basis that might inform future research directions.** Readers should approach this work as an amateur's exploration of quantum phenomena rather than peer-reviewed scientific research.
+**The intent is not to claim a solution to faster-than-light communication, but to propose a theoretical basis that might inform future research directions.** Readers should approach this work as an amateur's exploration of quantum phenomena, developed with AI assistance, rather than peer-reviewed scientific research.
 
 ---
 
@@ -1195,5 +1196,6 @@ This work is offered in the spirit of open scientific inquiry—an attempt to co
 **Date**: October 2025
 
 *"The most exciting phrase to hear in science, the one that heralds new discoveries, is not 'Eureka!' but 'That's funny...'"* — Isaac Asimov
+
 
 This work asks: Is collapse timing "funny" enough to warrant investigation?
