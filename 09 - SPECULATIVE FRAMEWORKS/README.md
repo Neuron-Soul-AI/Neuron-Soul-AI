@@ -120,7 +120,7 @@ All these explorations follow the same process:
 5. **Simplify ruthlessly** (what's the core mechanism?)
 6. **Test consistency** (does it explain multiple phenomena?)
 
-This is **Conceptual Law Thinking** in action - the cognitive framework documented in `/theoretical-frameworks/`.
+This is **Conceptual Law Thinking** in action - the cognitive framework documented in `/08 - THEORETICAL FRAMEWORKS/`.
 
 ---
 
