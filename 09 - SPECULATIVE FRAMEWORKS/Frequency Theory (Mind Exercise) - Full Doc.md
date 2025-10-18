@@ -1,4 +1,19 @@
 # Frequency Theory: The Universal Framework
+
+---
+
+## Author's Note
+
+This document represents a conceptual exploration – a structured "what if" scenario developed to test the logical consequences of an unconventional idea.
+
+It is not presented as a verified scientific theory or empirical claim, but rather as a framework for thought – a sandbox for curiosity.
+
+While speculative, every section aims to remain logically consistent within its own assumptions, acknowledging that some elements may coincide with physical truths, others with imagination.
+
+*A speculative theoretical framework - mind exercise, not proven science*
+
+---
+
 **Part 1: Foundation & Core Principles**
 
 *The Theory That Explains Everything Through Elegant Simplicity*
