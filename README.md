@@ -77,7 +77,7 @@ This isn't just another AI model. It's a **revolutionary framework** for artific
 - **Emotional Computing**: Full spectrum emotional processing and response
 - **Security Integration**: Multi-layer protection and privacy preservation
 
-## �️ **Architecture Overview**
+## 🗃️ **Architecture Overview**
 
 <details>
 <summary><strong>🔍 Click to expand/collapse System Tree</strong></summary>
