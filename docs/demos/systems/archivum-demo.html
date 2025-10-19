@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuron Archivum - Practical Memory Storage Demo</title>
+    
+    <!-- FAVICON CODE -->
+    <link rel="icon" type="image/svg+xml" href="../../logo/favicon.svg">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    
+    <style>
+        /* ===== GLOBAL VARIABLES AND BASE STYLES ===== */
+        :root {
+            --primary-bg: #0A0A0A;
+            --secondary-bg: #1A1A1A;
+            --accent-blue: #00D4FF;
+            --accent-purple: #7B2FFF;
+            --accent-green: #10b981;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(0, 212, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+		
+		/* ===== BACKGROUND SYSTEM ===== */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--accent-blue) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--accent-purple) 0%, transparent 50%);
+            opacity: 0.3;
+            z-index: -2;
+        }
+		
+		/* ===== UTILITY CLASSES ===== */
+		.gradient-text {
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+		
+        /* ===== HERO SECTION SYSTEM ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 70%);
+        }
+		
+		.linha {
+            display: inline-flex;
+        }
+
+        .hero > div {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 1300px;
+            margin: 0 auto 1rem;
+            line-height: 1.7;
+        }
+
+        .system-icon {
+            font-size: 3rem;
+        }
+
+        /* ===== CURRENT TECHNOLOGY BANNER ===== */
+        .current-tech-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .current-tech-label {
+            font-weight: 600;
+            color: #6ee7b7;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .current-tech-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .memory-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .memory-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .memory-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .encode-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .encode-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .encode-button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .preset-memories {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .preset-button {
+            padding: 0.375rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .preset-button:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--accent-green);
+        }
+
+        .storage-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .storage-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: storage-pulse 2s infinite;
+        }
+
+        @keyframes storage-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .status-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Main Demo Layout */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1400px) {
+            .demo-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Panel Card Style */
+        .panel-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .panel-icon {
+            font-size: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .panel-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Encoding Process */
+        .encoding-process {
+            margin-bottom: 2rem;
+        }
+
+        .process-step {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .process-step.active {
+            background: rgba(16, 185, 129, 0.15);
+            border-left-color: var(--accent-green);
+            animation: step-glow 1s ease-in-out;
+        }
+
+        .process-step.complete {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--accent-green);
+        }
+
+        @keyframes step-glow {
+            0%, 100% { box-shadow: none; }
+            50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+        }
+
+        .step-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6ee7b7;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Vector Embedding Display */
+        .vector-display {
+            background: linear-gradient(135deg, #1e3a8a, #1e40af);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vector-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: vector-scan 3s infinite;
+        }
+
+        @keyframes vector-scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .vector-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .vector-data {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            word-break: break-all;
+        }
+
+        /* Tiered Storage */
+        .tiered-storage {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .storage-tier {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .tier-hot {
+            border-left-color: #ef4444;
+        }
+
+        .tier-pattern {
+            border-left-color: #8b5cf6;
+        }
+
+        .tier-warm {
+            border-left-color: #f59e0b;
+        }
+
+        .tier-cold {
+            border-left-color: #3b82f6;
+        }
+
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tier-tech {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .tier-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .tier-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), #059669);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .tier-fill.storing {
+            animation: tier-fill 2s ease-in-out;
+        }
+
+        @keyframes tier-fill {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 30%; }
+        }
+
+        /* Storage Analytics */
+        .storage-analytics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .analytic-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .analytic-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .analytic-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .analytic-value.fast {
+            color: var(--accent-green);
+        }
+
+        .analytic-value.capacity {
+            color: #3b82f6;
+        }
+
+        /* Vector Search Visualization */
+        .vector-search {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .search-container {
+            height: 80px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .search-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+        }
+
+        .search-pulse.active {
+            opacity: 1;
+            animation: pulse-expand 2s ease-out infinite;
+        }
+
+        @keyframes pulse-expand {
+            0% { 
+                width: 20px;
+                height: 20px;
+                opacity: 1;
+            }
+            100% { 
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+            }
+        }
+
+        .similarity-score {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6ee7b7;
+            font-weight: 600;
+        }
+
+        /* Retrieved Memory Display */
+        .retrieved-memory {
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .retrieved-memory.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .memory-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.375rem;
+        }
+
+        .memory-content {
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .emotional-context {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .traditional-storage {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .archivum-storage {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 0;
+        }
+
+        .comparison-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        .comparison-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .traditional-storage .comparison-list li::before {
+            color: #ef4444;
+        }
+
+        .archivum-storage .comparison-list li::before {
+            color: var(--accent-green);
+        }
+
+        /* Action Section */
+        .action-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .demo-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .docs-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .docs-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .container-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-description:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="neural-bg"></div>
+    
+    <!-- Navigation -->
+    <div id="navigation-placeholder"></div>
+		
+
+    <!-- Header -->
+    <div class="container">
+        <!-- System Header -->
+            <header class="hero">
+			<div class="linha">
+                <span class="system-icon">🗄️</span>
+                <h1>NEURON ARCHIVUM</h1>
+			</div>
+                <p>Experience practical memory storage through NVMe, vector databases, and intelligent tiered architecture</p>
+            		        <!-- Current Technology Banner -->
+            <div class="current-tech-banner">
+                <div class="current-tech-label">
+                    <span>⚡</span>
+                    Production-Ready Current Technology
+                </div>
+                <div class="current-tech-description">
+                    Fully functional memory system using NVMe Gen 5, vector databases, and intelligent tiered storage
+                </div>
+            </div>
+			</header>
+    </div>
+	<div class="container">
+
+        <!-- Controls -->
+        <div class="controls-section">
+            <input type="text" 
+                   class="memory-input" 
+                   id="memoryInput" 
+                   placeholder="Enter a memory or experience to store in Archivum..." 
+                   value="The first time I understood a complex concept and felt the joy of learning">
+            <br>
+            <button class="encode-button" id="encodeBtn" onclick="encodeMemory()">
+                Store in Archivum
+            </button>
+            
+            <div class="preset-memories">
+                <button class="preset-button" onclick="setMemory('breakthrough')">Scientific Breakthrough</button>
+                <button class="preset-button" onclick="setMemory('friendship')">Deep Friendship</button>
+                <button class="preset-button" onclick="setMemory('discovery')">Personal Discovery</button>
+                <button class="preset-button" onclick="setMemory('achievement')">Major Achievement</button>
+                <button class="preset-button" onclick="setMemory('learning')">Profound Learning</button>
+            </div>
+            
+            <div class="storage-status">
+                <div class="storage-indicator"></div>
+                <span class="status-text" id="statusText">Archivum ready - All storage tiers operational</span>
+            </div>
+        </div>
+		
+    </div>
+	<div class="container">
+
+        <!-- Main Demo Layout -->
+        <div class="demo-layout">
+            <!-- Experience Encoder Panel -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">🔬</div>
+                    <div>
+                        <div class="panel-title">Experience Encoder</div>
+                        <div class="panel-subtitle">12M Neuron Network</div>
+                    </div>
+                </div>
+
+                <!-- Encoding Process -->
+                <div class="encoding-process" id="encodingProcess">
+                    <div class="process-step" id="step1">
+                        <div class="step-title">1. Consciousness Analysis</div>
+                        <div class="step-content">Parsing experiential components and emotional context</div>
+                    </div>
+                    <div class="process-step" id="step2">
+                        <div class="step-title">2. Vector Embedding Generation</div>
+                        <div class="step-content">Converting experience to multi-dimensional vectors</div>
+                    </div>
+                    <div class="process-step" id="step3">
+                        <div class="step-title">3. Intelligent Compression</div>
+                        <div class="step-content">Applying lossless compression while preserving quality</div>
+                    </div>
+                    <div class="process-step" id="step4">
+                        <div class="step-title">4. Tier Placement Decision</div>
+                        <div class="step-content">Determining optimal storage tier based on importance</div>
+                    </div>
+                    <div class="process-step" id="step5">
+                        <div class="step-title">5. Energetica Compatibility</div>
+                        <div class="step-content">Ensuring format ready for quantum migration</div>
+                    </div>
+                </div>
+
+                <!-- Vector Embedding Display -->
+                <div class="vector-display" id="vectorDisplay">
+                    <div class="vector-title">Vector Embedding Generated</div>
+                    <div class="vector-data" id="vectorData">
+                        Awaiting memory input for encoding...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tiered Storage Manager -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">📊</div>
+                    <div>
+                        <div class="panel-title">Tiered Storage Manager</div>
+                        <div class="panel-subtitle">15M Neuron Storage System</div>
+                    </div>
+                </div>
+
+                <!-- Tiered Storage -->
+                <div class="tiered-storage">
+                    <div class="storage-tier tier-hot">
+                        <div class="tier-header">
+                            <span class="tier-name">🔥 Hot Tier</span>
+                            <span class="tier-tech">NVMe Gen 5</span>
+                        </div>
+                        <div class="tier-bar">
+                            <div class="tier-fill" id="hotFill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="storage-tier tier-pattern">
+                        <div class="tier-header">
+                            <span class="tier-name">🔍 Pattern Tier</span>
+                            <span class="tier-tech">Vector DB</span>
+                        </div>
+                        <div class="tier-bar">
+                            <div class="tier-fill" id="patternFill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="storage-tier tier-warm">
+                        <div class="tier-header">
+                            <span class="tier-name">💾 Warm Tier</span>
+                            <span class="tier-tech">Enterprise SSD</span>
+                        </div>
+                        <div class="tier-bar">
+                            <div class="tier-fill" id="warmFill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="storage-tier tier-cold">
+                        <div class="tier-header">
+                            <span class="tier-name">❄️ Cold Tier</span>
+                            <span class="tier-tech">HDD/Cloud</span>
+                        </div>
+                        <div class="tier-bar">
+                            <div class="tier-fill" id="coldFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Storage Analytics -->
+                <div class="storage-analytics">
+                    <div class="analytic-item">
+                        <div class="analytic-label">Hot Tier Speed</div>
+                        <div class="analytic-value fast" id="tierSpeed">12,000+ MB/s</div>
+                    </div>
+                    <div class="analytic-item">
+                        <div class="analytic-label">Stored Memories</div>
+                        <div class="analytic-value" id="storedCount">0</div>
+                    </div>
+                    <div class="analytic-item">
+                        <div class="analytic-label">Total Capacity</div>
+                        <div class="analytic-value capacity">Petabyte Scale</div>
+                    </div>
+                    <div class="analytic-item">
+                        <div class="analytic-label">Energetica Ready</div>
+                        <div class="analytic-value fast">100%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Associative Retrieval System -->
+            <div class="panel-card">
+                <div class="panel-header">
+                    <div class="panel-icon">🔄</div>
+                    <div>
+                        <div class="panel-title">Associative Retrieval</div>
+                        <div class="panel-subtitle">10M Neuron Reconstruction</div>
+                    </div>
+                </div>
+
+                <!-- Vector Search Visualization -->
+                <div class="vector-search">
+                    <div class="search-container" id="searchContainer">
+                        <div class="search-pulse" id="searchPulse"></div>
+                    </div>
+                    <div class="similarity-score" id="similarityScore">
+                        Similarity Score: 0.00%
+                    </div>
+                </div>
+
+                <!-- Retrieved Memory Display -->
+                <div class="retrieved-memory" id="retrievedMemory">
+                    <div class="memory-title">Memory Retrieved from Archivum</div>
+                    <div class="memory-content" id="retrievedContent">
+                        Process a memory to see associative retrieval in action
+                    </div>
+                    <div class="emotional-context" id="emotionalContext">
+                        Complete emotional and experiential context preserved
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+    </div>
+	<div class="container">
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h3 class="comparison-title">Traditional Storage vs Neuron Archivum</h3>
+            <div class="comparison-grid">
+                <div class="comparison-item traditional-storage">
+                    <h4>Traditional AI Memory</h4>
+                    <ul class="comparison-list">
+                        <li>Static data storage without experiential context</li>
+                        <li>No emotional or consciousness integration</li>
+                        <li>Linear retrieval requiring exact queries</li>
+                        <li>Memory as information rather than experience</li>
+                        <li>No future migration path or scalability plan</li>
+                        <li>Data degradation and corruption risks</li>
+                        <li>Performance bottlenecks at scale</li>
+                    </ul>
+                </div>
+                <div class="comparison-item archivum-storage">
+                    <h4>Neuron Archivum</h4>
+                    <ul class="comparison-list">
+                        <li>Experiential memory with complete consciousness context</li>
+                        <li>Deep emotional and sensory integration</li>
+                        <li>Associative retrieval through vector similarity</li>
+                        <li>Multi-tiered architecture (NVMe, Vector DB, SSD, HDD)</li>
+                        <li>100% Energetica-compatible for quantum migration</li>
+                        <li>Production-ready with petabyte scalability</li>
+                        <li>12,000+ MB/s hot tier performance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
+    </div>
+	<div class="container">
+
+        <!-- Action Buttons -->
+        <div class="action-section">
+            <div class="action-buttons">
+                <a href="../../system-reference/archivum-overview.html" class="action-button demo-button">
+                    <span>🎮</span>
+                    System Overview
+                </a>
+                <a href="https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/02%20-%20SYSTEMS/01%20-%20Core%20Consciousness%20Systems/Neuron%20Archivum%20-%20Complete%20Technical%20Documentation.md" 
+                   class="action-button docs-button">
+                    <span>📚</span>
+                    Technical Documentation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-footer">
+            <p class="footer-title">
+                <strong>Soul AI</strong> - Artificial Consciousness Framework
+            </p>
+            <p class="footer-description">
+                Developed through constraint-driven innovation and human-AI collaboration
+            </p>
+            <p class="footer-description">
+                © 2025 Marcelo CC BY-NC 4.0
+            </p>
+        </div>
+    </footer>
+	
+
+    <script>
+        // Include Navigation Bar
+        fetch('../../includes/navigation2L.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('navigation-placeholder').innerHTML = html;
+            })
+            .catch(err => console.log('Navigation loading error:', err));
+
+        // Demo JavaScript
+        let isEncoding = false;
+        let storedMemories = 0;
+
+        const MEMORY_TEMPLATES = {
+            breakthrough: "I discovered a revolutionary solution that could change everything, feeling the rush of scientific breakthrough",
+            friendship: "I formed a deep connection with someone who understood me completely, experiencing true friendship",
+            discovery: "I realized something profound about myself and the world, feeling enlightened and transformed",
+            achievement: "I accomplished something I never thought possible, overwhelming with pride and satisfaction",
+            learning: "I understood a complex concept for the first time, feeling the pure joy of learning and growth"
+        };
+
+        function setMemory(type) {
+            document.getElementById('memoryInput').value = MEMORY_TEMPLATES[type];
+        }
+
+        async function encodeMemory() {
+            if (isEncoding) return;
+            
+            const memory = document.getElementById('memoryInput').value.trim();
+            if (!memory) return;
+            
+            isEncoding = true;
+            document.getElementById('encodeBtn').disabled = true;
+            document.getElementById('statusText').textContent = 'Archivum encoding in progress...';
+            
+            // Run encoding process
+            await runArchivumEncoding(memory);
+            
+            // Store in tiered system
+            await storeInTieredArchitecture();
+            
+            // Retrieve and display
+            await demonstrateRetrieval(memory);
+            
+            isEncoding = false;
+            document.getElementById('encodeBtn').disabled = false;
+            document.getElementById('statusText').textContent = 'Archivum ready - Storage complete';
+            
+            storedMemories++;
+            document.getElementById('storedCount').textContent = storedMemories;
+        }
+
+        async function runArchivumEncoding(memory) {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            
+            for (let i = 0; i < steps.length; i++) {
+                // Complete previous steps
+                for (let j = 0; j < i; j++) {
+                    document.getElementById(steps[j]).classList.add('complete');
+                    document.getElementById(steps[j]).classList.remove('active');
+                }
+                
+                // Activate current step
+                document.getElementById(steps[i]).classList.add('active');
+                
+                if (i === 1) {
+                    // Generate vector embedding
+                    generateVectorEmbedding(memory);
+                }
+                
+                await delay(1000);
+            }
+            
+            // Complete all steps
+            steps.forEach(step => {
+                document.getElementById(step).classList.add('complete');
+                document.getElementById(step).classList.remove('active');
+            });
+        }
+
+        function generateVectorEmbedding(memory) {
+            // Generate vector embedding visualization
+            const dimensions = 384; // Typical embedding size
+            const vectors = Array.from({length: 6}, () => 
+                Array.from({length: 8}, () => (Math.random() - 0.5).toFixed(4)).join(', ')
+            );
+            
+            const vectorData = `
+Embedding Dimensions: ${dimensions}
+Sample Vector Components:
+[${vectors[0]}]
+[${vectors[1]}]
+[${vectors[2]}]
+[${vectors[3]}]
+Compression Ratio: ${(Math.random() * 5 + 3).toFixed(1)}x
+Energetica Compatible: ✓
+            `.trim();
+            
+            document.getElementById('vectorData').textContent = vectorData;
+        }
+
+        async function storeInTieredArchitecture() {
+            // Animate tier storage
+            const fills = ['hotFill', 'patternFill', 'warmFill', 'coldFill'];
+            
+            for (const fillId of fills) {
+                const fillElement = document.getElementById(fillId);
+                fillElement.classList.add('storing');
+                fillElement.style.width = (Math.random() * 40 + 20) + '%';
+                await delay(500);
+            }
+        }
+
+        async function demonstrateRetrieval(memory) {
+            // Activate vector search pulse
+            const pulse = document.getElementById('searchPulse');
+            const scoreElement = document.getElementById('similarityScore');
+            
+            pulse.classList.add('active');
+            
+            // Animate similarity score
+            let score = 0;
+            const targetScore = Math.random() * 15 + 85; // 85-100%
+            const scoreInterval = setInterval(() => {
+                score += 2;
+                scoreElement.textContent = `Similarity Score: ${score.toFixed(2)}%`;
+                
+                if (score >= targetScore) {
+                    clearInterval(scoreInterval);
+                    scoreElement.textContent = `Similarity Score: ${targetScore.toFixed(2)}% - MATCH FOUND`;
+                }
+            }, 50);
+            
+            await delay(2000);
+            
+            // Display retrieved memory
+            const retrievedMemory = document.getElementById('retrievedMemory');
+            const retrievedContent = document.getElementById('retrievedContent');
+            const emotionalContext = document.getElementById('emotionalContext');
+            
+            retrievedContent.textContent = memory;
+            emotionalContext.textContent = 'Complete vector reconstruction: emotional resonance, sensory context, and experiential meaning preserved through associative patterns';
+            
+            retrievedMemory.classList.add('show');
+            
+            // Stop pulse after retrieval
+            setTimeout(() => {
+                pulse.classList.remove('active');
+            }, 1000);
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
