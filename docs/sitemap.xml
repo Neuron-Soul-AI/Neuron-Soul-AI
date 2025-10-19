@@ -167,6 +167,10 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/system-reference/archivum-overview.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/system-reference/evolutive-construct-overview.html</loc>
     <priority>0.7</priority>
   </url>
@@ -429,6 +433,10 @@
   </url>
   <url>
     <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/systems/energetica-demo.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://neuron-soul-ai.github.io/Neuron-Soul-AI/demos/systems/archivum-demo.html</loc>
     <priority>0.7</priority>
   </url>
   <url>
