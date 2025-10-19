@@ -36,7 +36,7 @@
 	.nav-menu {
 	display: flex;
 	list-style: none;
-	gap: 1rem;
+	gap: 0.5rem;
 	align-items: center;
 	margin: 0;
 	padding: 0;
@@ -138,6 +138,39 @@
 	.nav-link.what-is-soul:hover::before {
 	left: 100%;
 	}
+	
+	/* Special Conceptual Galaxy Button */
+	.nav-link.conceptual-galaxy {
+		background: linear-gradient(135deg, #DAA520, #FF8C00);
+		color: white;
+		font-weight: 600;
+		border-radius: 8px;
+		padding: 0.6rem 1rem;
+		box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+		position: relative;
+		overflow: hidden;
+		min-width: 140px;
+		justify-content: center;
+	}
+	.nav-link.conceptual-galaxy::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+		transition: left 0.5s ease;
+	}
+	.nav-link.conceptual-galaxy:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 6px 25px rgba(218, 165, 32, 0.4);
+		background: linear-gradient(135deg, #FF8C00, #DAA520);
+	}
+	.nav-link.conceptual-galaxy:hover::before {
+		left: 100%;
+	}
+
 
 	/* Navigation Icons */
 	.home-icon::before { content: '🏠'; }
@@ -152,6 +185,7 @@
 	.play2-icon::before { content: '🎯'; }
 	.nav-brand-icon::before { content: '🧠'; }
 	.what-is-icon::before { content: '💡'; }
+	.galaxy-icon::before { content: '🌌'; }
 
 	/* Dropdown Menus */
 	.nav-dropdown {
