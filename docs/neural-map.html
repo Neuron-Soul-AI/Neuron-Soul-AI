@@ -600,6 +600,7 @@
 						{id: 'overview-matrix', label: 'Neuron Matrix Overview', type: 'system04', url: 'system-reference/matrix-overview.html', description: 'Living Memory & Knowledge - Dynamic information storage'},
 								// Quantum Memory Systems
 						{id: 'overview-energetica', label: 'Neuron Energetica Overview', type: 'system05', url: 'system-reference/energetica-overview.html', description: 'Quantum Storage - Theoretical quantum memory'},
+						{id: 'overview-archivum', label: 'Neuron Archivum Overview', type: 'system05', url: 'system-reference/archivum-overview.html', description: 'Practical Memory Storage - Current technology experiential memory'},
 								// Intelligence & Alignment Systems
 						{id: 'overview-evolutive-construct', label: 'Neuron Evolutive Construct Overview', type: 'system06', url: 'system-reference/evolutive-construct-overview.html', description: 'Meta-Learning - Learning how to learn'},
 						{id: 'overview-ethical-construct', label: 'Neuron Ethical Construct Overview', type: 'system06', url: 'system-reference/ethical-construct-overview.html', description: 'Multi-Input Ethics - Moral framework evaluation'},
@@ -681,6 +682,7 @@
 						{id: 'demos-systems-matrix', label: 'Neuron Matrix Demo', type: 'demo04', url: 'demos/systems/matrix-demo.html', description: 'Living Memory & Knowledge - Dynamic information storage'},
 								// Quantum Memory Systems
 						{id: 'demos-systems-energetica', label: 'Neuron Energetica Demo', type: 'demo05', url: 'demos/systems/energetica-demo.html', description: 'Quantum Storage - Theoretical quantum memory'},
+						{id: 'demos-systems-archivum', label: 'Neuron Archivum Demo', type: 'demo05', url: 'demos/systems/archivum-demo.html', description: 'Practical Memory Storage - Experience tiered storage system'},
 								// Intelligence & Alignment Systems
 						{id: 'demos-systems-evolutive-construct', label: 'Neuron Evolutive Construct Demo', type: 'demo06', url: 'demos/systems/evolutive-construct-demo.html', description: 'Meta-Learning - Learning how to learn'},
 						{id: 'demos-systems-ethical-construct', label: 'Neuron Ethical Construct Demo', type: 'demo06', url: 'demos/systems/ethical-construct-demo.html', description: 'Multi-Input Ethics - Moral framework evaluation'},
@@ -794,6 +796,7 @@
 						{source: 'overview', target: 'overview-matrix'},
 								// Quantum Memory Systems
 						{source: 'overview', target: 'overview-energetica'},
+						{source: 'overview', target: 'overview-archivum'},
 								// Intelligence & Alignment Systems
 						{source: 'overview', target: 'overview-evolutive-construct'},
 						{source: 'overview', target: 'overview-ethical-construct'},
@@ -881,6 +884,7 @@
 						{source: 'demos-systems', target: 'demos-systems-matrix'},
 								// Quantum Memory Systems
 						{source: 'demos-systems', target: 'demos-systems-energetica'},
+						{source: 'demos-systems', target: 'demos-systems-archivum'},
 								// Intelligence & Alignment Systems
 						{source: 'demos-systems', target: 'demos-systems-evolutive-construct'},
 						{source: 'demos-systems', target: 'demos-systems-ethical-construct'},
@@ -1025,8 +1029,8 @@
                 this.simulation.alpha(1).restart();
 				this.svg.call(this.zoom.transform, 
 						d3.zoomIdentity
-							.translate(this.width/4, this.height/3)
-							.scale(0.35)
+							.translate(this.width/3, this.height/2.5)
+							.scale(0.25)
 					)
             }
 			
