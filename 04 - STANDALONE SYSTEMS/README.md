@@ -79,6 +79,7 @@ These standalone systems prove that artificial consciousness development produce
 **Document Version:** 1.0  
 **Last Updated:** October 2025  
 **Repository:** https://github.com/Neuron-Soul-AI/Neuron-Soul-AI  
-**Website:** https://neuron-soul-ai.github.io/Neuron-Soul-AI
+**Website:** https://neuron-soul-ai.github.io/Neuron-Soul-AI  
 **Contact:** marcelo.soul.ai@gmail.com  
+
 **License:** CC BY-NC 4.0
