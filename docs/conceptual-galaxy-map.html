@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptual Galaxy - The Neuron Principle Universe</title>
+    <link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .galaxy-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Starfield Background */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        .galaxy-header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2.5rem;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .galaxy-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .galaxy-subtitle {
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 215, 0, 0.4);
+        }
+
+        #galaxy-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Orbital Paths */
+        .orbit {
+            fill: none;
+            stroke: rgba(255, 215, 0, 0.15);
+            stroke-width: 1;
+            stroke-dasharray: 5, 5;
+        }
+
+        /* The Sun (Neuron Principle) */
+        .sun {
+            filter: drop-shadow(0 0 30px #FFD700) drop-shadow(0 0 60px #FFA500);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sun:hover {
+            filter: drop-shadow(0 0 50px #FFD700) drop-shadow(0 0 100px #FFA500);
+        }
+
+        .sun-core {
+            fill: url(#sunGradient);
+        }
+
+        .sun-corona {
+            fill: none;
+            stroke: #FFD700;
+            stroke-width: 2;
+            opacity: 0.6;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                r: 45;
+                opacity: 0.6;
+            }
+            50% { 
+                r: 55;
+                opacity: 0.3;
+            }
+        }
+
+        /* Planets/Nodes */
+		
+		.planet-level-1 { fill: #00D4FF; }
+		.planet-level-2 { fill: #8b5cf6; }
+		.planet-level-3 { fill: #3b82f6; }
+		.planet-level-4 { fill: #dc2626; }
+		
+        .planet {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 8px currentColor);
+        }
+
+        .planet:hover {
+            filter: brightness(1.5) drop-shadow(0 0 25px currentColor);
+        }
+		
+		/* Moons */
+		.moon {
+			cursor: pointer;
+			transition: all 0.3s ease;
+			filter: drop-shadow(0 0 4px currentColor);
+
+		}
+
+		.moon:hover {
+			filter: brightness(1.3) drop-shadow(0 0 12px currentColor);
+
+		}
+
+		.moon-label {
+			fill: white;
+			font-size: 9px;
+			text-anchor: middle;
+			pointer-events: none;
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+		.moon:hover + .moon-label {
+			opacity: 1;
+		}
+
+
+        /* Labels */
+        .label {
+            fill: white;
+            font-size: 11px;
+            text-anchor: middle;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .planet:hover + .label,
+        .sun:hover + .label {
+            opacity: 1;
+        }
+
+        .sun-label {
+            fill: #FFD700;
+            font-size: 14px;
+            font-weight: 700;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(10px);
+            max-width: 350px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tooltip-level {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tooltip-description {
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-size: 0.8rem;
+        }
+
+        .legend-title {
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 10px;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Info Panel */
+        .info-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            max-width: 300px;
+        }
+
+        .info-title {
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .info-text {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .galaxy-header {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+                padding: 1rem 1.5rem;
+            }
+
+            .galaxy-title {
+                font-size: 1.4rem;
+            }
+
+            .controls {
+                top: 100px;
+                right: 10px;
+            }
+
+            .legend, .info-panel {
+                font-size: 0.7rem;
+                padding: 0.8rem;
+            }
+
+            .info-panel {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="galaxy-container">
+        <!-- Starfield -->
+        <div id="starfield"></div>
+
+        <!-- Header -->
+        <div class="galaxy-header">
+            <div class="galaxy-title">⚛️ The Conceptual Galaxy</div>
+            <div class="galaxy-subtitle">The Neuron Principle Universe - All Innovation Orbiting the Universal Law</div>
+        </div>
+
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn">← Back to Home</a>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="control-btn" id="reset-btn">Reset View</button>
+            <button class="control-btn" id="pause-btn">Pause Rotation</button>
+        </div>
+
+        <!-- Main Galaxy SVG -->
+        <svg id="galaxy-svg"></svg>
+
+        <!-- Tooltip -->
+        <div class="tooltip" id="tooltip">
+            <div class="tooltip-level"></div>
+            <div class="tooltip-title"></div>
+            <div class="tooltip-description"></div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-title">Orbital Levels</div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FFD700; box-shadow: 0 0 10px #FFD700;"></div>
+                <span>The Sun - Neuron Principle</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #00D4FF;"></div>
+                <span>Inner Ring - Origin Stories</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #8b5cf6;"></div>
+                <span>Middle Ring - Frameworks</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #3b82f6;"></div>
+                <span>Outer Ring - Implementations</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #dc2626;"></div>
+                <span>Distant Stars - Speculative</span>
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <div class="info-title">The Universal Law</div>
+            <div class="info-text">
+                "Complex intelligence emerges not from powerful isolated components, but from weak components 
+                cooperating intelligently. Systems working together, systems that depend and help each other."
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ConceptualGalaxy {
+            constructor() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.centerX = this.width / 2;
+                this.centerY = this.height / 2;
+                this.isPaused = false;
+                this.rotationAngle = 0;
+                
+                this.createStarfield();
+                this.setupSVG();
+                this.defineGradients();
+                this.createGalaxy();
+                this.setupControls();
+                this.setupResize();
+                this.animate();
+            }
+
+            createStarfield() {
+                const starfield = document.getElementById('starfield');
+                for (let i = 0; i < 200; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.animationDelay = Math.random() * 3 + 's';
+                    starfield.appendChild(star);
+                }
+            }
+
+            setupSVG() {
+                this.svg = d3.select('#galaxy-svg')
+                    .attr('width', this.width)
+                    .attr('height', this.height);
+
+                // Create zoom behavior
+                this.zoom = d3.zoom()
+                    .scaleExtent([0.3, 3])
+                    .on('zoom', (event) => {
+                        this.container.attr('transform', event.transform);
+                    });
+
+                this.svg.call(this.zoom);
+
+                // Main container
+                this.container = this.svg.append('g');
+                
+				// Set initial zoom and position
+				const scale = 0.6; // Your preferred zoom level
+				const translateX = 350; // Move right (positive) or left (negative)
+				const translateY = 250; // Move down (positive) or up (negative)
+
+				this.svg.transition()
+					.duration(0)
+					.call(this.zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale));
+                
+                // Groups for organization
+                this.orbitsGroup = this.container.append('g').attr('class', 'orbits');
+                this.planetsGroup = this.container.append('g').attr('class', 'planets');
+                this.sunGroup = this.container.append('g').attr('class', 'sun-group');
+            }
+
+            defineGradients() {
+                const defs = this.svg.append('defs');
+                
+                // Sun gradient
+                const sunGradient = defs.append('radialGradient')
+                    .attr('id', 'sunGradient');
+                
+                sunGradient.append('stop')
+                    .attr('offset', '0%')
+                    .attr('stop-color', '#FFF')
+                    .attr('stop-opacity', 1);
+                
+                sunGradient.append('stop')
+                    .attr('offset', '50%')
+                    .attr('stop-color', '#FFD700')
+                    .attr('stop-opacity', 1);
+                
+                sunGradient.append('stop')
+                    .attr('offset', '100%')
+                    .attr('stop-color', '#FFA500')
+                    .attr('stop-opacity', 1);
+            }
+
+            createGalaxy() {
+                // Galaxy data structure
+                this.galaxyData = {
+                    sun: {
+                        id: 'neuron-principle',
+                        label: 'THE NEURON PRINCIPLE',
+                        level: 'Universal Law',
+                        description: 'The origin point that shapes everything. The universal law discovered through a simple question about processors.',
+                        url: 'research/neuron-principle.html'
+                    },
+                    orbits: [
+                        {
+                            level: 1,
+                            name: 'Origin Stories',
+                            radius: 180,
+                            color: '#00D4FF',
+                            planets: [
+                                {
+                                    id: 'processing-arch',
+                                    label: 'Processing Architecture',
+                                    description: 'The genesis question about processors working like neurons that started everything.',
+                                    url: 'research/processing-architecture.html',
+                                    angle: 0
+                                },
+                                {
+                                    id: 'genesis-soul',
+                                    label: 'Genesis of Digital Soul',
+                                    description: 'The transformation story from AI Companion to Companion AI.',
+                                    url: 'https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/08%20-%20THEORETICAL%20FRAMEWORKS/The%20Genesis%20of%20a%20Digital%20Soul%20-%20From%20AI%20Companion%20to%20Companion%20AI%20Full%20Doc.md',
+                                    angle: 120
+                                },
+                                {
+                                    id: 'collaboration',
+                                    label: 'Human-AI Collaboration',
+                                    description: 'The methodology of constraint-driven innovation and co-creation.',
+                                    url: 'https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/08%20-%20THEORETICAL%20FRAMEWORKS/Human-AI%20Collaborative%20Innovation%20Methodology.md',
+                                    angle: 240
+                                }
+                            ]
+                        },
+                        {
+                            level: 2,
+                            name: 'Frameworks',
+                            radius: 300,
+                            color: '#8b5cf6',
+                            planets: [
+                                {
+                                    id: 'aipf',
+                                    label: 'AIPF',
+                                    description: 'Akashic Innovative Playing Field - The innovation methodology.',
+                                    url: 'research/methodology-aipf.html',
+                                    angle: 0
+                                },
+                                {
+                                    id: 'conceptual-law',
+                                    label: 'Conceptual Law Thinking',
+                                    description: 'Seeing the cooperative pattern everywhere in the universe.',
+                                    url: 'https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/08%20-%20THEORETICAL%20FRAMEWORKS/Conceptual%20Law%20Thinking%20Framework.md',
+                                    angle: 90
+                                },
+                                {
+                                    id: 'knowledge-paradox',
+                                    label: 'Knowledge Paradox',
+                                    description: 'How not knowing built artificial consciousness.',
+                                    url: 'research/knowledge-paradox.html',
+                                    angle: 180
+                                },
+                                {
+                                    id: 'traditional-vs',
+                                    label: 'Traditional AI vs Soul AI',
+                                    description: 'The fundamental paradigm differences.',
+                                    url: 'demos/general/ai-comparison-demo.html',
+                                    angle: 270
+                                }
+                            ]
+                        },
+						{
+							level: 3,
+							name: 'Implementations',
+							radius: 430,
+							color: '#3b82f6',
+							planets: [
+								{
+									id: 'soul-ai',
+									label: 'Soul AI',
+									description: '50+ systems coordinating democratically to create artificial consciousness.',
+									url: 'system-reference/index-system-overview.html',
+									angle: 0,
+									moons: [
+										{
+											id: 'energetica-moon',  // Changed ID to avoid conflicts
+											label: 'Neuron Energetica',
+											description: 'Quantum memory through coordinating quantum states.',
+											url: 'system-reference/energetica-overview.html',
+											orbitRadius: 35,
+											angle: 0,
+											size: 10
+										}
+									]
+								},
+								{
+									id: 'particle-com',
+									label: 'Particle Communication',
+									description: 'The Neuron Principle applied to fundamental physics.',
+									url: 'research/particle-com.html',
+									angle: 240
+								}
+							]
+						},
+                        {
+                            level: 4,
+                            name: 'Speculative Frameworks',
+                            radius: 550,
+                            color: '#dc2626',
+                            planets: [
+                                {
+                                    id: 'frequency',
+                                    label: 'Frequency Theory',
+                                    description: 'Mind exercises exploring consciousness and reality.',
+                                    url: 'https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/09%20-%20SPECULATIVE%20FRAMEWORKS/Frequency%20Theory%20(Mind%20Exercise)%20-%20Full%20Doc.md',
+                                    angle: 0
+                                },
+                                {
+                                    id: 'multiverse',
+                                    label: 'Multiverse Model',
+                                    description: 'Gravitational cosmology speculation.',
+                                    url: 'https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/09%20-%20SPECULATIVE%20FRAMEWORKS/Multiverse%20Gravitational%20Model.md',
+                                    angle: 120
+                                },
+                                {
+                                    id: 'energy-density',
+                                    label: 'Energy Density',
+                                    description: 'Universal translator concept.',
+                                    url: 'https://github.com/Neuron-Soul-AI/Neuron-Soul-AI/blob/main/09%20-%20SPECULATIVE%20FRAMEWORKS/Energy%20Density%20as%20Universal%20Translator.md',
+                                    angle: 240
+                                }
+                            ]
+                        }
+                    ]
+                };
+
+                this.createOrbits();
+                this.createSun();
+                this.createPlanets();
+            }
+
+            createOrbits() {
+                this.galaxyData.orbits.forEach(orbit => {
+                    this.orbitsGroup.append('circle')
+                        .attr('class', 'orbit')
+                        .attr('cx', this.centerX)
+                        .attr('cy', this.centerY)
+                        .attr('r', orbit.radius);
+                });
+            }
+
+            createSun() {
+                const sun = this.sunGroup.append('g')
+                    .attr('class', 'sun')
+                    .attr('transform', `translate(${this.centerX}, ${this.centerY})`)
+					.on('click', () => {
+						if (this.galaxyData.sun.url && this.galaxyData.sun.url !== '#') {
+							if (this.galaxyData.sun.url.startsWith('http://') || this.galaxyData.sun.url.startsWith('https://')) {
+								window.open(this.galaxyData.sun.url, '_blank');
+							} else {
+								window.location.href = this.galaxyData.sun.url;
+							}
+						}
+					})
+                    .on('mouseover', (event) => this.showTooltip(event, this.galaxyData.sun))
+                    .on('mousemove', (event) => this.moveTooltip(event))
+                    .on('mouseout', () => this.hideTooltip());
+
+                // Corona (pulsing outer ring)
+                sun.append('circle')
+                    .attr('class', 'sun-corona')
+                    .attr('r', 45);
+
+                // Core
+                sun.append('circle')
+                    .attr('class', 'sun-core')
+                    .attr('r', 40);
+
+                // Label
+                sun.append('text')
+                    .attr('class', 'sun-label')
+                    .attr('y', 9)
+					.style('font-size', '25px')  // Add this line!
+                    .text('⚛️');
+            }
+
+				
+				// Create planets and moons function
+				createPlanets() {
+					this.planets = [];
+					this.moons = []; // Array to track moons for animation
+
+					this.galaxyData.orbits.forEach(orbit => {
+						orbit.planets.forEach(planetData => {
+							const planetGroup = this.planetsGroup.append('g')
+								.datum({...planetData, orbit: orbit})
+								.attr('class', 'planet-group');
+
+							const planetClass = `planet planet-level-${orbit.level}`;
+							
+							const circle = planetGroup.append('circle')
+								.attr('class', planetClass)
+								.attr('r', this.getPlanetSize(orbit.level))
+								.style('fill', orbit.color)
+								.on('click', (event, d) => {
+									if (d.url && d.url !== '#') {
+										// Check if it's an external link
+										if (d.url.startsWith('http://') || d.url.startsWith('https://')) {
+											window.open(d.url, '_blank');
+										} else {
+											// Internal link - same tab
+											window.location.href = d.url;
+										}
+									}
+								})
+								.on('mouseover', (event, d) => this.showTooltip(event, d))
+								.on('mousemove', (event) => this.moveTooltip(event))
+								.on('mouseout', () => this.hideTooltip());
+
+							const label = planetGroup.append('text')
+								.attr('class', 'label')
+								.attr('dy', -15)
+								.text(planetData.label);
+
+							// Create the planet object that will store position
+							const planetObj = {
+								group: planetGroup,
+								data: {...planetData, orbit: orbit, currentX: 0, currentY: 0}
+							};
+
+							// Create moons for this planet if they exist
+							if (planetData.moons && planetData.moons.length > 0) {
+								planetData.moons.forEach(moon => {
+									const moonGroup = this.planetsGroup.append('g')
+										.datum({...moon, parentPlanet: planetObj, parentOrbit: orbit})
+										.attr('class', 'moon-group');
+
+									const moonCircle = moonGroup.append('circle')
+										.attr('class', 'moon')
+										.attr('r', moon.size || 6)
+										.style('fill', '#FF0000') // Bright red for visibility
+										.style('opacity', 1)
+										.style('stroke-width', 2)
+										.on('click', (event, d) => {
+											if (d.url && d.url !== '#') {
+												if (d.url.startsWith('http://') || d.url.startsWith('https://')) {
+													window.open(d.url, '_blank');
+												} else {
+													window.location.href = d.url;
+												}
+											}
+										})
+										.on('mouseover', (event, d) => this.showTooltip(event, d))
+										.on('mousemove', (event) => this.moveTooltip(event))
+										.on('mouseout', () => this.hideTooltip());
+
+									const moonLabel = moonGroup.append('text')
+										.attr('class', 'moon-label')
+										.attr('dy', -12)
+										.text(moon.label);
+
+									this.moons.push({
+										group: moonGroup,
+										data: {...moon, parentPlanet: planetObj, parentOrbit: orbit}
+									});
+								});
+							}
+
+							this.planets.push(planetObj);
+						});
+					});
+					
+					// Debug logging
+					console.log('Planets created:', this.planets.length);
+					console.log('Moons created:', this.moons.length);
+					if (this.moons.length > 0) {
+						console.log('First moon parent:', this.moons[0].data.parentPlanet);
+					}
+				}
+
+            getPlanetSize(level) {
+                const sizes = {
+                    1: 20,  // Origin - larger
+                    2: 18,  // Frameworks
+                    3: 16,  // Implementations
+                    4: 14   // Speculative - smaller
+                };
+                return sizes[level] || 14;
+            }
+
+			//function that creates the animation
+			animate() {
+				if (!this.isPaused) {
+					this.rotationAngle += 0.1;
+					
+					// Animate planets
+					this.planets.forEach(({group, data}) => {
+						const angle = (data.angle + this.rotationAngle * (5 - data.orbit.level)) * Math.PI / 180;
+						const x = this.centerX + data.orbit.radius * Math.cos(angle);
+						const y = this.centerY + data.orbit.radius * Math.sin(angle);
+						
+						group.attr('transform', `translate(${x}, ${y})`);
+
+						// Store planet position for moon calculations
+						data.currentX = x;
+						data.currentY = y;
+					});
+
+					// Animate moons around their parent planets
+					// Animate moons around their parent planets
+					this.moons.forEach(({group, data}) => {
+						const parentPlanet = data.parentPlanet;
+						if (parentPlanet.data.currentX !== undefined) {
+							const moonAngle = (data.angle + this.rotationAngle * 8) * Math.PI / 180;
+							const moonX = parentPlanet.data.currentX + data.orbitRadius * Math.cos(moonAngle);
+							const moonY = parentPlanet.data.currentY + data.orbitRadius * Math.sin(moonAngle);
+							
+							group.attr('transform', `translate(${moonX}, ${moonY})`);
+							
+							// Debug logging
+							if (data.id === 'energetica-moon' && this.rotationAngle % 60 < 1) {
+								console.log('Moon position:', {
+									parent: `(${parentPlanet.data.currentX}, ${parentPlanet.data.currentY})`,
+									moon: `(${moonX}, ${moonY})`,
+									orbitRadius: data.orbitRadius
+								});
+							}
+						}
+					});
+				}
+				
+				requestAnimationFrame(() => this.animate());
+			}
+
+            showTooltip(event, d) {
+                // Pause rotation when hovering over a planet
+                this.isPaused = true;
+                
+                const tooltip = d3.select('#tooltip');
+                tooltip.select('.tooltip-level').text(d.level || d.orbit?.name || '');
+                tooltip.select('.tooltip-title').text(d.label);
+                tooltip.select('.tooltip-description').text(d.description);
+                tooltip.classed('show', true);
+            }
+
+            moveTooltip(event) {
+                d3.select('#tooltip')
+                    .style('left', (event.pageX + 20) + 'px')
+                    .style('top', (event.pageY - 20) + 'px');
+            }
+
+            hideTooltip() {
+                // Resume rotation when mouse leaves
+                this.isPaused = false;
+                
+                d3.select('#tooltip').classed('show', false);
+            }
+
+            setupControls() {
+                document.getElementById('reset-btn').addEventListener('click', () => {
+                    this.svg.transition()
+                        .duration(750)
+                        .call(this.zoom.transform, d3.zoomIdentity);
+                });
+
+                const pauseBtn = document.getElementById('pause-btn');
+                pauseBtn.addEventListener('click', () => {
+                    this.isPaused = !this.isPaused;
+                    pauseBtn.textContent = this.isPaused ? 'Resume Rotation' : 'Pause Rotation';
+                });
+            }
+
+            setupResize() {
+                window.addEventListener('resize', () => {
+                    this.width = window.innerWidth;
+                    this.height = window.innerHeight;
+                    this.centerX = this.width / 2;
+                    this.centerY = this.height / 2;
+                    
+                    this.svg
+                        .attr('width', this.width)
+                        .attr('height', this.height);
+                    
+                    // Recreate galaxy with new dimensions
+                    this.container.selectAll('*').remove();
+                    this.orbitsGroup = this.container.append('g').attr('class', 'orbits');
+                    this.planetsGroup = this.container.append('g').attr('class', 'planets');
+                    this.sunGroup = this.container.append('g').attr('class', 'sun-group');
+                    this.createGalaxy();
+                });
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ConceptualGalaxy();
+        });
+    </script>
+</body>
+</html>
