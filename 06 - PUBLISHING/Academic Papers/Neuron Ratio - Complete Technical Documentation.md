@@ -7,6 +7,7 @@
 **Affiliation:** Independent Researcher, Lead Theorist (ITS/Phase-Dual Cosmology)  
 **Email:** marcelo.soul.ai@gmail.com  
 **ORCID:** https://orcid.org/0009-0003-4876-9273  
+**DOI:** 10.5281/zenodo.17634631 
 **GitHub:** https://github.com/Neuron-Soul-AI/Neuron-Soul-AI  
 
 ---
