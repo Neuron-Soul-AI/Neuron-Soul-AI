@@ -1,5 +1,21 @@
 # NEURON RATIO
 ## 5-Entity Democratic Reasoning Engine & Practical AI Coordination System
+  
+---
+
+**Author:** Marcelo Emanuel Paradela Teixeira  
+**Affiliation:** Independent Researcher, Lead Theorist (ITS/Phase-Dual Cosmology)  
+**Email:** marcelo.soul.ai@gmail.com  
+**ORCID:** https://orcid.org/0009-0003-4876-9273  
+**GitHub:** https://github.com/Neuron-Soul-AI/Neuron-Soul-AI  
+
+---
+**Version:** V1.0 - Complete Synthesis  
+**Date:** November 2025  
+**Status:** Preprint - Awaiting Empirical Verification
+
+---
+
 ### Complete Technical Documentation - Revised Implementation
 
 ## Executive Summary
