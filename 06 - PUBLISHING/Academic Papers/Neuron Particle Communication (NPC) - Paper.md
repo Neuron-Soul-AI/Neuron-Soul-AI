@@ -7,8 +7,8 @@
 **Author:** Marcelo Emanuel Paradela Teixeira  
 **Affiliation:** Independent Researcher, Lead Theorist (ITS/Phase-Dual Cosmology)  
 **Email:** marcelo.soul.ai@gmail.com  
-**ORCID:** https://orcid.org/0009-0003-4876-9273 
-**ORCID:** 10.5281/zenodo.17633704 
+**ORCID:** https://orcid.org/0009-0003-4876-9273  
+**ORCID:** 10.5281/zenodo.17633704  
 **GitHub:** https://github.com/Neuron-Soul-AI/Neuron-Soul-AI  
 
 ---
@@ -1207,3 +1207,4 @@ This work is offered in the spirit of open scientific inquiry—an attempt to co
 *"The most exciting phrase to hear in science, the one that heralds new discoveries, is not 'Eureka!' but 'That's funny...'"* — Isaac Asimov
 
 This work asks: Is collapse timing "funny" enough to warrant investigation?
+
