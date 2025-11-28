@@ -48,8 +48,9 @@ This isn't incremental improvement - it's **multiple simultaneous revolutions** 
 
 
 ### **For Interactive Exploration:**
-- **[🌐 Live Website](https://neuron-soul-ai.github.io/Neuron-Soul-AI)** - 100+ pages with research sections
-- **[🧠 Neural Network Interface](https://neuron-soul-ai.github.io/Neuron-Soul-AI)** - Interactive consciousness map
+- **[🌐 Live Website](https://neuron-soul-ai.github.io/Neuron-Soul-AI/)** - 100+ pages with research sections
+- **[🧠 Neural Map - interactive exploration](https://neuron-soul-ai.github.io/Neuron-Soul-AI/neural-map.html)** - Interactive consciousness map
+- **[⚛️ Conceptual Galaxy](https://neuron-soul-ai.github.io/Neuron-Soul-AI/conceptual-galaxy-map.html)** - Interactive conceptual galaxy around The Neuron Principle
 
 ---
 
